@@ -5,6 +5,12 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 const CANAL_RESULTADO = '1493454727680364584';
 
+const ROLES_AUTORIZADOS = [
+  '1474197418890362911',
+  '1460348058888830976',
+  '1466331349945155615'
+];
+
 client.once('ready', () => { console.log('Bot conectado: ' + client.user.tag); });
 
 client.on('messageCreate', async (message) => {
@@ -39,6 +45,8 @@ client.on('messageCreate', async (message) => {
   const p7 = get(/PREGUNTA 7[^\n]*\n([^\n]+)/i);
   const p8 = get(/PREGUNTA 8[^\n]*\n([^\n]+)/i);
   const p9 = get(/PREGUNTA 9[^\n]*\n([^\n]+)/i);
+
+  const mencionRoles = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
 
   const embed = new EmbedBuilder()
     .setTitle('🦅  NUEVO EXAMEN DE INGRESO — GRUPO HALCÓN  🦅')
@@ -76,11 +84,18 @@ client.on('messageCreate', async (message) => {
       .setStyle(ButtonStyle.Danger)
   );
 
-  await message.channel.send({ embeds: [embed], components: [row] });
+  await message.channel.send({ content: mencionRoles, embeds: [embed], components: [row] });
 });
 
 client.on('interactionCreate', async (interaction) => {
   if (!interaction.isButton()) return;
+
+  const tieneRol = ROLES_AUTORIZADOS.some(rolId => interaction.member.roles.cache.has(rolId));
+
+  if (!tieneRol) {
+    await interaction.reply({ content: '❌ No tenés permisos para aprobar o rechazar postulaciones.', ephemeral: true });
+    return;
+  }
 
   await interaction.deferUpdate();
 
@@ -100,37 +115,29 @@ client.on('interactionCreate', async (interaction) => {
         .setTitle('POSTULANTE APROBADO')
         .setDescription(mencion + ' fue **APROBADO** en el Grupo Halcón.')
         .addFields({ name: '👮  Revisado por', value: revisor, inline: true })
-        .setColor(0x00CC66)
-        .setTimestamp()
+        .setColor(0x00CC66).setTimestamp()
         .setFooter({ text: 'Grupo Halcón  •  ' + fecha });
       await canal.send({ embeds: [embedAp] });
-
       const rowDone = new ActionRowBuilder().addComponents(
         new ButtonBuilder().setCustomId('done1').setLabel('APROBADO por ' + revisor).setStyle(ButtonStyle.Success).setDisabled(true),
         new ButtonBuilder().setCustomId('done2').setLabel('RECHAZAR').setStyle(ButtonStyle.Danger).setDisabled(true)
       );
       await interaction.editReply({ components: [rowDone] });
-
     } else {
       const embedRe = new EmbedBuilder()
         .setTitle('POSTULANTE RECHAZADO')
         .setDescription(mencion + ' fue **RECHAZADO** en el Grupo Halcón.')
         .addFields({ name: '👮  Revisado por', value: revisor, inline: true })
-        .setColor(0xCC2222)
-        .setTimestamp()
+        .setColor(0xCC2222).setTimestamp()
         .setFooter({ text: 'Grupo Halcón  •  ' + fecha });
       await canal.send({ embeds: [embedRe] });
-
       const rowDone = new ActionRowBuilder().addComponents(
         new ButtonBuilder().setCustomId('done1').setLabel('APROBAR').setStyle(ButtonStyle.Success).setDisabled(true),
         new ButtonBuilder().setCustomId('done2').setLabel('RECHAZADO por ' + revisor).setStyle(ButtonStyle.Danger).setDisabled(true)
       );
       await interaction.editReply({ components: [rowDone] });
     }
-
-  } catch (error) {
-    console.error('Error al procesar boton:', error);
-  }
+  } catch (error) { console.error('Error:', error); }
 });
 
 client.login(process.env.TOKEN)
