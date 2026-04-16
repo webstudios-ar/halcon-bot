@@ -306,22 +306,35 @@ client.on('interactionCreate', async (interaction) => {
 
     const ultimas = historial.slice(-5);
 
-    // Generar un boton por cada sancion del historial
-    // Las sanciones de acumulacion (warns que se convirtieron en strike) se muestran como un solo boton
-    // Las sanciones directas (strike puesto manualmente) tambien tienen su boton
-    const botonesParaMostrar = ultimas.map((s, i) => {
+    // Construir botones agrupando cadenas de sanciones
+    // Logica: recorrer el historial y detectar cadenas de warns que se convirtieron en strike
+    // Una cadena es: N warns seguidos + 1 strike con "acumulados" = un solo boton del strike
+    // Un warn suelto despues = su propio boton
+    // Un strike directo (sin "acumulados") = su propio boton
+    const botonesParaMostrar = [];
+    for (let i = 0; i < ultimas.length; i++) {
+      const s = ultimas[i];
       const idxReal = sancion.historial.indexOf(s);
+      // Si es un warn que forma parte de una cadena que ya resulto en strike acumulado, saltarlo
+      // (el strike acumulado ya representa a todos los warns de esa cadena)
+      if (s.nivel.includes('WARN')) {
+        // Buscar si hay un strike acumulado DESPUES de este warn en el historial
+        const hayStrikeAcumuladoPosteriror = ultimas.slice(i + 1).some(posterior => posterior.nivel.includes('acumulados'));
+        if (hayStrikeAcumuladoPosteriror) continue; // Este warn ya esta representado por el strike acumulado
+      }
       let label;
       if (s.nivel.includes('acumulados')) {
         label = 'STRIKE acumulado (3 warns)';
       } else {
         label = s.nivel.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\uFE0F]/gu, '').trim().substring(0, 60);
       }
-      return new ButtonBuilder()
-        .setCustomId('ELEG_' + idxReal + '_' + interaction.user.id)
-        .setLabel(label)
-        .setStyle(ButtonStyle.Secondary);
-    });
+      botonesParaMostrar.push(
+        new ButtonBuilder()
+          .setCustomId('ELEG_' + idxReal + '_' + interaction.user.id)
+          .setLabel(label)
+          .setStyle(ButtonStyle.Secondary)
+      );
+    }
 
     const row = new ActionRowBuilder().addComponents(botonesParaMostrar);
     const descripcion = ultimas.map((s, i) =>
