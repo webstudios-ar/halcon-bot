@@ -169,10 +169,10 @@ client.on('interactionCreate', async (interaction) => {
 
   // BOTON ELEGIR SANCION A APELAR
   if (interaction.isButton() && interaction.customId.startsWith('elegir_apelacion_')) {
-    const partes = interaction.customId.split('_');
-    // formato: elegir_apelacion_USERID_IDX
-    const userId = partes[2];
-    const idxReal = parseInt(partes[3]);
+    const partes = interaction.customId.split('|');
+    // formato: elegir_apelacion|USERID|IDX
+    const userId = partes[1];
+    const idxReal = parseInt(partes[2]);
 
     // Verificar que es el mismo usuario
     if (interaction.user.id !== userId) {
@@ -235,7 +235,7 @@ client.on('interactionCreate', async (interaction) => {
       await interaction.followUp({ content: '<@' + userId + '>', embeds: [embedRes] });
 
     } else {
-      sancion.historial.push({ nivel: '❌ APELACIÓN RECHAZADA', motivo: 'Rechazada por <@' + interaction.user.id + '>', fecha: new Date().toLocaleString('es-AR') });
+      sancion.historial.push({ nivel: '❌ APELACIÓN RECHAZADA', motivo: 'Rechazada por <@' + interaction.user.id + '>', fecha: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) });
       await guardarSanciones();
 
       const embedRes = new EmbedBuilder()
@@ -262,7 +262,7 @@ client.on('interactionCreate', async (interaction) => {
     const parts = interaction.customId.split('_');
     const accion = parts[0], nombre = parts[2], discordId = parts[3];
     const mencion = discordId ? '<@' + discordId + '>' : '**' + nombre + '**';
-    const fecha = new Date().toLocaleString('es-AR');
+    const fecha = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     const revisor = interaction.member?.displayName || interaction.user.username;
     try {
       const canal = await client.channels.fetch(CANAL_RESULTADO);
@@ -297,7 +297,7 @@ client.on('interactionCreate', async (interaction) => {
       // Guardar el indice real en el historial completo para recuperarla despues
       const idxReal = sancion.historial.indexOf(s);
       return new ButtonBuilder()
-        .setCustomId('elegir_apelacion_' + interaction.user.id + '_' + idxReal)
+        .setCustomId('elegir_apelacion|' + interaction.user.id + '|' + idxReal)
         .setLabel(s.nivel.replace(/[🚨⚠️🔴💀✅❌\ufe0f]/gu, '').trim().substring(0, 50))
         .setStyle(ButtonStyle.Secondary);
     });
@@ -373,7 +373,7 @@ client.on('interactionCreate', async (interaction) => {
     else if (tipo === 'strike2')   { sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 2); nivel = '🔴 STRIKE 2'; color = 0xCC2222; }
     else if (tipo === 'expulsion') { sancion.warns = 0; sancion.strikes = 3; nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; }
 
-    sancion.historial.push({ motivo, nivel, fecha: new Date().toLocaleString('es-AR'), sancionadorId: interaction.user.id });
+    sancion.historial.push({ motivo, nivel, fecha: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }), sancionadorId: interaction.user.id });
     await guardarSanciones();
 
     const embed = new EmbedBuilder().setTitle('🚨 SANCIÓN — GRUPO HALCÓN').setDescription('<@' + usuario.id + '> ha recibido una sanción.').addFields({ name: '📊 Nivel', value: nivel, inline: true }, { name: '⚠️ Warns', value: String(sancion.warns), inline: true }, { name: '🔴 Strikes', value: String(sancion.strikes), inline: true }, { name: '📋 Motivo', value: motivo, inline: false }, { name: '👮 Sancionado por', value: '<@' + interaction.user.id + '>', inline: true }).setColor(color).setTimestamp().setFooter({ text: 'Grupo Halcón  •  Sistema de Sanciones' });
