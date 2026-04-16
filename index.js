@@ -5,8 +5,9 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 const CANAL_RESULTADO   = '1493454727680364584';
 const CANAL_UPDATES     = '1493446131663896626';
-const CANAL_SANCIONES   = '1492669993958113380';
 const ROL_MIEMBRO       = '1459343074378387591';
+const CANAL_SANCIONES   = '1492669993958113380';
+const CANAL_APELACIONES = '1494145072214839366';
 
 const ROLES_AUTORIZADOS = [
   '1474197418890362911',
@@ -14,20 +15,18 @@ const ROLES_AUTORIZADOS = [
   '1466331349945155615'
 ];
 
-// Rangos de Halcon en orden ascendente
-const RANGOS_HALCON = [
-  { nombre: 'Miembro Halcón',      id: '1459343074378387591' },
-  { nombre: 'Teniente Halcón',     id: '1459343200000000001' },
-  { nombre: 'Capitán Halcón',      id: '1459343200000000002' },
-  { nombre: 'Comandante Halcón',   id: '1459343200000000003' },
-  { nombre: 'Jefe Halcón',         id: '1459343200000000004' },
-  { nombre: 'Sub Jefe Halcón',     id: '1459343200000000005' },
-  { nombre: 'Director/a Halcón',   id: '1459343200000000006' },
-];
+const RANGOS = {
+  '1459343074378387591': 'Miembro Halcón',
+  '1460777138129998025': 'Teniente Halcón',
+  '1476854892181065739': 'Capitán Halcón',
+  '1466328471536930846': 'Comandante Halcón',
+  '1466331349945155615': 'Jefe Halcón',
+  '1466331228864254002': 'Sub Jefe Halcón',
+  '1460348058888830976': 'Director/a Halcón',
+};
 
-// Sistema de sanciones en memoria
-const sanciones = {}; // { userId: { warns: 0, strikes: 0, historial: [] } }
-
+// Sanciones en memoria: { userId: { warns, strikes, historial[] } }
+const sanciones = {};
 function getSancion(userId) {
   if (!sanciones[userId]) sanciones[userId] = { warns: 0, strikes: 0, historial: [] };
   return sanciones[userId];
@@ -37,13 +36,11 @@ client.once('ready', async () => {
   console.log('Bot conectado: ' + client.user.tag);
 
   const commands = [
-    // /nuevo
     new SlashCommandBuilder()
       .setName('nuevo')
       .setDescription('Ingresa un nuevo miembro al Grupo Halcon')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a ingresar').setRequired(true)),
 
-    // /ascender
     new SlashCommandBuilder()
       .setName('ascender')
       .setDescription('Asciende a un miembro del Grupo Halcon')
@@ -59,32 +56,30 @@ client.once('ready', async () => {
           { name: 'Director/a Halcón', value: '1460348058888830976' },
         )),
 
-    // /operativo
     new SlashCommandBuilder()
       .setName('operativo')
       .setDescription('Anuncia un operativo del Grupo Halcon')
       .addStringOption(o => o.setName('tipo').setDescription('Tipo de operativo').setRequired(true)
         .addChoices(
-          { name: '🚐 ALFA — Convoy Blindado',          value: 'ALFA' },
-          { name: '🛡️ BRAVO — Escolta VIP',              value: 'BRAVO' },
-          { name: '🔴 CHARLIE — Control Zona Caliente',  value: 'CHARLIE' },
-          { name: '🏦 DELTA — Custodia Bancaria',        value: 'DELTA' },
-          { name: '🚗 ECHO — Persecución Alto Riesgo',   value: 'ECHO' },
-          { name: '🆘 FOXTROT — Rescate de Rehén',       value: 'FOXTROT' },
-          { name: '🌆 GOLF — Patrulla Urbana',           value: 'GOLF' },
-          { name: '🚨 HOTEL — Respuesta Robo Banco',     value: 'HOTEL' },
+          { name: '🚐 ALFA — Convoy Blindado',         value: 'ALFA'    },
+          { name: '🛡️ BRAVO — Escolta VIP',             value: 'BRAVO'   },
+          { name: '🔴 CHARLIE — Control Zona Caliente', value: 'CHARLIE' },
+          { name: '🏦 DELTA — Custodia Bancaria',       value: 'DELTA'   },
+          { name: '🚗 ECHO — Persecución Alto Riesgo',  value: 'ECHO'    },
+          { name: '🆘 FOXTROT — Rescate de Rehén',      value: 'FOXTROT' },
+          { name: '🌆 GOLF — Patrulla Urbana',          value: 'GOLF'    },
+          { name: '🚨 HOTEL — Respuesta Robo Banco',    value: 'HOTEL'   },
         ))
       .addStringOption(o => o.setName('descripcion').setDescription('Detalles del operativo').setRequired(true))
       .addStringOption(o => o.setName('hora').setDescription('Hora del operativo (ej: 21:00)').setRequired(false)),
 
-    // /sancionar
     new SlashCommandBuilder()
       .setName('sancionar')
       .setDescription('Aplica una sancion a un miembro del Grupo Halcon')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a sancionar').setRequired(true))
-      .addStringOption(o => o.setName('motivo').setDescription('Motivo de la sancion').setRequired(true)),
+      .addStringOption(o => o.setName('motivo').setDescription('Motivo de la sancion').setRequired(true))
+      .addIntegerOption(o => o.setName('cantidad').setDescription('Cantidad de warns a aplicar (default: 1)').setMinValue(1).setMaxValue(3).setRequired(false)),
 
-    // /sanciones
     new SlashCommandBuilder()
       .setName('sanciones')
       .setDescription('Ver el historial de sanciones de un miembro')
@@ -101,42 +96,56 @@ client.once('ready', async () => {
 
 client.on('interactionCreate', async (interaction) => {
 
-  // ==================== BOTÓN APELAR ====================
+  // ==================== BOTON APELAR ====================
   if (interaction.isButton() && interaction.customId.startsWith('apelar_')) {
     const userId = interaction.customId.split('_')[1];
+
+    // Solo puede apelar la persona sancionada
+    if (interaction.user.id !== userId) {
+      await interaction.reply({ content: '❌ Solo la persona sancionada puede apelar.', ephemeral: true });
+      return;
+    }
+
     const sancion = getSancion(userId);
     const mencionSup = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
+    const ultimaSancion = sancion.historial[sancion.historial.length - 1];
 
     const embedApelacion = new EmbedBuilder()
-      .setTitle('⚖️ APELACIÓN DE SANCIÓN')
+      .setTitle('⚖️ APELACIÓN DE SANCIÓN — GRUPO HALCÓN')
       .setDescription('<@' + userId + '> está apelando su última sanción.')
       .addFields(
-        { name: '⚠️ Warns actuales', value: String(sancion.warns), inline: true },
+        { name: '⚠️ Warns actuales',   value: String(sancion.warns),   inline: true },
         { name: '🔴 Strikes actuales', value: String(sancion.strikes), inline: true },
-        { name: '📋 Última sanción', value: sancion.historial[sancion.historial.length - 1]?.motivo || 'N/A', inline: false }
+        { name: '📋 Sanción apelada',  value: ultimaSancion ? ultimaSancion.nivel + ' — ' + ultimaSancion.motivo : 'N/A', inline: false }
       )
       .setColor(0xFFAA00)
-      .setTimestamp();
+      .setTimestamp()
+      .setFooter({ text: 'Grupo Halcón  •  Sistema de Apelaciones' });
 
-    await interaction.reply({ content: mencionSup, embeds: [embedApelacion] });
+    const canalApel = await client.channels.fetch(CANAL_APELACIONES);
+    await canalApel.send({ content: mencionSup, embeds: [embedApelacion] });
+
+    // Deshabilitar el boton de apelar
+    const rowDone = new ActionRowBuilder().addComponents(
+      new ButtonBuilder().setCustomId('apelar_done').setLabel('APELACIÓN ENVIADA').setStyle(ButtonStyle.Secondary).setDisabled(true)
+    );
+    await interaction.update({ components: [rowDone] });
     return;
   }
 
-  // ==================== BOTONES POSTULACIÓN ====================
+  // ==================== BOTONES POSTULACION ====================
   if (interaction.isButton() && !interaction.customId.startsWith('apelar_')) {
     const tieneRol = ROLES_AUTORIZADOS.some(r => interaction.member.roles.cache.has(r));
     if (!tieneRol) {
       await interaction.reply({ content: '❌ No tenés permisos para hacer esto.', ephemeral: true });
       return;
     }
-
     await interaction.deferUpdate();
     const parts = interaction.customId.split('_');
     const accion = parts[0], nombre = parts[2], discordId = parts[3];
     const mencion = discordId ? '<@' + discordId + '>' : '**' + nombre + '**';
     const fecha = new Date().toLocaleString('es-AR');
     const revisor = interaction.member?.displayName || interaction.user.username;
-
     try {
       const canal = await client.channels.fetch(CANAL_RESULTADO);
       if (accion === 'ap') {
@@ -191,7 +200,7 @@ client.on('interactionCreate', async (interaction) => {
         .setTitle('🦅 NUEVO INGRESO — GRUPO HALCÓN')
         .setDescription('<@' + usuario.id + '> ha sido ingresado oficialmente al **Grupo Halcón**.\n¡Bienvenido, Agente!')
         .addFields(
-          { name: '👮 Ingresado por', value: revisor, inline: true },
+          { name: '👮 Ingresado por',  value: revisor,        inline: true },
           { name: '🔸 Rango asignado', value: 'Miembro Halcón', inline: true }
         )
         .setColor(0xFFD700).setThumbnail(usuario.displayAvatarURL()).setTimestamp()
@@ -206,47 +215,31 @@ client.on('interactionCreate', async (interaction) => {
 
   // ==================== /ascender ====================
   else if (interaction.commandName === 'ascender') {
-    const usuario = interaction.options.getUser('usuario');
-    const rolId   = interaction.options.getString('rango');
-    const miembro = await interaction.guild.members.fetch(usuario.id);
-
-    // Buscar nombre del rango elegido
-    const rangoNombre = {
-      '1459343074378387591': 'Miembro Halcón',
-      '1460777138129998025':   'Teniente Halcón',
-      '1476854892181065739':    'Capitán Halcón',
-      '1466328471536930846': 'Comandante Halcón',
-      '1466331349945155615':       'Jefe Halcón',
-      '1466331228864254002':    'Sub Jefe Halcón',
-      '1460348058888830976':   'Director/a Halcón',
-    }[rolId] || 'Rango desconocido';
-
+    const usuario  = interaction.options.getUser('usuario');
+    const rolId    = interaction.options.getString('rango');
+    const miembro  = await interaction.guild.members.fetch(usuario.id);
+    const rangoNombre = RANGOS[rolId] || 'Rango desconocido';
     try {
-      // Quitar todos los roles de Halcon primero
-      const todosRoles = ['1459343074378387591','1460777138129998025','1476854892181065739','1466328471536930846','1466331349945155615','1466331228864254002','1460348058888830976'];
-      for (const r of todosRoles) {
-        if (r !== '1460777138129998025' && r !== '1476854892181065739' && r !== '1466328471536930846' && r !== '1466331349945155615' && r !== '1466331228864254002' && r !== '1460348058888830976') {
-          if (miembro.roles.cache.has(r)) await miembro.roles.remove(r).catch(() => {});
-        }
+      // Quitar todos los roles de Halcon
+      for (const id of Object.keys(RANGOS)) {
+        if (miembro.roles.cache.has(id)) await miembro.roles.remove(id).catch(() => {});
       }
-      // Asignar nuevo rol
-      if (!rolId.includes('_ID')) await miembro.roles.add(rolId);
-
+      await miembro.roles.add(rolId);
       const canalUp = await client.channels.fetch(CANAL_UPDATES);
       const embed = new EmbedBuilder()
         .setTitle('🦅 ASCENSO — GRUPO HALCÓN')
         .setDescription('<@' + usuario.id + '> ha sido ascendido en el **Grupo Halcón**.')
         .addFields(
-          { name: '🎖️ Nuevo rango',    value: rangoNombre, inline: true },
-          { name: '👮 Ascendido por',  value: revisor,     inline: true }
+          { name: '🎖️ Nuevo rango',   value: rangoNombre, inline: true },
+          { name: '👮 Ascendido por', value: revisor,      inline: true }
         )
         .setColor(0xFFD700).setThumbnail(usuario.displayAvatarURL()).setTimestamp()
         .setFooter({ text: 'Grupo Halcón  •  Sistema de Ascensos' });
       await canalUp.send({ content: '<@' + usuario.id + '>', embeds: [embed] });
-      await interaction.reply({ content: '✅ **' + miembro.displayName + '** ascendido a ' + rangoNombre + ' y anunciado en #updates.', ephemeral: true });
+      await interaction.reply({ content: '✅ **' + miembro.displayName + '** ascendido a ' + rangoNombre + '.', ephemeral: true });
     } catch (err) {
       console.error(err);
-      await interaction.reply({ content: '❌ Error al ascender al miembro. Verificá que el bot tenga el rol más alto.', ephemeral: true });
+      await interaction.reply({ content: '❌ Error al ascender. Verificá que el bot tenga el rol más alto.', ephemeral: true });
     }
   }
 
@@ -255,7 +248,6 @@ client.on('interactionCreate', async (interaction) => {
     const tipo = interaction.options.getString('tipo');
     const desc = interaction.options.getString('descripcion');
     const hora = interaction.options.getString('hora') || 'A confirmar';
-
     const infoTipo = {
       'ALFA':    { emoji: '🚐', nombre: 'CONVOY BLINDADO',         nivel: 'ALTO RIESGO',       color: 0xCC2222 },
       'BRAVO':   { emoji: '🛡️', nombre: 'ESCOLTA VIP',             nivel: 'ALTO RIESGO',       color: 0xCC2222 },
@@ -266,9 +258,7 @@ client.on('interactionCreate', async (interaction) => {
       'GOLF':    { emoji: '🌆', nombre: 'PATRULLA URBANA',         nivel: 'PRESENCIA DIARIA',  color: 0x2D6A2D },
       'HOTEL':   { emoji: '🚨', nombre: 'RESPUESTA ROBO BANCO',    nivel: 'ALTO RIESGO',       color: 0xCC2222 },
     }[tipo];
-
     const mencionRoles = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
-
     const embed = new EmbedBuilder()
       .setTitle(infoTipo.emoji + '  OPERATIVO ' + tipo + ' — ' + infoTipo.nombre)
       .addFields(
@@ -279,34 +269,28 @@ client.on('interactionCreate', async (interaction) => {
       )
       .setColor(infoTipo.color).setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Operaciones' });
-
-    // Mandar en el canal actual
     await interaction.reply({ content: mencionRoles, embeds: [embed] });
   }
 
   // ==================== /sancionar ====================
   else if (interaction.commandName === 'sancionar') {
-    const usuario = interaction.options.getUser('usuario');
-    const motivo  = interaction.options.getString('motivo');
-    const sancion = getSancion(usuario.id);
+    const usuario  = interaction.options.getUser('usuario');
+    const motivo   = interaction.options.getString('motivo');
+    const cantidad = interaction.options.getInteger('cantidad') || 1;
+    const sancion  = getSancion(usuario.id);
 
-    sancion.warns++;
-    let nivel = '';
-    let color = 0xFFAA00;
-    let expulsado = false;
+    let nivel = '', color = 0xFFAA00, expulsado = false;
 
-    if (sancion.warns >= 3) {
-      sancion.warns = 0;
-      sancion.strikes++;
-      nivel = '🔴 STRIKE ' + sancion.strikes;
-      color = 0xCC2222;
-      if (sancion.strikes >= 3) {
-        nivel = '💀 EXPULSIÓN';
-        color = 0x000000;
-        expulsado = true;
+    for (let i = 0; i < cantidad; i++) {
+      sancion.warns++;
+      if (sancion.warns >= 3) {
+        sancion.warns = 0;
+        sancion.strikes++;
+        if (sancion.strikes >= 3) { nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; break; }
+        else { nivel = '🔴 STRIKE ' + sancion.strikes; color = 0xCC2222; }
+      } else {
+        nivel = '⚠️ WARN ' + sancion.warns; color = 0xFFAA00;
       }
-    } else {
-      nivel = '⚠️ WARN ' + sancion.warns;
     }
 
     sancion.historial.push({ motivo, nivel, fecha: new Date().toLocaleString('es-AR') });
@@ -322,11 +306,11 @@ client.on('interactionCreate', async (interaction) => {
       .setTitle('🚨 SANCIÓN — GRUPO HALCÓN')
       .setDescription('<@' + usuario.id + '> ha recibido una sanción.')
       .addFields(
-        { name: '📊 Nivel',          value: nivel,             inline: true },
+        { name: '📊 Nivel',          value: nivel,                   inline: true },
         { name: '⚠️ Warns',          value: String(sancion.warns),   inline: true },
         { name: '🔴 Strikes',        value: String(sancion.strikes), inline: true },
-        { name: '📋 Motivo',         value: motivo,            inline: false },
-        { name: '👮 Sancionado por', value: revisor,           inline: true }
+        { name: '📋 Motivo',         value: motivo,                  inline: false },
+        { name: '👮 Sancionado por', value: revisor,                 inline: true }
       )
       .setColor(color).setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Sistema de Sanciones' });
@@ -336,7 +320,8 @@ client.on('interactionCreate', async (interaction) => {
     await interaction.reply({ content: '✅ Sanción aplicada en #sanciones-halcon.', ephemeral: true });
 
     if (expulsado) {
-      await interaction.followUp({ content: '⛔ **' + usuario.username + '** llegó a 3 strikes. Se recomienda expulsión inmediata.', ephemeral: false });
+      const mencionSup = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
+      await canalSanc.send({ content: mencionSup + ' ⛔ **' + usuario.username + '** llegó a 3 strikes. Se recomienda expulsión inmediata.' });
     }
   }
 
@@ -344,34 +329,28 @@ client.on('interactionCreate', async (interaction) => {
   else if (interaction.commandName === 'sanciones') {
     const usuario = interaction.options.getUser('usuario');
     const sancion = getSancion(usuario.id);
-
     const historial = sancion.historial.length > 0
       ? sancion.historial.slice(-5).map((s, i) => '**' + (i+1) + '.** ' + s.nivel + ' — ' + s.motivo + '\n_' + s.fecha + '_').join('\n\n')
       : 'Sin sanciones registradas.';
-
     const embed = new EmbedBuilder()
-      .setTitle('📋 HISTORIAL DE SANCIONES — ' + usuario.username.toUpperCase())
+      .setTitle('📋 SANCIONES — ' + usuario.username.toUpperCase())
       .addFields(
-        { name: '⚠️ Warns actuales',  value: String(sancion.warns),   inline: true },
+        { name: '⚠️ Warns actuales',   value: String(sancion.warns),   inline: true },
         { name: '🔴 Strikes actuales', value: String(sancion.strikes), inline: true },
-        { name: '📜 Últimas sanciones', value: historial, inline: false }
+        { name: '📜 Últimas sanciones', value: historial,              inline: false }
       )
       .setColor(0xFFD700).setThumbnail(usuario.displayAvatarURL()).setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Sistema de Sanciones' });
-
     await interaction.reply({ embeds: [embed], ephemeral: true });
   }
-
 });
 
 // ==================== POSTULACIONES ====================
 client.on('messageCreate', async (message) => {
   if (!message.webhookId) return;
   if (!message.content.includes('NUEVO EXAMEN DE INGRESO')) return;
-
   const c = message.content;
   await message.delete();
-
   const get = (p) => { const m = c.match(p); return m ? m[1].replace(/\*/g,'').replace(/>/g,'').trim() : 'N/A'; };
   const nombre = get(/Nombre IC:\s*(.+)/i), rango = get(/Rango PFA:\s*(.+)/i);
   const mic = get(/Micrófono:\s*(.+)/i), disp = get(/Disponibilidad:\s*(.+)/i);
@@ -384,9 +363,7 @@ client.on('messageCreate', async (message) => {
   const p4=get(/PREGUNTA 4[^\n]*\n([^\n]+)/i),p5=get(/PREGUNTA 5[^\n]*\n([^\n]+)/i);
   const p6=get(/PREGUNTA 6[^\n]*\n([^\n]+)/i),p7=get(/PREGUNTA 7[^\n]*\n([^\n]+)/i);
   const p8=get(/PREGUNTA 8[^\n]*\n([^\n]+)/i),p9=get(/PREGUNTA 9[^\n]*\n([^\n]+)/i);
-
   const mencionRoles = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
-
   const embed = new EmbedBuilder()
     .setTitle('🦅  NUEVO EXAMEN DE INGRESO — GRUPO HALCÓN  🦅')
     .setColor(0xFFD700)
@@ -411,12 +388,10 @@ client.on('messageCreate', async (message) => {
     )
     .setTimestamp()
     .setFooter({ text: 'Grupo Halcón  •  Sistema de Postulaciones' });
-
   const row = new ActionRowBuilder().addComponents(
     new ButtonBuilder().setCustomId('ap_'+Date.now()+'_'+nombre+'_'+(discordId||'')).setLabel('APROBAR').setStyle(ButtonStyle.Success),
     new ButtonBuilder().setCustomId('re_'+Date.now()+'_'+nombre+'_'+(discordId||'')).setLabel('RECHAZAR').setStyle(ButtonStyle.Danger)
   );
-
   await message.channel.send({ content: mencionRoles, embeds: [embed], components: [row] });
 });
 
