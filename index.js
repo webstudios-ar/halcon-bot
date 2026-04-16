@@ -10,6 +10,9 @@ const CANAL_SANCIONES   = '1492669993958113380';
 const CANAL_APELACIONES = '1494145072214839366';
 const CANAL_OPERATIVOS  = '1494252679407472720';
 const ROL_HALCON        = '1466327608697290854';
+
+// Asistentes por operativo: { messageId: [userId, ...] }
+const asistentes = {};
 const GITHUB_REPO       = 'webstudios-ar/halcon-bot';
 const GITHUB_FILE       = 'sanciones.json';
 
@@ -140,8 +143,26 @@ client.on('interactionCreate', async (interaction) => {
       .setColor(0xCC2222).setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Operaciones' });
 
+    const rowAnota = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('ANOTA_placeholder')
+        .setLabel('✅  Me anoto')
+        .setStyle(ButtonStyle.Success)
+    );
+
     const canalOp = await client.channels.fetch(CANAL_OPERATIVOS);
-    await canalOp.send({ content: '<@&' + ROL_HALCON + '>', embeds: [embed] });
+    const msgEnviado = await canalOp.send({ content: '<@&' + ROL_HALCON + '>', embeds: [embed], components: [rowAnota] });
+
+    // Actualizar el boton con el messageId real
+    const rowReal = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('ANOTA_' + msgEnviado.id)
+        .setLabel('✅  Me anoto')
+        .setStyle(ButtonStyle.Success)
+    );
+    await msgEnviado.edit({ components: [rowReal] });
+    asistentes[msgEnviado.id] = [];
+
     await interaction.reply({ content: '✅ Operativo anunciado en #operativos.', ephemeral: true });
     return;
   }
@@ -265,6 +286,33 @@ client.on('interactionCreate', async (interaction) => {
       );
       await interaction.update({ components: [rowDone] });
       await interaction.followUp({ content: '<@' + userId + '>', embeds: [embed] });
+      return;
+    }
+
+    // --- Boton Me Anoto ---
+    if (id.startsWith('ANOTA_')) {
+      const msgId = id.replace('ANOTA_', '');
+      if (!asistentes[msgId]) asistentes[msgId] = [];
+
+      // Verificar si ya se anotó
+      if (asistentes[msgId].includes(interaction.user.id)) {
+        await interaction.reply({ content: '❌ Ya te anotaste en este operativo.', ephemeral: true });
+        return;
+      }
+
+      // Agregar al usuario
+      asistentes[msgId].push(interaction.user.id);
+      const lista = asistentes[msgId].map(uid => '<@' + uid + '>').join('\n');
+
+      // Actualizar el embed con la lista
+      const msgOriginal = interaction.message;
+      const embedActualizado = EmbedBuilder.from(msgOriginal.embeds[0])
+        .setFields(
+          ...msgOriginal.embeds[0].fields.filter(f => f.name !== '👥 Asistentes confirmados'),
+          { name: '👥 Asistentes confirmados (' + asistentes[msgId].length + ')', value: lista, inline: false }
+        );
+
+      await interaction.update({ embeds: [embedActualizado] });
       return;
     }
 
