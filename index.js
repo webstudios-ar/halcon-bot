@@ -5,6 +5,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 
 const CANAL_RESULTADO   = '1493454727680364584';
 const CANAL_UPDATES     = '1493446131663896626';
+const CANAL_SANCIONES   = '1492669993958113380';
 const ROL_MIEMBRO       = '1459343074378387591';
 
 const ROLES_AUTORIZADOS = [
@@ -330,7 +331,9 @@ client.on('interactionCreate', async (interaction) => {
       .setColor(color).setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Sistema de Sanciones' });
 
-    await interaction.reply({ content: '<@' + usuario.id + '>', embeds: [embed], components: [rowApelar] });
+    const canalSanc = await client.channels.fetch(CANAL_SANCIONES);
+    await canalSanc.send({ content: '<@' + usuario.id + '>', embeds: [embed], components: [rowApelar] });
+    await interaction.reply({ content: '✅ Sanción aplicada en #sanciones-halcon.', ephemeral: true });
 
     if (expulsado) {
       await interaction.followUp({ content: '⛔ **' + usuario.username + '** llegó a 3 strikes. Se recomienda expulsión inmediata.', ephemeral: false });
