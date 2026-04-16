@@ -169,14 +169,25 @@ client.on('interactionCreate', async (interaction) => {
 
   // BOTON ELEGIR SANCION A APELAR
   if (interaction.isButton() && interaction.customId.startsWith('elegir_apelacion_')) {
-    const idx = parseInt(interaction.customId.split('_')[2]);
-    const sanciones_pendientes = global.apelacionPendiente?.[interaction.user.id];
-    if (!sanciones_pendientes || !sanciones_pendientes[idx]) {
+    const partes = interaction.customId.split('_');
+    // formato: elegir_apelacion_USERID_IDX
+    const userId = partes[2];
+    const idxReal = parseInt(partes[3]);
+
+    // Verificar que es el mismo usuario
+    if (interaction.user.id !== userId) {
+      await interaction.reply({ content: '❌ Solo vos podés elegir tu sanción.', ephemeral: true });
+      return;
+    }
+
+    const sancion = getSancion(userId);
+    const sancionElegida = sancion.historial[idxReal];
+    if (!sancionElegida) {
       await interaction.reply({ content: '❌ No se encontró la sanción. Usá /apelar-sancion-halcon de nuevo.', ephemeral: true });
       return;
     }
     global.apelacionElegida = global.apelacionElegida || {};
-    global.apelacionElegida[interaction.user.id] = sanciones_pendientes[idx];
+    global.apelacionElegida[interaction.user.id] = sancionElegida;
 
     const modal = new ModalBuilder().setCustomId('modal_apelacion').setTitle('Apelación de Sanción — Grupo Halcón');
     const input = new TextInputBuilder()
@@ -282,16 +293,15 @@ client.on('interactionCreate', async (interaction) => {
     if (historial.length === 0) { await interaction.reply({ content: '❌ No tenés sanciones registradas para apelar.', ephemeral: true }); return; }
 
     const ultimas = historial.slice(-5);
-    const btns = ultimas.map((s, i) =>
-      new ButtonBuilder()
-        .setCustomId('elegir_apelacion_' + i)
+    const btns = ultimas.map((s, i) => {
+      // Guardar el indice real en el historial completo para recuperarla despues
+      const idxReal = sancion.historial.indexOf(s);
+      return new ButtonBuilder()
+        .setCustomId('elegir_apelacion_' + interaction.user.id + '_' + idxReal)
         .setLabel(s.nivel.replace(/[🚨⚠️🔴💀✅❌\ufe0f]/gu, '').trim().substring(0, 50))
-        .setStyle(ButtonStyle.Secondary)
-    );
+        .setStyle(ButtonStyle.Secondary);
+    });
     const row = new ActionRowBuilder().addComponents(btns);
-
-    global.apelacionPendiente = global.apelacionPendiente || {};
-    global.apelacionPendiente[interaction.user.id] = ultimas;
 
     const descripcion = ultimas.map((s, i) =>
       '**' + (i+1) + '.** ' + s.nivel + (s.sancionadorId ? ' — Sancionado por <@' + s.sancionadorId + '>' : '') + '\n_Motivo: ' + s.motivo + '_ | ' + s.fecha
