@@ -9,6 +9,7 @@ const ROL_MIEMBRO       = '1459343074378387591';
 const CANAL_SANCIONES   = '1492669993958113380';
 const CANAL_APELACIONES = '1494145072214839366';
 const CANAL_OPERATIVOS  = '1494252679407472720';
+const CANAL_GALERIA     = '1494259484783284254';
 const ROL_HALCON        = '1466327608697290854';
 
 // Asistentes por operativo: { messageId: [userId, ...] }
@@ -106,6 +107,9 @@ client.once('ready', async () => {
     new SlashCommandBuilder().setName('sanciones').setDescription('Ver el historial de sanciones de un miembro')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a consultar').setRequired(true)),
 
+    new SlashCommandBuilder().setName('galeria').setDescription('Publicar una foto de operativo en la galería del Halcón')
+      .addAttachmentOption(o => o.setName('imagen').setDescription('La foto del operativo').setRequired(true)),
+
     new SlashCommandBuilder().setName('apelar-sancion-halcon').setDescription('Apelá tu última sanción del Grupo Halcón'),
 
   ].map(c => c.toJSON());
@@ -121,6 +125,29 @@ client.once('ready', async () => {
 client.on('interactionCreate', async (interaction) => {
 
   // ===== MODAL SUBMIT =====
+  // ===== MODAL GALERIA =====
+  if (interaction.isModalSubmit() && interaction.customId.startsWith('modal_galeria_')) {
+    const titulo      = interaction.fields.getTextInputValue('gal_titulo');
+    const descripcion = interaction.fields.getTextInputValue('gal_descripcion');
+    const imageUrl    = interaction.customId.replace('modal_galeria_', '');
+
+    const embed = new EmbedBuilder()
+      .setTitle('📸  ' + titulo)
+      .setDescription(descripcion)
+      .setImage(imageUrl)
+      .addFields(
+        { name: '🦅 Publicado por', value: '<@' + interaction.user.id + '>', inline: true },
+        { name: '📅 Fecha',         value: fecha(), inline: true }
+      )
+      .setColor(0xFFD700)
+      .setFooter({ text: 'Grupo Halcón  •  Galería de Operativos' });
+
+    const canalGal = await client.channels.fetch(CANAL_GALERIA);
+    await canalGal.send({ embeds: [embed] });
+    await interaction.reply({ content: '✅ Foto publicada en #galeria.', ephemeral: true });
+    return;
+  }
+
   // ===== MODAL OPERATIVO =====
   if (interaction.isModalSubmit() && interaction.customId === 'modal_operativo') {
     const tipo        = interaction.fields.getTextInputValue('op_tipo');
@@ -542,6 +569,51 @@ client.on('interactionCreate', async (interaction) => {
       const m = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
       await canalSanc.send({ content: m + ' ⛔ **' + usuario.username + '** llegó a 3 strikes. Se recomienda expulsión inmediata.' });
     }
+  }
+
+  // /galeria
+  else if (interaction.commandName === 'galeria') {
+    // Verificar que tiene al menos rol de Miembro Halcon
+    const todosRolesHalcon = Object.keys(RANGOS);
+    const esMiembro = todosRolesHalcon.some(r => interaction.member.roles.cache.has(r));
+    if (!esMiembro) {
+      await interaction.reply({ content: '❌ Solo los miembros del Grupo Halcón pueden publicar en la galería.', ephemeral: true });
+      return;
+    }
+
+    const imagen = interaction.options.getAttachment('imagen');
+
+    // Verificar que es una imagen
+    if (!imagen.contentType?.startsWith('image/')) {
+      await interaction.reply({ content: '❌ Solo se pueden subir imágenes.', ephemeral: true });
+      return;
+    }
+
+    // Abrir modal con titulo y descripcion, guardando la URL de la imagen en el customId
+    const modal = new ModalBuilder()
+      .setCustomId('modal_galeria_' + imagen.url)
+      .setTitle('Publicar en Galería — Grupo Halcón');
+
+    modal.addComponents(
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('gal_titulo')
+          .setLabel('Título de la publicación')
+          .setStyle(TextInputStyle.Short)
+          .setPlaceholder('Ej: Operativo ALFA — Convoy exitoso')
+          .setRequired(true).setMaxLength(80)
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder()
+          .setCustomId('gal_descripcion')
+          .setLabel('Descripción / Caption')
+          .setStyle(TextInputStyle.Paragraph)
+          .setPlaceholder('Contá cómo fue el operativo, quiénes participaron, el resultado...')
+          .setRequired(true).setMaxLength(500)
+      )
+    );
+
+    await interaction.showModal(modal);
   }
 
   // /sanciones
