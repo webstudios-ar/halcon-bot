@@ -168,11 +168,11 @@ client.on('interactionCreate', async (interaction) => {
   }
 
   // BOTON ELEGIR SANCION A APELAR
-  if (interaction.isButton() && interaction.customId.startsWith('elegir_apelacion|')) {
-    const partes = interaction.customId.split('|');
-    // formato: elegir_apelacion|USERID|IDX
-    const userId = partes[1];
-    const idxReal = parseInt(partes[2]);
+  if (interaction.isButton() && interaction.customId.startsWith('apx-')) {
+    const partes = interaction.customId.split('-');
+    // formato: apx-IDX-USERID
+    const idxReal = parseInt(partes[1]);
+    const userId = partes[2];
 
     // Verificar que es el mismo usuario
     if (interaction.user.id !== userId) {
@@ -297,7 +297,7 @@ client.on('interactionCreate', async (interaction) => {
       // Guardar el indice real en el historial completo para recuperarla despues
       const idxReal = sancion.historial.indexOf(s);
       return new ButtonBuilder()
-        .setCustomId('elegir_apelacion|' + interaction.user.id + '|' + idxReal)
+        .setCustomId('apx-' + idxReal + '-' + interaction.user.id)
         .setLabel(s.nivel.replace(/[🚨⚠️🔴💀✅❌\ufe0f]/gu, '').trim().substring(0, 50))
         .setStyle(ButtonStyle.Secondary);
     });
