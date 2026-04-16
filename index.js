@@ -189,7 +189,7 @@ client.on('interactionCreate', async (interaction) => {
         .setCustomId('texto_apelacion')
         .setLabel('Explicá tu caso — única oportunidad')
         .setStyle(TextInputStyle.Paragraph)
-        .setPlaceholder('Describí tu argumento detalladamente.\n\nATENCIÓN: El Head de Halcón aprobará o rechazará sin posibilidad de mediación. Esta es tu única oportunidad.')
+        .setPlaceholder('Describí tu argumento. El Head aprobará o rechazará sin mediación. Única oportunidad.')
         .setMinLength(30).setMaxLength(1000).setRequired(true);
       modal.addComponents(new ActionRowBuilder().addComponents(input));
       await interaction.showModal(modal);
