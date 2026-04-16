@@ -1,18 +1,12 @@
 {
   "696160444083077121": {
-    "warns": 1,
+    "warns": 0,
     "strikes": 0,
     "historial": [
       {
         "motivo": "1",
         "nivel": "⚠️ WARN 1",
         "fecha": "16/04/2026, 04:32 a. m.",
-        "sancionadorId": "696160444083077121"
-      },
-      {
-        "motivo": "1",
-        "nivel": "⚠️ WARN 1",
-        "fecha": "16/04/2026, 04:33 a. m.",
         "sancionadorId": "696160444083077121"
       }
     ]
