@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, REST, Routes, SlashCommandBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, REST, Routes, SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
 
@@ -25,7 +25,6 @@ const RANGOS = {
   '1460348058888830976': 'Director/a Halcón',
 };
 
-// Sanciones en memoria: { userId: { warns, strikes, historial[] } }
 const sanciones = {};
 function getSancion(userId) {
   if (!sanciones[userId]) sanciones[userId] = { warns: 0, strikes: 0, historial: [] };
@@ -77,20 +76,24 @@ client.once('ready', async () => {
       .setName('sancionar')
       .setDescription('Aplica una sancion a un miembro del Grupo Halcon')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a sancionar').setRequired(true))
-      .addStringOption(o => o.setName('motivo').setDescription('Motivo de la sancion').setRequired(true))
-      .addStringOption(o => o.setName('sancion').setDescription('Tipo de sancion a aplicar').setRequired(true)
+      .addStringOption(o => o.setName('sancion').setDescription('Tipo de sancion').setRequired(true)
         .addChoices(
-          { name: '⚠️ Warn 1',   value: 'warn1'   },
-          { name: '⚠️ Warn 2',   value: 'warn2'   },
-          { name: '🔴 Strike 1', value: 'strike1' },
-          { name: '🔴 Strike 2', value: 'strike2' },
+          { name: '⚠️ Warn 1',    value: 'warn1'    },
+          { name: '⚠️ Warn 2',    value: 'warn2'    },
+          { name: '🔴 Strike 1',  value: 'strike1'  },
+          { name: '🔴 Strike 2',  value: 'strike2'  },
           { name: '💀 Expulsión', value: 'expulsion' },
-        )),
+        ))
+      .addStringOption(o => o.setName('motivo').setDescription('Motivo de la sancion').setRequired(true)),
 
     new SlashCommandBuilder()
       .setName('sanciones')
       .setDescription('Ver el historial de sanciones de un miembro')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a consultar').setRequired(true)),
+
+    new SlashCommandBuilder()
+      .setName('apelar-sancion-halcon')
+      .setDescription('Apelá tu última sanción del Grupo Halcón'),
 
   ].map(c => c.toJSON());
 
@@ -103,45 +106,113 @@ client.once('ready', async () => {
 
 client.on('interactionCreate', async (interaction) => {
 
-  // ==================== BOTON APELAR ====================
-  if (interaction.isButton() && interaction.customId.startsWith('apelar_')) {
-    const userId = interaction.customId.split('_')[1];
+  // ==================== MODAL DE APELACION ====================
+  if (interaction.isModalSubmit() && interaction.customId === 'modal_apelacion') {
+    const texto = interaction.fields.getTextInputValue('texto_apelacion');
+    const userId = interaction.user.id;
+    const sancion = getSancion(userId);
+    const ultimaSancion = sancion.historial[sancion.historial.length - 1];
 
-    // Solo puede apelar la persona sancionada
-    if (interaction.user.id !== userId) {
-      await interaction.reply({ content: '❌ Solo la persona sancionada puede apelar.', ephemeral: true });
+    if (!ultimaSancion) {
+      await interaction.reply({ content: '❌ No tenés sanciones registradas para apelar.', ephemeral: true });
       return;
     }
 
-    const sancion = getSancion(userId);
     const mencionSup = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
-    const ultimaSancion = sancion.historial[sancion.historial.length - 1];
 
     const embedApelacion = new EmbedBuilder()
       .setTitle('⚖️ APELACIÓN DE SANCIÓN — GRUPO HALCÓN')
-      .setDescription('<@' + userId + '> está apelando su última sanción.')
+      .setDescription('<@' + userId + '> está apelando su sanción.')
       .addFields(
-        { name: '⚠️ Warns actuales',   value: String(sancion.warns),   inline: true },
-        { name: '🔴 Strikes actuales', value: String(sancion.strikes), inline: true },
-        { name: '📋 Sanción apelada',  value: ultimaSancion ? ultimaSancion.nivel + ' — ' + ultimaSancion.motivo : 'N/A', inline: false }
+        { name: '📊 Sanción apelada',  value: ultimaSancion.nivel,  inline: true },
+        { name: '📋 Motivo original',  value: ultimaSancion.motivo, inline: true },
+        { name: '✍️ Argumento del apelador', value: texto, inline: false }
       )
       .setColor(0xFFAA00)
+      .setThumbnail(interaction.user.displayAvatarURL())
       .setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Sistema de Apelaciones' });
 
-    const canalApel = await client.channels.fetch(CANAL_APELACIONES);
-    await canalApel.send({ content: mencionSup, embeds: [embedApelacion] });
-
-    // Deshabilitar el boton de apelar
-    const rowDone = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('apelar_done').setLabel('APELACIÓN ENVIADA').setStyle(ButtonStyle.Secondary).setDisabled(true)
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('apel_aceptar_' + userId)
+        .setLabel('ACEPTAR APELACIÓN')
+        .setStyle(ButtonStyle.Success),
+      new ButtonBuilder()
+        .setCustomId('apel_rechazar_' + userId)
+        .setLabel('RECHAZAR APELACIÓN')
+        .setStyle(ButtonStyle.Danger)
     );
-    await interaction.update({ components: [rowDone] });
+
+    const canalApel = await client.channels.fetch(CANAL_APELACIONES);
+    await canalApel.send({ content: mencionSup, embeds: [embedApelacion], components: [row] });
+
+    await interaction.reply({ content: '✅ Tu apelación fue enviada. El Head del Halcón la revisará a la brevedad.', ephemeral: true });
+    return;
+  }
+
+  // ==================== BOTONES APELACION (ACEPTAR/RECHAZAR) ====================
+  if (interaction.isButton() && (interaction.customId.startsWith('apel_aceptar_') || interaction.customId.startsWith('apel_rechazar_'))) {
+    const tieneRol = ROLES_AUTORIZADOS.some(r => interaction.member.roles.cache.has(r));
+    if (!tieneRol) {
+      await interaction.reply({ content: '❌ No tenés permisos para resolver apelaciones.', ephemeral: true });
+      return;
+    }
+
+    const partes = interaction.customId.split('_');
+    const decision = partes[1]; // aceptar o rechazar
+    const userId = partes[2];
+    const revisor = interaction.member?.displayName || interaction.user.username;
+
+    if (decision === 'aceptar') {
+      // Revertir la ultima sancion
+      const sancion = getSancion(userId);
+      const ultima = sancion.historial[sancion.historial.length - 1];
+      if (ultima) {
+        if (ultima.nivel.includes('STRIKE')) { sancion.strikes = Math.max(0, sancion.strikes - 1); }
+        else if (ultima.nivel.includes('WARN')) { sancion.warns = Math.max(0, sancion.warns - 1); }
+        sancion.historial.push({ nivel: '✅ APELACIÓN ACEPTADA', motivo: 'Aceptada por ' + revisor, fecha: new Date().toLocaleString('es-AR') });
+      }
+
+      const embedRes = new EmbedBuilder()
+        .setTitle('✅ APELACIÓN ACEPTADA')
+        .setDescription('<@' + userId + '> — tu apelación fue **ACEPTADA**. La sanción fue revertida.')
+        .addFields({ name: '👮 Resuelto por', value: revisor, inline: true })
+        .setColor(0x00CC66).setTimestamp()
+        .setFooter({ text: 'Grupo Halcón  •  Sistema de Apelaciones' });
+
+      const rowDone = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId('done_apel1').setLabel('APELACIÓN ACEPTADA — ' + revisor).setStyle(ButtonStyle.Success).setDisabled(true),
+        new ButtonBuilder().setCustomId('done_apel2').setLabel('RECHAZAR').setStyle(ButtonStyle.Danger).setDisabled(true)
+      );
+
+      await interaction.update({ components: [rowDone] });
+      await interaction.followUp({ content: '<@' + userId + '>', embeds: [embedRes] });
+
+    } else {
+      const sancion = getSancion(userId);
+      sancion.historial.push({ nivel: '❌ APELACIÓN RECHAZADA', motivo: 'Rechazada por ' + revisor, fecha: new Date().toLocaleString('es-AR') });
+
+      const embedRes = new EmbedBuilder()
+        .setTitle('❌ APELACIÓN RECHAZADA')
+        .setDescription('<@' + userId + '> — tu apelación fue **RECHAZADA**. La sanción se mantiene.')
+        .addFields({ name: '👮 Resuelto por', value: revisor, inline: true })
+        .setColor(0xCC2222).setTimestamp()
+        .setFooter({ text: 'Grupo Halcón  •  Sistema de Apelaciones' });
+
+      const rowDone = new ActionRowBuilder().addComponents(
+        new ButtonBuilder().setCustomId('done_apel1').setLabel('ACEPTAR').setStyle(ButtonStyle.Success).setDisabled(true),
+        new ButtonBuilder().setCustomId('done_apel2').setLabel('APELACIÓN RECHAZADA — ' + revisor).setStyle(ButtonStyle.Danger).setDisabled(true)
+      );
+
+      await interaction.update({ components: [rowDone] });
+      await interaction.followUp({ content: '<@' + userId + '>', embeds: [embedRes] });
+    }
     return;
   }
 
   // ==================== BOTONES POSTULACION ====================
-  if (interaction.isButton() && !interaction.customId.startsWith('apelar_')) {
+  if (interaction.isButton()) {
     const tieneRol = ROLES_AUTORIZADOS.some(r => interaction.member.roles.cache.has(r));
     if (!tieneRol) {
       await interaction.reply({ content: '❌ No tenés permisos para hacer esto.', ephemeral: true });
@@ -189,12 +260,39 @@ client.on('interactionCreate', async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
   const tieneRol = ROLES_AUTORIZADOS.some(r => interaction.member.roles.cache.has(r));
+  const revisor = interaction.member?.displayName || interaction.user.username;
+
+  // ==================== /apelar-sancion-halcon ====================
+  if (interaction.commandName === 'apelar-sancion-halcon') {
+    const sancion = getSancion(interaction.user.id);
+    if (sancion.historial.length === 0) {
+      await interaction.reply({ content: '❌ No tenés sanciones registradas para apelar.', ephemeral: true });
+      return;
+    }
+
+    const modal = new ModalBuilder()
+      .setCustomId('modal_apelacion')
+      .setTitle('Apelación de Sanción — Grupo Halcón');
+
+    const input = new TextInputBuilder()
+      .setCustomId('texto_apelacion')
+      .setLabel('Explicá por qué apelás tu sanción')
+      .setStyle(TextInputStyle.Paragraph)
+      .setPlaceholder('Describí detalladamente tu argumento. Sé claro y respetuoso. El Head lo leerá directamente.')
+      .setMinLength(30)
+      .setMaxLength(1000)
+      .setRequired(true);
+
+    modal.addComponents(new ActionRowBuilder().addComponents(input));
+    await interaction.showModal(modal);
+    return;
+  }
+
+  // A partir de aca solo roles autorizados
   if (!tieneRol) {
     await interaction.reply({ content: '❌ No tenés permisos para usar este comando.', ephemeral: true });
     return;
   }
-
-  const revisor = interaction.member?.displayName || interaction.user.username;
 
   // ==================== /nuevo ====================
   if (interaction.commandName === 'nuevo') {
@@ -207,27 +305,25 @@ client.on('interactionCreate', async (interaction) => {
         .setTitle('🦅 NUEVO INGRESO — GRUPO HALCÓN')
         .setDescription('<@' + usuario.id + '> ha sido ingresado oficialmente al **Grupo Halcón**.\n¡Bienvenido, Agente!')
         .addFields(
-          { name: '👮 Ingresado por',  value: revisor,        inline: true },
+          { name: '👮 Ingresado por',  value: revisor,         inline: true },
           { name: '🔸 Rango asignado', value: 'Miembro Halcón', inline: true }
         )
         .setColor(0xFFD700).setThumbnail(usuario.displayAvatarURL()).setTimestamp()
         .setFooter({ text: 'Grupo Halcón  •  Sistema de Ingresos' });
       await canalUp.send({ content: '<@' + usuario.id + '>', embeds: [embed] });
-      await interaction.reply({ content: '✅ **' + miembro.displayName + '** ingresado como Miembro Halcón y anunciado en #updates.', ephemeral: true });
+      await interaction.reply({ content: '✅ **' + miembro.displayName + '** ingresado como Miembro Halcón.', ephemeral: true });
     } catch (err) {
-      console.error(err);
       await interaction.reply({ content: '❌ Error al ingresar al miembro.', ephemeral: true });
     }
   }
 
   // ==================== /ascender ====================
   else if (interaction.commandName === 'ascender') {
-    const usuario  = interaction.options.getUser('usuario');
-    const rolId    = interaction.options.getString('rango');
-    const miembro  = await interaction.guild.members.fetch(usuario.id);
+    const usuario = interaction.options.getUser('usuario');
+    const rolId   = interaction.options.getString('rango');
+    const miembro = await interaction.guild.members.fetch(usuario.id);
     const rangoNombre = RANGOS[rolId] || 'Rango desconocido';
     try {
-      // Quitar todos los roles de Halcon
       for (const id of Object.keys(RANGOS)) {
         if (miembro.roles.cache.has(id)) await miembro.roles.remove(id).catch(() => {});
       }
@@ -245,7 +341,6 @@ client.on('interactionCreate', async (interaction) => {
       await canalUp.send({ content: '<@' + usuario.id + '>', embeds: [embed] });
       await interaction.reply({ content: '✅ **' + miembro.displayName + '** ascendido a ' + rangoNombre + '.', ephemeral: true });
     } catch (err) {
-      console.error(err);
       await interaction.reply({ content: '❌ Error al ascender. Verificá que el bot tenga el rol más alto.', ephemeral: true });
     }
   }
@@ -281,38 +376,20 @@ client.on('interactionCreate', async (interaction) => {
 
   // ==================== /sancionar ====================
   else if (interaction.commandName === 'sancionar') {
-    const usuario  = interaction.options.getUser('usuario');
-    const motivo   = interaction.options.getString('motivo');
-    const tipo     = interaction.options.getString('sancion');
-    const sancion  = getSancion(usuario.id);
+    const usuario = interaction.options.getUser('usuario');
+    const motivo  = interaction.options.getString('motivo');
+    const tipo    = interaction.options.getString('sancion');
+    const sancion = getSancion(usuario.id);
 
     let nivel = '', color = 0xFFAA00, expulsado = false;
 
-    if (tipo === 'warn1') {
-      sancion.warns = Math.max(sancion.warns, 1);
-      nivel = '⚠️ WARN 1'; color = 0xFFAA00;
-    } else if (tipo === 'warn2') {
-      sancion.warns = Math.max(sancion.warns, 2);
-      nivel = '⚠️ WARN 2'; color = 0xFFAA00;
-    } else if (tipo === 'strike1') {
-      sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 1);
-      nivel = '🔴 STRIKE 1'; color = 0xCC2222;
-    } else if (tipo === 'strike2') {
-      sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 2);
-      nivel = '🔴 STRIKE 2'; color = 0xCC2222;
-    } else if (tipo === 'expulsion') {
-      sancion.warns = 0; sancion.strikes = 3;
-      nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true;
-    }
+    if (tipo === 'warn1')    { sancion.warns = Math.max(sancion.warns, 1); nivel = '⚠️ WARN 1'; color = 0xFFAA00; }
+    else if (tipo === 'warn2')    { sancion.warns = Math.max(sancion.warns, 2); nivel = '⚠️ WARN 2'; color = 0xFFAA00; }
+    else if (tipo === 'strike1')  { sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 1); nivel = '🔴 STRIKE 1'; color = 0xCC2222; }
+    else if (tipo === 'strike2')  { sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 2); nivel = '🔴 STRIKE 2'; color = 0xCC2222; }
+    else if (tipo === 'expulsion') { sancion.warns = 0; sancion.strikes = 3; nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; }
 
     sancion.historial.push({ motivo, nivel, fecha: new Date().toLocaleString('es-AR') });
-
-    const rowApelar = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId('apelar_' + usuario.id)
-        .setLabel('APELAR')
-        .setStyle(ButtonStyle.Secondary)
-    );
 
     const embed = new EmbedBuilder()
       .setTitle('🚨 SANCIÓN — GRUPO HALCÓN')
@@ -328,7 +405,7 @@ client.on('interactionCreate', async (interaction) => {
       .setFooter({ text: 'Grupo Halcón  •  Sistema de Sanciones' });
 
     const canalSanc = await client.channels.fetch(CANAL_SANCIONES);
-    await canalSanc.send({ content: '<@' + usuario.id + '>', embeds: [embed], components: [rowApelar] });
+    await canalSanc.send({ content: '<@' + usuario.id + '>', embeds: [embed] });
     await interaction.reply({ content: '✅ Sanción aplicada en #sanciones-halcon.', ephemeral: true });
 
     if (expulsado) {
