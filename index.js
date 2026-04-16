@@ -177,7 +177,7 @@ client.on('interactionCreate', async (interaction) => {
       const embedRes = new EmbedBuilder()
         .setTitle('✅ APELACIÓN ACEPTADA')
         .setDescription('<@' + userId + '> — tu apelación fue **ACEPTADA**. La sanción fue revertida.')
-        .addFields({ name: '👮 Resuelto por', value: revisor, inline: true })
+        .addFields({ name: '👮 Resuelto por', value: '<@' + interaction.user.id + '>', inline: true })
         .setColor(0x00CC66).setTimestamp()
         .setFooter({ text: 'Grupo Halcón  •  Sistema de Apelaciones' });
 
@@ -196,7 +196,7 @@ client.on('interactionCreate', async (interaction) => {
       const embedRes = new EmbedBuilder()
         .setTitle('❌ APELACIÓN RECHAZADA')
         .setDescription('<@' + userId + '> — tu apelación fue **RECHAZADA**. La sanción se mantiene.')
-        .addFields({ name: '👮 Resuelto por', value: revisor, inline: true })
+        .addFields({ name: '👮 Resuelto por', value: '<@' + interaction.user.id + '>', inline: true })
         .setColor(0xCC2222).setTimestamp()
         .setFooter({ text: 'Grupo Halcón  •  Sistema de Apelaciones' });
 
@@ -276,9 +276,9 @@ client.on('interactionCreate', async (interaction) => {
 
     const input = new TextInputBuilder()
       .setCustomId('texto_apelacion')
-      .setLabel('Explicá por qué apelás tu sanción')
+      .setLabel('Explicá tu caso — única oportunidad de apelar')
       .setStyle(TextInputStyle.Paragraph)
-      .setPlaceholder('Describí detalladamente tu argumento. Sé claro y respetuoso. El Head lo leerá directamente.')
+      .setPlaceholder('Describí detalladamente tu argumento. Sé claro y respetuoso.\n\nATENCIÓN: El Head de Halcón tendrá la posibilidad de aprobar o rechazar tu sanción. No habrá mediación posible. Esta es tu única oportunidad de apelar.')
       .setMinLength(30)
       .setMaxLength(1000)
       .setRequired(true);
@@ -399,7 +399,7 @@ client.on('interactionCreate', async (interaction) => {
         { name: '⚠️ Warns',          value: String(sancion.warns),   inline: true },
         { name: '🔴 Strikes',        value: String(sancion.strikes), inline: true },
         { name: '📋 Motivo',         value: motivo,                  inline: false },
-        { name: '👮 Sancionado por', value: revisor,                 inline: true }
+        { name: '👮 Sancionado por', value: '<@' + interaction.user.id + '>', inline: true }
       )
       .setColor(color).setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Sistema de Sanciones' });
