@@ -78,7 +78,14 @@ client.once('ready', async () => {
       .setDescription('Aplica una sancion a un miembro del Grupo Halcon')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a sancionar').setRequired(true))
       .addStringOption(o => o.setName('motivo').setDescription('Motivo de la sancion').setRequired(true))
-      .addIntegerOption(o => o.setName('cantidad').setDescription('Cantidad de warns a aplicar (default: 1)').setMinValue(1).setMaxValue(3).setRequired(false)),
+      .addStringOption(o => o.setName('sancion').setDescription('Tipo de sancion a aplicar').setRequired(true)
+        .addChoices(
+          { name: '⚠️ Warn 1',   value: 'warn1'   },
+          { name: '⚠️ Warn 2',   value: 'warn2'   },
+          { name: '🔴 Strike 1', value: 'strike1' },
+          { name: '🔴 Strike 2', value: 'strike2' },
+          { name: '💀 Expulsión', value: 'expulsion' },
+        )),
 
     new SlashCommandBuilder()
       .setName('sanciones')
@@ -276,21 +283,26 @@ client.on('interactionCreate', async (interaction) => {
   else if (interaction.commandName === 'sancionar') {
     const usuario  = interaction.options.getUser('usuario');
     const motivo   = interaction.options.getString('motivo');
-    const cantidad = interaction.options.getInteger('cantidad') || 1;
+    const tipo     = interaction.options.getString('sancion');
     const sancion  = getSancion(usuario.id);
 
     let nivel = '', color = 0xFFAA00, expulsado = false;
 
-    for (let i = 0; i < cantidad; i++) {
-      sancion.warns++;
-      if (sancion.warns >= 3) {
-        sancion.warns = 0;
-        sancion.strikes++;
-        if (sancion.strikes >= 3) { nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; break; }
-        else { nivel = '🔴 STRIKE ' + sancion.strikes; color = 0xCC2222; }
-      } else {
-        nivel = '⚠️ WARN ' + sancion.warns; color = 0xFFAA00;
-      }
+    if (tipo === 'warn1') {
+      sancion.warns = Math.max(sancion.warns, 1);
+      nivel = '⚠️ WARN 1'; color = 0xFFAA00;
+    } else if (tipo === 'warn2') {
+      sancion.warns = Math.max(sancion.warns, 2);
+      nivel = '⚠️ WARN 2'; color = 0xFFAA00;
+    } else if (tipo === 'strike1') {
+      sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 1);
+      nivel = '🔴 STRIKE 1'; color = 0xCC2222;
+    } else if (tipo === 'strike2') {
+      sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 2);
+      nivel = '🔴 STRIKE 2'; color = 0xCC2222;
+    } else if (tipo === 'expulsion') {
+      sancion.warns = 0; sancion.strikes = 3;
+      nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true;
     }
 
     sancion.historial.push({ motivo, nivel, fecha: new Date().toLocaleString('es-AR') });
