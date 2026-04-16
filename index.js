@@ -306,30 +306,22 @@ client.on('interactionCreate', async (interaction) => {
 
     const ultimas = historial.slice(-5);
 
-    // Detectar si hay una sancion de acumulacion (Strike con "(3 warns acumulados)")
-    // En ese caso mostrar solo esa como boton unico
-    const acumulacion = ultimas.find(s => s.nivel.includes('acumulados'));
-    let botonesParaMostrar;
-
-    if (acumulacion) {
-      // Solo el boton de la acumulacion
-      const idxReal = sancion.historial.indexOf(acumulacion);
-      botonesParaMostrar = [
-        new ButtonBuilder()
-          .setCustomId('ELEG_' + idxReal + '_' + interaction.user.id)
-          .setLabel('STRIKE acumulado — apelar')
-          .setStyle(ButtonStyle.Secondary)
-      ];
-    } else {
-      // Mostrar cada sancion como boton individual
-      botonesParaMostrar = ultimas.map((s, i) => {
-        const idxReal = sancion.historial.indexOf(s);
-        return new ButtonBuilder()
-          .setCustomId('ELEG_' + idxReal + '_' + interaction.user.id)
-          .setLabel(s.nivel.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\uFE0F]/gu, '').trim().substring(0, 60))
-          .setStyle(ButtonStyle.Secondary);
-      });
-    }
+    // Generar un boton por cada sancion del historial
+    // Las sanciones de acumulacion (warns que se convirtieron en strike) se muestran como un solo boton
+    // Las sanciones directas (strike puesto manualmente) tambien tienen su boton
+    const botonesParaMostrar = ultimas.map((s, i) => {
+      const idxReal = sancion.historial.indexOf(s);
+      let label;
+      if (s.nivel.includes('acumulados')) {
+        label = 'STRIKE acumulado (3 warns)';
+      } else {
+        label = s.nivel.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\uFE0F]/gu, '').trim().substring(0, 60);
+      }
+      return new ButtonBuilder()
+        .setCustomId('ELEG_' + idxReal + '_' + interaction.user.id)
+        .setLabel(label)
+        .setStyle(ButtonStyle.Secondary);
+    });
 
     const row = new ActionRowBuilder().addComponents(botonesParaMostrar);
     const descripcion = ultimas.map((s, i) =>
