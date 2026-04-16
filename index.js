@@ -8,6 +8,8 @@ const CANAL_UPDATES     = '1493446131663896626';
 const ROL_MIEMBRO       = '1459343074378387591';
 const CANAL_SANCIONES   = '1492669993958113380';
 const CANAL_APELACIONES = '1494145072214839366';
+const CANAL_OPERATIVOS  = '1494252679407472720';
+const ROL_HALCON        = '1466327608697290854';
 const GITHUB_REPO       = 'webstudios-ar/halcon-bot';
 const GITHUB_FILE       = 'sanciones.json';
 
@@ -84,20 +86,7 @@ client.once('ready', async () => {
           { name: 'Director/a Halcón', value: '1460348058888830976' },
         )),
 
-    new SlashCommandBuilder().setName('operativo').setDescription('Anuncia un operativo del Grupo Halcon')
-      .addStringOption(o => o.setName('tipo').setDescription('Tipo de operativo').setRequired(true)
-        .addChoices(
-          { name: '🚐 ALFA — Convoy Blindado',         value: 'ALFA'    },
-          { name: '🛡️ BRAVO — Escolta VIP',             value: 'BRAVO'   },
-          { name: '🔴 CHARLIE — Control Zona Caliente', value: 'CHARLIE' },
-          { name: '🏦 DELTA — Custodia Bancaria',       value: 'DELTA'   },
-          { name: '🚗 ECHO — Persecución Alto Riesgo',  value: 'ECHO'    },
-          { name: '🆘 FOXTROT — Rescate de Rehén',      value: 'FOXTROT' },
-          { name: '🌆 GOLF — Patrulla Urbana',          value: 'GOLF'    },
-          { name: '🚨 HOTEL — Respuesta Robo Banco',    value: 'HOTEL'   },
-        ))
-      .addStringOption(o => o.setName('descripcion').setDescription('Detalles del operativo').setRequired(true))
-      .addStringOption(o => o.setName('hora').setDescription('Hora del operativo (ej: 21:00)').setRequired(false)),
+    new SlashCommandBuilder().setName('operativo').setDescription('Anuncia un operativo del Grupo Halcon'),
 
     new SlashCommandBuilder().setName('sancionar').setDescription('Aplica una sancion a un miembro del Grupo Halcon')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a sancionar').setRequired(true))
@@ -129,6 +118,34 @@ client.once('ready', async () => {
 client.on('interactionCreate', async (interaction) => {
 
   // ===== MODAL SUBMIT =====
+  // ===== MODAL OPERATIVO =====
+  if (interaction.isModalSubmit() && interaction.customId === 'modal_operativo') {
+    const tipo        = interaction.fields.getTextInputValue('op_tipo');
+    const hora        = interaction.fields.getTextInputValue('op_hora');
+    const lugar       = interaction.fields.getTextInputValue('op_lugar');
+    const descripcion = interaction.fields.getTextInputValue('op_descripcion');
+    const requisitos  = interaction.fields.getTextInputValue('op_requisitos') || 'Toda la unidad';
+    const revisorOp   = interaction.member?.displayName || interaction.user.username;
+
+    const embed = new EmbedBuilder()
+      .setTitle('🚨  OPERATIVO — GRUPO HALCÓN')
+      .addFields(
+        { name: '📋 Tipo',           value: tipo,        inline: true },
+        { name: '🕐 Hora',           value: hora,        inline: true },
+        { name: '📍 Zona',           value: lugar,       inline: true },
+        { name: '👥 Participantes',  value: requisitos,  inline: true },
+        { name: '👮 Ordenado por',   value: revisorOp,   inline: true },
+        { name: '📝 Descripción',    value: descripcion, inline: false }
+      )
+      .setColor(0xCC2222).setTimestamp()
+      .setFooter({ text: 'Grupo Halcón  •  Operaciones' });
+
+    const canalOp = await client.channels.fetch(CANAL_OPERATIVOS);
+    await canalOp.send({ content: '<@&' + ROL_HALCON + '>', embeds: [embed] });
+    await interaction.reply({ content: '✅ Operativo anunciado en #operativos.', ephemeral: true });
+    return;
+  }
+
   if (interaction.isModalSubmit() && interaction.customId.startsWith('modal_apelacion')) {
     const texto = interaction.fields.getTextInputValue('texto_apelacion');
     const userId = interaction.user.id;
@@ -387,27 +404,35 @@ client.on('interactionCreate', async (interaction) => {
     } catch (err) { await interaction.reply({ content: '❌ Error al ascender. Verificá que el bot tenga el rol más alto.', ephemeral: true }); }
   }
 
-  // /operativo
+  // /operativo — abre modal
   else if (interaction.commandName === 'operativo') {
-    const tipo = interaction.options.getString('tipo');
-    const desc = interaction.options.getString('descripcion');
-    const hora = interaction.options.getString('hora') || 'A confirmar';
-    const info = {
-      'ALFA':    { emoji:'🚐', nombre:'CONVOY BLINDADO',         nivel:'ALTO RIESGO',       color:0xCC2222 },
-      'BRAVO':   { emoji:'🛡️', nombre:'ESCOLTA VIP',             nivel:'ALTO RIESGO',       color:0xCC2222 },
-      'CHARLIE': { emoji:'🔴', nombre:'CONTROL ZONA CALIENTE',   nivel:'MEDIO RIESGO',      color:0xFFAA00 },
-      'DELTA':   { emoji:'🏦', nombre:'CUSTODIA BANCARIA',       nivel:'ALTO RIESGO',       color:0xCC2222 },
-      'ECHO':    { emoji:'🚗', nombre:'PERSECUCIÓN ALTO RIESGO', nivel:'ALTO RIESGO',       color:0xCC2222 },
-      'FOXTROT': { emoji:'🆘', nombre:'RESCATE DE REHÉN',        nivel:'BAJA PELIGROSIDAD', color:0x2266CC },
-      'GOLF':    { emoji:'🌆', nombre:'PATRULLA URBANA',         nivel:'PRESENCIA DIARIA',  color:0x2D6A2D },
-      'HOTEL':   { emoji:'🚨', nombre:'RESPUESTA ROBO BANCO',    nivel:'ALTO RIESGO',       color:0xCC2222 },
-    }[tipo];
-    const mencionRoles = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
-    const embed = new EmbedBuilder()
-      .setTitle(info.emoji + '  OPERATIVO ' + tipo + ' — ' + info.nombre)
-      .addFields({ name: '⚠️ Nivel', value: info.nivel, inline: true }, { name: '🕐 Hora', value: hora, inline: true }, { name: '👮 Ordenado por', value: revisor, inline: true }, { name: '📋 Descripción', value: desc, inline: false })
-      .setColor(info.color).setTimestamp().setFooter({ text: 'Grupo Halcón  •  Operaciones' });
-    await interaction.reply({ content: mencionRoles, embeds: [embed] });
+    const modal = new ModalBuilder().setCustomId('modal_operativo').setTitle('Nuevo Operativo — Grupo Halcón');
+    modal.addComponents(
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder().setCustomId('op_tipo').setLabel('Tipo de operativo')
+          .setStyle(TextInputStyle.Short).setPlaceholder('Ej: ALFA — Convoy Blindado, GOLF — Patrulla, etc.')
+          .setRequired(true).setMaxLength(60)
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder().setCustomId('op_hora').setLabel('Hora del operativo')
+          .setStyle(TextInputStyle.Short).setPlaceholder('Ej: 21:00').setRequired(true).setMaxLength(20)
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder().setCustomId('op_lugar').setLabel('Zona / Ubicación')
+          .setStyle(TextInputStyle.Short).setPlaceholder('Ej: Banco Central, Zona Norte, etc.').setRequired(true).setMaxLength(80)
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder().setCustomId('op_descripcion').setLabel('Descripción del operativo')
+          .setStyle(TextInputStyle.Paragraph).setPlaceholder('Detallá el objetivo, la táctica y lo que se espera de cada uno.')
+          .setRequired(true).setMaxLength(500)
+      ),
+      new ActionRowBuilder().addComponents(
+        new TextInputBuilder().setCustomId('op_requisitos').setLabel('Requisitos / Quiénes participan')
+          .setStyle(TextInputStyle.Short).setPlaceholder('Ej: Toda la unidad, solo Capitanes+, mínimo 4 agentes.')
+          .setRequired(false).setMaxLength(100)
+      )
+    );
+    await interaction.showModal(modal);
   }
 
   // /sancionar
