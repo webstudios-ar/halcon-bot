@@ -482,7 +482,7 @@ client.on('interactionCreate', async (interaction) => {
       const canalUp = await client.channels.fetch(CANAL_UPDATES);
       const embed = new EmbedBuilder().setTitle('🦅 ASCENSO — GRUPO HALCÓN')
         .setDescription('<@' + usuario.id + '> ha sido ascendido en el **Grupo Halcón**.')
-        .addFields({ name: '🎖️ Nuevo rango', value: rangoNombre, inline: true }, { name: '👮 Ascendido por', value: revisor, inline: true })
+        .addFields({ name: '🎖️ Nuevo rango', value: rangoNombre, inline: true }, { name: '👮 Ascendido por', value: '<@' + interaction.user.id + '>', inline: true })
         .setColor(0xFFD700).setThumbnail(usuario.displayAvatarURL()).setTimestamp().setFooter({ text: 'Grupo Halcón  •  Sistema de Ascensos' });
       await canalUp.send({ content: '<@' + usuario.id + '>', embeds: [embed] });
       await interaction.reply({ content: '✅ **' + miembro.displayName + '** ascendido a ' + rangoNombre + '.', ephemeral: true });
