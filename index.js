@@ -14,6 +14,9 @@ const ROL_HALCON        = '1466327608697290854';
 
 // Asistentes por operativo: { messageId: [userId, ...] }
 const asistentes = {};
+
+// Imagenes temporales para galeria: { userId: imageUrl }
+const imagenesPendientes = {};
 const GITHUB_REPO       = 'webstudios-ar/halcon-bot';
 const GITHUB_FILE       = 'sanciones.json';
 
@@ -126,10 +129,16 @@ client.on('interactionCreate', async (interaction) => {
 
   // ===== MODAL SUBMIT =====
   // ===== MODAL GALERIA =====
-  if (interaction.isModalSubmit() && interaction.customId.startsWith('modal_galeria_')) {
+  if (interaction.isModalSubmit() && interaction.customId === 'modal_galeria') {
     const titulo      = interaction.fields.getTextInputValue('gal_titulo');
     const descripcion = interaction.fields.getTextInputValue('gal_descripcion');
-    const imageUrl    = interaction.customId.replace('modal_galeria_', '');
+    const imageUrl    = imagenesPendientes[interaction.user.id];
+    delete imagenesPendientes[interaction.user.id];
+
+    if (!imageUrl) {
+      await interaction.reply({ content: '❌ No se encontró la imagen. Usá /galeria de nuevo.', ephemeral: true });
+      return;
+    }
 
     const embed = new EmbedBuilder()
       .setTitle('📸  ' + titulo)
@@ -589,9 +598,10 @@ client.on('interactionCreate', async (interaction) => {
       return;
     }
 
-    // Abrir modal con titulo y descripcion, guardando la URL de la imagen en el customId
+    // Guardar URL en memoria y usar customId simple
+    imagenesPendientes[interaction.user.id] = imagen.url;
     const modal = new ModalBuilder()
-      .setCustomId('modal_galeria_' + imagen.url)
+      .setCustomId('modal_galeria')
       .setTitle('Publicar en Galería — Grupo Halcón');
 
     modal.addComponents(
