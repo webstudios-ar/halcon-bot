@@ -484,7 +484,7 @@ client.on('interactionCreate', async (interaction) => {
         .setDescription('<@' + usuario.id + '> ha sido ascendido en el **Grupo Halcón**.')
         .addFields({ name: '🎖️ Nuevo rango', value: rangoNombre, inline: true }, { name: '👮 Ascendido por', value: '<@' + interaction.user.id + '>', inline: true })
         .setColor(0xFFD700).setThumbnail(usuario.displayAvatarURL()).setTimestamp().setFooter({ text: 'Grupo Halcón  •  Sistema de Ascensos' });
-      await canalUp.send({ content: '<@' + usuario.id + '>', embeds: [embed] });
+      await canalUp.send({ embeds: [embed] });
       await interaction.reply({ content: '✅ **' + miembro.displayName + '** ascendido a ' + rangoNombre + '.', ephemeral: true });
     } catch (err) { await interaction.reply({ content: '❌ Error al ascender. Verificá que el bot tenga el rol más alto.', ephemeral: true }); }
   }
