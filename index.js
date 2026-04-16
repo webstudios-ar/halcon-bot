@@ -395,11 +395,33 @@ client.on('interactionCreate', async (interaction) => {
     const sancion = getSancion(usuario.id);
 
     let nivel = '', color = 0xFFAA00, expulsado = false;
-    if      (tipo === 'warn1')    { sancion.warns = Math.max(sancion.warns, 1); nivel = '⚠️ WARN 1'; }
-    else if (tipo === 'warn2')    { sancion.warns = Math.max(sancion.warns, 2); nivel = '⚠️ WARN 2'; }
-    else if (tipo === 'strike1')  { sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 1); nivel = '🔴 STRIKE 1'; color = 0xCC2222; }
-    else if (tipo === 'strike2')  { sancion.warns = 0; sancion.strikes = Math.max(sancion.strikes, 2); nivel = '🔴 STRIKE 2'; color = 0xCC2222; }
-    else if (tipo === 'expulsion'){ sancion.warns = 0; sancion.strikes = 3; nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; }
+
+    if (tipo === 'warn1' || tipo === 'warn2') {
+      // Sumar warns al contador
+      const cantidad = tipo === 'warn1' ? 1 : 2;
+      sancion.warns += cantidad;
+      // Si llega a 3 o mas, convertir en strike automaticamente
+      if (sancion.warns >= 3) {
+        sancion.warns = 0;
+        sancion.strikes += 1;
+        nivel = '🔴 STRIKE ' + sancion.strikes + ' (3 warns acumulados)';
+        color = 0xCC2222;
+        if (sancion.strikes >= 3) { nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; }
+      } else {
+        nivel = '⚠️ WARN ' + sancion.warns; color = 0xFFAA00;
+      }
+    } else if (tipo === 'strike1') {
+      sancion.warns = 0; sancion.strikes += 1;
+      nivel = '🔴 STRIKE ' + sancion.strikes; color = 0xCC2222;
+      if (sancion.strikes >= 3) { nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; }
+    } else if (tipo === 'strike2') {
+      sancion.warns = 0; sancion.strikes += 2;
+      nivel = '🔴 STRIKE ' + sancion.strikes; color = 0xCC2222;
+      if (sancion.strikes >= 3) { nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true; }
+    } else if (tipo === 'expulsion') {
+      sancion.warns = 0; sancion.strikes = 3;
+      nivel = '💀 EXPULSIÓN'; color = 0x000000; expulsado = true;
+    }
 
     sancion.historial.push({ motivo, nivel, fecha: fecha(), sancionadorId: interaction.user.id });
     await guardarSanciones();
