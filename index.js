@@ -416,7 +416,7 @@ client.on('interactionCreate', async (interaction) => {
       .setColor(color).setTimestamp().setFooter({ text: 'Grupo Halcón  •  Sistema de Sanciones' });
 
     const canalSanc = await client.channels.fetch(CANAL_SANCIONES);
-    await canalSanc.send({ content: '<@' + usuario.id + '>', embeds: [embed] });
+    await canalSanc.send({ embeds: [embed] });
     await interaction.reply({ content: '✅ Sanción aplicada en #sanciones-halcon.', ephemeral: true });
 
     if (expulsado) {
