@@ -138,7 +138,8 @@ client.on('interactionCreate', async (interaction) => {
         { name: '📍 Zona',           value: lugar,       inline: true },
         { name: '👥 Participantes',  value: requisitos,  inline: true },
         { name: '👮 Ordenado por',   value: revisorOp,   inline: true },
-        { name: '📝 Descripción',    value: descripcion, inline: false }
+        { name: '📝 Descripción',    value: descripcion, inline: false },
+        { name: '⚠️ Importante',     value: 'Una vez anotado **no podés cancelar**. No asistir al operativo habiendo confirmado asistencia conlleva **2 warns automáticos**.', inline: false }
       )
       .setColor(0xCC2222).setTimestamp()
       .setFooter({ text: 'Grupo Halcón  •  Operaciones' });
