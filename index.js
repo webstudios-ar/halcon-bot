@@ -129,12 +129,21 @@ client.once('ready', async () => {
 client.on('interactionCreate', async (interaction) => {
 
   // ===== MODAL SUBMIT =====
-  if (interaction.isModalSubmit() && interaction.customId === 'modal_apelacion') {
+  if (interaction.isModalSubmit() && interaction.customId.startsWith('modal_apelacion')) {
     const texto = interaction.fields.getTextInputValue('texto_apelacion');
     const userId = interaction.user.id;
     const sancion = getSancion(userId);
-    const elegida = global.apelacionElegida?.[userId];
-    const sancionFinal = elegida || sancion.historial.filter(s => !s.nivel.includes('APELAC')).slice(-1)[0];
+
+    // Extraer el idx del customId del modal: modal_apelacion_ELEG_IDX_USERID
+    let sancionFinal = null;
+    const partesCid = interaction.customId.split('_');
+    // formato: modal_apelacion_ELEG_IDX_USERID => idx esta en posicion 3
+    if (partesCid.length >= 5) {
+      const idxReal = parseInt(partesCid[3]);
+      sancionFinal = sancion.historial[idxReal];
+    }
+    // Fallback: ultima sancion
+    if (!sancionFinal) sancionFinal = sancion.historial.filter(s => !s.nivel.includes('APELAC')).slice(-1)[0];
 
     if (!sancionFinal) {
       await interaction.reply({ content: '❌ No se encontró la sanción.', ephemeral: true });
@@ -170,28 +179,12 @@ client.on('interactionCreate', async (interaction) => {
     const id = interaction.customId;
 
     // --- Elegir sancion a apelar ---
+    // El customId tiene todo lo necesario: ELEG_IDX_USERID
+    // Solo abre el modal — la busqueda del historial se hace en el modal submit
     if (id.startsWith('ELEG_')) {
-      const partes = id.split('_'); // ELEG_IDX_USERID
-      const idxReal = parseInt(partes[1]);
-      const userId = partes[2];
-
-      if (interaction.user.id !== userId) {
-        await interaction.reply({ content: '❌ Solo vos podés elegir tu sanción.', ephemeral: true });
-        return;
-      }
-
-      const sancion = getSancion(userId);
-      const sancionElegida = sancion.historial[idxReal];
-
-      if (!sancionElegida) {
-        await interaction.reply({ content: '❌ No se encontró la sanción. Usá /apelar-sancion-halcon de nuevo.', ephemeral: true });
-        return;
-      }
-
-      global.apelacionElegida = global.apelacionElegida || {};
-      global.apelacionElegida[userId] = sancionElegida;
-
-      const modal = new ModalBuilder().setCustomId('modal_apelacion').setTitle('Apelación — Grupo Halcón');
+      const modal = new ModalBuilder()
+        .setCustomId('modal_apelacion_' + id) // guarda el customId del boton para recuperar en submit
+        .setTitle('Apelación — Grupo Halcón');
       const input = new TextInputBuilder()
         .setCustomId('texto_apelacion')
         .setLabel('Explicá tu caso — única oportunidad')
