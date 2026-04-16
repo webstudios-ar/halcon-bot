@@ -168,7 +168,7 @@ client.on('interactionCreate', async (interaction) => {
   }
 
   // BOTON ELEGIR SANCION A APELAR
-  if (interaction.isButton() && interaction.customId.startsWith('elegir_apelacion_')) {
+  if (interaction.isButton() && interaction.customId.startsWith('elegir_apelacion|')) {
     const partes = interaction.customId.split('|');
     // formato: elegir_apelacion|USERID|IDX
     const userId = partes[1];
