@@ -492,6 +492,10 @@ client.on('interactionCreate', async (interaction) => {
 
   // /nuevo
   if (interaction.commandName === 'nuevo') {
+    if (interaction.channelId !== CANAL_UPDATES) {
+      await interaction.reply({ content: '❌ Este comando solo puede usarse en <#' + CANAL_UPDATES + '>.', ephemeral: true });
+      return;
+    }
     const usuario = interaction.options.getUser('usuario');
     const miembro = await interaction.guild.members.fetch(usuario.id);
     try {
@@ -508,6 +512,10 @@ client.on('interactionCreate', async (interaction) => {
 
   // /ascender
   else if (interaction.commandName === 'ascender') {
+    if (interaction.channelId !== CANAL_UPDATES) {
+      await interaction.reply({ content: '❌ Este comando solo puede usarse en <#' + CANAL_UPDATES + '>.', ephemeral: true });
+      return;
+    }
     const usuario = interaction.options.getUser('usuario');
     const rolId   = interaction.options.getString('rango');
     const miembro = await interaction.guild.members.fetch(usuario.id);
@@ -558,6 +566,10 @@ client.on('interactionCreate', async (interaction) => {
 
   // /sancionar
   else if (interaction.commandName === 'sancionar') {
+    if (interaction.channelId !== CANAL_SANCIONES) {
+      await interaction.reply({ content: '❌ Este comando solo puede usarse en <#' + CANAL_SANCIONES + '>.', ephemeral: true });
+      return;
+    }
     const usuario = interaction.options.getUser('usuario');
     const motivo  = interaction.options.getString('motivo');
     const tipo    = interaction.options.getString('sancion');
@@ -623,6 +635,13 @@ client.on('interactionCreate', async (interaction) => {
     const miembro  = await interaction.guild.members.fetch(usuario.id);
 
     try {
+      // Verificar que no sea el Dueño
+      const ROL_DUENO_HALCON = '1474197418890362911';
+      if (miembro.roles.cache.has(ROL_DUENO_HALCON)) {
+        await interaction.reply({ content: '❌ No podés expulsar al **Dueño** del Grupo Halcón.', ephemeral: true });
+        return;
+      }
+
       // Quitar TODOS los roles de Halcon
       const TODOS_ROLES_HALCON = [
         '1466327608697290854',
