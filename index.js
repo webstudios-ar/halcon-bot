@@ -108,10 +108,10 @@ client.once('ready', async () => {
   await cargarAsistentes();
 
   const commands = [
-    new SlashCommandBuilder().setName('nuevo').setDescription('Ingresa un nuevo miembro al Grupo Halcon')
+    new SlashCommandBuilder().setName('nuevo').setDescription('[SOLO HEAD] Ingresa un nuevo miembro al Grupo Halcón')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a ingresar').setRequired(true)),
 
-    new SlashCommandBuilder().setName('ascender').setDescription('Asciende a un miembro del Grupo Halcon')
+    new SlashCommandBuilder().setName('ascender').setDescription('[SOLO HEAD] Asciende a un miembro del Grupo Halcón')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a ascender').setRequired(true))
       .addStringOption(o => o.setName('rango').setDescription('Nuevo rango').setRequired(true)
         .addChoices(
@@ -124,9 +124,9 @@ client.once('ready', async () => {
           { name: 'Director/a Halcón', value: '1460348058888830976' },
         )),
 
-    new SlashCommandBuilder().setName('operativo').setDescription('Anuncia un operativo del Grupo Halcon'),
+    new SlashCommandBuilder().setName('operativo').setDescription('[SOLO HEAD] Anuncia un operativo del Grupo Halcón'),
 
-    new SlashCommandBuilder().setName('sancionar').setDescription('Aplica una sancion a un miembro del Grupo Halcon')
+    new SlashCommandBuilder().setName('sancionar').setDescription('[SOLO HEAD] Aplica una sanción a un miembro del Grupo Halcón')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a sancionar').setRequired(true))
       .addStringOption(o => o.setName('sancion').setDescription('Tipo de sancion').setRequired(true)
         .addChoices(
@@ -138,13 +138,13 @@ client.once('ready', async () => {
         ))
       .addStringOption(o => o.setName('motivo').setDescription('Motivo de la sancion').setRequired(true)),
 
-    new SlashCommandBuilder().setName('sanciones').setDescription('Ver el historial de sanciones de un miembro')
+    new SlashCommandBuilder().setName('sanciones').setDescription('[SOLO HEAD] Ver el historial de sanciones de un miembro')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a consultar').setRequired(true)),
 
     new SlashCommandBuilder().setName('galeria').setDescription('Publicar una foto de operativo en la galería del Halcón')
       .addAttachmentOption(o => o.setName('imagen').setDescription('La foto del operativo').setRequired(true)),
 
-    new SlashCommandBuilder().setName('expulsar').setDescription('Expulsa a un miembro del Grupo Halcón')
+    new SlashCommandBuilder().setName('expulsar').setDescription('[SOLO HEAD] Expulsa a un miembro del Grupo Halcón')
       .addUserOption(o => o.setName('usuario').setDescription('El usuario a expulsar').setRequired(true))
       .addStringOption(o => o.setName('motivo').setDescription('Motivo de la expulsión').setRequired(true)),
 
