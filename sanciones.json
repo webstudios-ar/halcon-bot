@@ -16,5 +16,17 @@
         "sancionadorId": "696160444083077121"
       }
     ]
+  },
+  "813147862895558726": {
+    "warns": 0,
+    "strikes": 3,
+    "historial": [
+      {
+        "nivel": "💀 EXPULSIÓN",
+        "motivo": "Pelado",
+        "fecha": "18/04/2026, 08:20 a. m.",
+        "sancionadorId": "696160444083077121"
+      }
+    ]
   }
 }
