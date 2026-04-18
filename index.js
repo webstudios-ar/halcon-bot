@@ -15,6 +15,36 @@ const ROL_HALCON        = '1466327608697290854';
 // Asistentes por operativo: { messageId: [userId, ...] }
 const asistentes = {};
 
+async function guardarAsistentes() {
+  try {
+    const res = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/asistentes.json', {
+      headers: { 'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
+    });
+    const sha = res.status !== 404 ? (await res.json()).sha : null;
+    const content = Buffer.from(JSON.stringify(asistentes, null, 2)).toString('base64');
+    const body = { message: 'update asistentes', content };
+    if (sha) body.sha = sha;
+    await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/asistentes.json', {
+      method: 'PUT',
+      headers: { 'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  } catch (err) { console.error('Error guardando asistentes:', err.message); }
+}
+
+async function cargarAsistentes() {
+  try {
+    const res = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/asistentes.json', {
+      headers: { 'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
+    });
+    if (res.status === 404) return;
+    const data = await res.json();
+    const loaded = JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
+    Object.assign(asistentes, loaded);
+    console.log('Asistentes cargados:', Object.keys(asistentes).length, 'operativos');
+  } catch (err) { console.error('Error cargando asistentes:', err.message); }
+}
+
 // Imagenes temporales para galeria: { userId: imageUrl }
 const imagenesPendientes = {};
 const GITHUB_REPO       = 'webstudios-ar/halcon-bot';
@@ -75,6 +105,7 @@ function getSancion(userId) {
 client.once('ready', async () => {
   console.log('Bot conectado: ' + client.user.tag);
   await cargarSanciones();
+  await cargarAsistentes();
 
   const commands = [
     new SlashCommandBuilder().setName('nuevo').setDescription('Ingresa un nuevo miembro al Grupo Halcon')
@@ -112,6 +143,10 @@ client.once('ready', async () => {
 
     new SlashCommandBuilder().setName('galeria').setDescription('Publicar una foto de operativo en la galería del Halcón')
       .addAttachmentOption(o => o.setName('imagen').setDescription('La foto del operativo').setRequired(true)),
+
+    new SlashCommandBuilder().setName('expulsar').setDescription('Expulsa a un miembro del Grupo Halcón')
+      .addUserOption(o => o.setName('usuario').setDescription('El usuario a expulsar').setRequired(true))
+      .addStringOption(o => o.setName('motivo').setDescription('Motivo de la expulsión').setRequired(true)),
 
     new SlashCommandBuilder().setName('apelar-sancion-halcon').setDescription('Apelá tu última sanción del Grupo Halcón'),
 
@@ -339,6 +374,7 @@ client.on('interactionCreate', async (interaction) => {
 
       // Agregar al usuario
       asistentes[msgId].push(interaction.user.id);
+      await guardarAsistentes();
       const lista = asistentes[msgId].map(uid => '<@' + uid + '>').join('\n');
 
       // Actualizar el embed con la lista
@@ -577,6 +613,47 @@ client.on('interactionCreate', async (interaction) => {
     if (expulsado) {
       const m = ROLES_AUTORIZADOS.map(id => '<@&' + id + '>').join(' ');
       await canalSanc.send({ content: m + ' ⛔ **' + usuario.username + '** llegó a 3 strikes. Se recomienda expulsión inmediata.' });
+    }
+  }
+
+  // /expulsar
+  else if (interaction.commandName === 'expulsar') {
+    const usuario  = interaction.options.getUser('usuario');
+    const motivo   = interaction.options.getString('motivo');
+    const miembro  = await interaction.guild.members.fetch(usuario.id);
+
+    try {
+      // Quitar todos los roles de Halcon
+      for (const id of Object.keys(RANGOS)) {
+        if (miembro.roles.cache.has(id)) await miembro.roles.remove(id).catch(() => {});
+      }
+      // Quitar rol Miembro Halcon tambien
+      if (miembro.roles.cache.has(ROL_MIEMBRO)) await miembro.roles.remove(ROL_MIEMBRO).catch(() => {});
+
+      // Registrar en sanciones
+      const sancion = getSancion(usuario.id);
+      sancion.historial.push({ nivel: '💀 EXPULSIÓN', motivo, fecha: fecha(), sancionadorId: interaction.user.id });
+      sancion.warns = 0;
+      sancion.strikes = 3;
+      await guardarSanciones();
+
+      // Anunciar en #updates
+      const canalUp = await client.channels.fetch(CANAL_UPDATES);
+      const embed = new EmbedBuilder()
+        .setTitle('🚫 EXPULSIÓN — GRUPO HALCÓN')
+        .setDescription('<@' + usuario.id + '> ha sido **expulsado** del Grupo Halcón.')
+        .addFields(
+          { name: '📋 Motivo',        value: motivo,                                  inline: false },
+          { name: '👮 Expulsado por', value: '<@' + interaction.user.id + '>',        inline: true }
+        )
+        .setColor(0x000000).setThumbnail(usuario.displayAvatarURL()).setTimestamp()
+        .setFooter({ text: 'Grupo Halcón  •  Sistema de Expulsiones' });
+
+      await canalUp.send({ embeds: [embed] });
+      await interaction.reply({ content: '✅ **' + miembro.displayName + '** fue expulsado del Grupo Halcón.', ephemeral: true });
+    } catch (err) {
+      console.error(err);
+      await interaction.reply({ content: '❌ Error al expulsar al miembro.', ephemeral: true });
     }
   }
 
