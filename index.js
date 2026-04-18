@@ -623,12 +623,22 @@ client.on('interactionCreate', async (interaction) => {
     const miembro  = await interaction.guild.members.fetch(usuario.id);
 
     try {
-      // Quitar todos los roles de Halcon
-      for (const id of Object.keys(RANGOS)) {
+      // Quitar TODOS los roles de Halcon
+      const TODOS_ROLES_HALCON = [
+        '1466327608697290854',
+        '1474197418890362911',
+        '1460348058888830976',
+        '1466331349945155615',
+        '1466331228864254002',
+        '1466328471536930846',
+        '1476854892181065739',
+        '1460777138129998025',
+        '1494247166053449798',
+        '1459343074378387591',
+      ];
+      for (const id of TODOS_ROLES_HALCON) {
         if (miembro.roles.cache.has(id)) await miembro.roles.remove(id).catch(() => {});
       }
-      // Quitar rol Miembro Halcon tambien
-      if (miembro.roles.cache.has(ROL_MIEMBRO)) await miembro.roles.remove(ROL_MIEMBRO).catch(() => {});
 
       // Registrar en sanciones
       const sancion = getSancion(usuario.id);
