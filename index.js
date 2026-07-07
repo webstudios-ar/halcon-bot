@@ -1,6 +1,14 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, REST, Routes, SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 
+// Manejo global de errores para que un crash no tumbe el proceso
+process.on('unhandledRejection', (err) => {
+  console.error('[GLOBAL] Unhandled promise rejection:', err);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[GLOBAL] Uncaught exception:', err);
+});
+
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
 
 // ==================== CONSTANTES ====================
@@ -157,9 +165,11 @@ function iniciarTimeoutPostulacion(userId) {
   const p = postulacionesActivas[userId];
   if (!p) return;
   if (p.timeoutId) clearTimeout(p.timeoutId);
+  const restanteMs = Math.max(0, p.expiraTs - Date.now());
   p.timeoutId = setTimeout(async () => {
     if (!postulacionesActivas[userId]) return;
     delete postulacionesActivas[userId];
+    await guardarPostulacionesActivas();
     // Aplicar cooldown de 24hs por no terminar a tiempo
     postulacionesCooldown[userId] = Date.now() + COOLDOWN_POSTULACION_MS;
     await guardarCooldowns();
@@ -173,7 +183,58 @@ function iniciarTimeoutPostulacion(userId) {
         }
       }
     } catch (e) { /* ignorar */ }
-  }, TIEMPO_MAX_POSTULACION_MS);
+  }, restanteMs);
+}
+
+// Persistir postulaciones activas (sin timeoutId porque no es serializable)
+async function guardarPostulacionesActivas() {
+  try {
+    const serializable = {};
+    for (const [uid, data] of Object.entries(postulacionesActivas)) {
+      serializable[uid] = {
+        inicio: data.inicio,
+        expiraTs: data.expiraTs,
+        datos: data.datos
+      };
+    }
+    const res = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/postulaciones_activas.json', {
+      headers: { 'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
+    });
+    const sha = res.status !== 404 ? (await res.json()).sha : null;
+    const content = Buffer.from(JSON.stringify(serializable, null, 2)).toString('base64');
+    const body = { message: 'update postulaciones activas', content };
+    if (sha) body.sha = sha;
+    await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/postulaciones_activas.json', {
+      method: 'PUT',
+      headers: { 'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  } catch (err) { console.error('Error guardando postulaciones activas:', err.message); }
+}
+
+async function cargarPostulacionesActivas() {
+  try {
+    const res = await fetch('https://api.github.com/repos/' + GITHUB_REPO + '/contents/postulaciones_activas.json', {
+      headers: { 'Authorization': 'Bearer ' + process.env.GITHUB_TOKEN, 'Accept': 'application/vnd.github+json' }
+    });
+    if (res.status === 404) return;
+    const data = await res.json();
+    const loaded = JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
+    const ahora = Date.now();
+    for (const [uid, p] of Object.entries(loaded)) {
+      if (p.expiraTs > ahora) {
+        // Todavía tiene tiempo, restaurar
+        postulacionesActivas[uid] = {
+          inicio: p.inicio,
+          expiraTs: p.expiraTs,
+          timeoutId: null,
+          datos: p.datos || {}
+        };
+        iniciarTimeoutPostulacion(uid);
+      }
+    }
+    console.log('Postulaciones activas restauradas:', Object.keys(postulacionesActivas).length);
+  } catch (err) { console.error('Error cargando postulaciones activas:', err.message); }
 }
 
 // ==================== READY ====================
@@ -181,6 +242,7 @@ client.once('ready', async () => {
   console.log('Bot conectado: ' + client.user.tag);
   await cargarAsistentes();
   await cargarCooldowns();
+  await cargarPostulacionesActivas();
   botListo = true;
   console.log('[BOT] Todos los datos cargados. Bot listo para recibir comandos.');
 
@@ -253,6 +315,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.rango  = interaction.fields.getTextInputValue('m1_rango');
     postulacionesActivas[uid].datos.mic    = interaction.fields.getTextInputValue('m1_mic');
     postulacionesActivas[uid].datos.disp   = interaction.fields.getTextInputValue('m1_disp');
+    await guardarPostulacionesActivas();
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -282,6 +345,7 @@ client.on('interactionCreate', async (interaction) => {
       });
     }
     postulacionesActivas[uid].datos.latasResp = respuestas;
+    await guardarPostulacionesActivas();
 
     const aciertos = respuestas.filter(r => r.acierta).length;
     const total = respuestas.length;
@@ -304,6 +368,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.fuga      = interaction.fields.getTextInputValue('m2_fuga');
     postulacionesActivas[uid].datos.disparar  = interaction.fields.getTextInputValue('m2_disparar');
     postulacionesActivas[uid].datos.nvl       = interaction.fields.getTextInputValue('m2_nvl');
+    await guardarPostulacionesActivas();
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -323,6 +388,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.punto     = interaction.fields.getTextInputValue('m3_punto');
     postulacionesActivas[uid].datos.superior  = interaction.fields.getTextInputValue('m3_superior');
     postulacionesActivas[uid].datos.patrulla  = interaction.fields.getTextInputValue('m3_patrulla');
+    await guardarPostulacionesActivas();
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -346,6 +412,7 @@ client.on('interactionCreate', async (interaction) => {
     // Cancelar el timeout ya que completó
     if (postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
     delete postulacionesActivas[uid];
+    await guardarPostulacionesActivas();
 
     // Preparar detalle de latas
     const latasResp = d.latasResp || [];
@@ -510,11 +577,10 @@ client.on('interactionCreate', async (interaction) => {
         datos: {}
       };
       iniciarTimeoutPostulacion(uid);
-
-      // Modal 1: datos personales
+      await guardarPostulacionesActivas();
       const modal = new ModalBuilder()
         .setCustomId('POSTULAR_MODAL_1')
-        .setTitle('Postulación Halcón (1/4) — Datos');
+        .setTitle('Postulación Halcón (1/5) — Datos');
 
       modal.addComponents(
         new ActionRowBuilder().addComponents(
