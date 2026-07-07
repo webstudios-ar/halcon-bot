@@ -6,7 +6,8 @@
       "nombre": "Valito Bachi",
       "rango": "Dueño",
       "mic": "si",
-      "disp": "todo los dias"
+      "disp": "todo los dias",
+      "latasResp": []
     }
   }
 }
