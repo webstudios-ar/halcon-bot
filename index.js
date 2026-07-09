@@ -169,10 +169,10 @@ function iniciarTimeoutPostulacion(userId) {
   p.timeoutId = setTimeout(async () => {
     if (!postulacionesActivas[userId]) return;
     delete postulacionesActivas[userId];
-    await guardarPostulacionesActivas();
+    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
     // Aplicar cooldown de 24hs por no terminar a tiempo
     postulacionesCooldown[userId] = Date.now() + COOLDOWN_POSTULACION_MS;
-    await guardarCooldowns();
+    guardarCooldowns().catch(e => console.error("Save cooldowns:", e.message));
     // Intentar avisar por DM
     try {
       const guild = client.guilds.cache.first();
@@ -286,6 +286,12 @@ client.once('ready', async () => {
 
 // ==================== INTERACTIONS ====================
 client.on('interactionCreate', async (interaction) => {
+  const tipoLog = interaction.isChatInputCommand() ? 'SLASH:' + interaction.commandName
+    : interaction.isButton() ? 'BUTTON:' + interaction.customId
+    : interaction.isModalSubmit() ? 'MODAL:' + interaction.customId
+    : 'OTHER';
+  console.log('[INTERACTION] ' + tipoLog + ' por ' + interaction.user.tag);
+
   // Bloquear interacciones hasta que el bot haya cargado todos los datos
   if (!botListo) {
     try {
@@ -315,7 +321,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.rango  = interaction.fields.getTextInputValue('m1_rango');
     postulacionesActivas[uid].datos.mic    = interaction.fields.getTextInputValue('m1_mic');
     postulacionesActivas[uid].datos.disp   = interaction.fields.getTextInputValue('m1_disp');
-    await guardarPostulacionesActivas();
+    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -345,7 +351,7 @@ client.on('interactionCreate', async (interaction) => {
       });
     }
     postulacionesActivas[uid].datos.latasResp = respuestas;
-    await guardarPostulacionesActivas();
+    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
 
     const aciertos = respuestas.filter(r => r.acierta).length;
     const total = respuestas.length;
@@ -368,7 +374,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.fuga      = interaction.fields.getTextInputValue('m2_fuga');
     postulacionesActivas[uid].datos.disparar  = interaction.fields.getTextInputValue('m2_disparar');
     postulacionesActivas[uid].datos.nvl       = interaction.fields.getTextInputValue('m2_nvl');
-    await guardarPostulacionesActivas();
+    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -388,7 +394,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.punto     = interaction.fields.getTextInputValue('m3_punto');
     postulacionesActivas[uid].datos.superior  = interaction.fields.getTextInputValue('m3_superior');
     postulacionesActivas[uid].datos.patrulla  = interaction.fields.getTextInputValue('m3_patrulla');
-    await guardarPostulacionesActivas();
+    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -412,7 +418,7 @@ client.on('interactionCreate', async (interaction) => {
     // Cancelar el timeout ya que completó
     if (postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
     delete postulacionesActivas[uid];
-    await guardarPostulacionesActivas();
+    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
 
     // Preparar detalle de latas
     const latasResp = d.latasResp || [];
@@ -524,7 +530,7 @@ client.on('interactionCreate', async (interaction) => {
       }
 
       asistentes[msgId].push(interaction.user.id);
-      await guardarAsistentes();
+      guardarAsistentes().catch(e => console.error("Save asistentes:", e.message));
       const lista = asistentes[msgId].map(uid => '<@' + uid + '>').join('\n');
 
       const msgOriginal = interaction.message;
@@ -577,7 +583,7 @@ client.on('interactionCreate', async (interaction) => {
         datos: {}
       };
       iniciarTimeoutPostulacion(uid);
-      await guardarPostulacionesActivas();
+      guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
       const modal = new ModalBuilder()
         .setCustomId('POSTULAR_MODAL_1')
         .setTitle('Postulación Halcón (1/5) — Datos');
@@ -810,7 +816,7 @@ client.on('interactionCreate', async (interaction) => {
 
           // Aplicar cooldown de 24hs
           postulacionesCooldown[discordId] = Date.now() + COOLDOWN_POSTULACION_MS;
-          await guardarCooldowns();
+          guardarCooldowns().catch(e => console.error("Save cooldowns:", e.message));
 
           // Enviar DM al postulante rechazado
           try {
