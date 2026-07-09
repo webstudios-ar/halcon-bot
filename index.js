@@ -548,29 +548,41 @@ client.on('interactionCreate', async (interaction) => {
     if (id === 'POSTULAR_INICIAR') {
       const uid = interaction.user.id;
 
-      // Chequear cooldown
-      const cooldownHasta = estaEnCooldown(uid);
-      if (cooldownHasta) {
-        await interaction.reply({
-          content: '⏳ Ya te postulaste recientemente. Podés volver a intentar <t:' + Math.floor(cooldownHasta / 1000) + ':R>.',
-          ephemeral: true
-        });
-        return;
+      // Los DUEÑOS pueden postular indefinidamente (modo testing)
+      const esDueno = interaction.member.roles.cache.has(ROL_DUENO_HALCON);
+
+      // Chequear cooldown (dueños lo saltan)
+      if (!esDueno) {
+        const cooldownHasta = estaEnCooldown(uid);
+        if (cooldownHasta) {
+          await interaction.reply({
+            content: '⏳ Ya te postulaste recientemente. Podés volver a intentar <t:' + Math.floor(cooldownHasta / 1000) + ':R>.',
+            ephemeral: true
+          });
+          return;
+        }
       }
 
-      // Chequear si ya tiene postulación activa
+      // Chequear si ya tiene postulación activa (dueños la reinician)
       if (postulacionesActivas[uid]) {
-        const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
-        const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
-        await interaction.reply({
-          content: '❌ Ya tenés una postulación en curso. Te quedan **' + minutos + ' minutos** para terminarla. Buscá en tus mensajes el último modal enviado por el bot.',
-          ephemeral: true
-        });
-        return;
+        if (esDueno) {
+          // Dueño reinicia su postulación pendiente
+          if (postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
+          delete postulacionesActivas[uid];
+          guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+        } else {
+          const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
+          const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
+          await interaction.reply({
+            content: '❌ Ya tenés una postulación en curso. Te quedan **' + minutos + ' minutos** para terminarla. Buscá en tus mensajes el último modal enviado por el bot.',
+            ephemeral: true
+          });
+          return;
+        }
       }
 
-      // Chequear si ya es Halcón
-      if (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE)) {
+      // Chequear si ya es Halcón (dueños lo saltan)
+      if (!esDueno && (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE))) {
         await interaction.reply({ content: '❌ Ya sos parte del Grupo Halcón. No podés volver a postularte.', ephemeral: true });
         return;
       }
