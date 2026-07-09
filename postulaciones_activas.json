@@ -6,7 +6,8 @@
       "nombre": "Prueba",
       "rango": "Sargento",
       "mic": "Si",
-      "disp": "9"
+      "disp": "9",
+      "latasResp": []
     }
   }
 }
