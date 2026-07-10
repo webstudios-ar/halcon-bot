@@ -24,6 +24,7 @@ const ROL_HALCON_BASE   = '1466327608697290854';   // rol grupal "Halcón"
 const ROL_MIEMBRO       = '1459343074378387591';   // rol "Miembro Halcón"
 const ROL_CADETE        = '1494247166053449798';   // rol "Cadete Halcón"
 const ROL_DUENO_HALCON  = '1474197418890362911';
+const ROL_DUENO_GENERAL = '1452149338049613864'; // Dueño general del server (para bypass de testing)
 
 const ROLES_AUTORIZADOS = ['1474197418890362911','1460348058888830976','1466331349945155615'];
 
@@ -549,7 +550,9 @@ client.on('interactionCreate', async (interaction) => {
       const uid = interaction.user.id;
 
       // Los DUEÑOS pueden postular indefinidamente (modo testing)
-      const esDueno = interaction.member.roles.cache.has(ROL_DUENO_HALCON);
+      const esDueno = interaction.member.roles.cache.has(ROL_DUENO_HALCON) ||
+                      interaction.member.roles.cache.has(ROL_DUENO_GENERAL);
+      console.log('[POSTULAR_INICIAR] Usuario:', interaction.user.tag, '· esDueno:', esDueno, '· roles:', interaction.member.roles.cache.map(r => r.id).join(', '));
 
       // Chequear cooldown (dueños lo saltan)
       if (!esDueno) {
