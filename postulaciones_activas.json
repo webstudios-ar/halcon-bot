@@ -6,7 +6,8 @@
       "nombre": "pepito lopez",
       "rango": "sargento",
       "mic": "si",
-      "disp": "4"
+      "disp": "4",
+      "latasResp": []
     }
   }
 }
