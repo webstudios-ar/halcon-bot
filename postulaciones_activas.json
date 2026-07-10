@@ -7,60 +7,10 @@
       "rango": "aa",
       "mic": "aa",
       "disp": "aa",
-      "robosPreguntados": [
-        {
-          "nombre": "Casa Michael",
-          "latas": 2
-        },
-        {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Maze Bank",
-          "latas": 3
-        },
-        {
-          "nombre": "Rancho Abandonado",
-          "latas": 4
-        },
-        {
-          "nombre": "Estadio",
-          "latas": 3
-        }
-      ],
-      "latasResp": [
-        {
-          "nombre": "Casa Michael",
-          "correcto": 2,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Carnicería",
-          "correcto": 8,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Maze Bank",
-          "correcto": 3,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Rancho Abandonado",
-          "correcto": 4,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Estadio",
-          "correcto": 3,
-          "respondio": null,
-          "acierta": false
-        }
-      ]
+      "latasResp": [],
+      "fuga": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "disparar": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "nvl": "AAAAAAAAAAAAAAAAAAAAAAAAAAA"
     }
   }
 }
