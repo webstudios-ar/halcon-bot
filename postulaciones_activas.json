@@ -2,6 +2,11 @@
   "1353571805729783921": {
     "inicio": 1783641953353,
     "expiraTs": 1783642853353,
-    "datos": {}
+    "datos": {
+      "nombre": "pepito lopez",
+      "rango": "sargento",
+      "mic": "si",
+      "disp": "4"
+    }
   }
 }
