@@ -1,66 +1,7 @@
 {
-  "696160444083077121": {
-    "inicio": 1783639570730,
-    "expiraTs": 1783640470730,
-    "datos": {
-      "nombre": "aaa",
-      "rango": "aaa",
-      "mic": "aa",
-      "disp": "aa",
-      "robosPreguntados": [
-        {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Banco Central",
-          "latas": 6
-        },
-        {
-          "nombre": "Humane",
-          "latas": 6
-        },
-        {
-          "nombre": "Subte",
-          "latas": 4
-        },
-        {
-          "nombre": "Rancho Abandonado",
-          "latas": 4
-        }
-      ],
-      "latasResp": [
-        {
-          "nombre": "Carnicería",
-          "correcto": 8,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Banco Central",
-          "correcto": 6,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Humane",
-          "correcto": 6,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Subte",
-          "correcto": 4,
-          "respondio": null,
-          "acierta": false
-        },
-        {
-          "nombre": "Rancho Abandonado",
-          "correcto": 4,
-          "respondio": null,
-          "acierta": false
-        }
-      ]
-    }
+  "1353571805729783921": {
+    "inicio": 1783641953353,
+    "expiraTs": 1783642853353,
+    "datos": {}
   }
 }
