@@ -2,6 +2,11 @@
   "696160444083077121": {
     "inicio": 1783648069758,
     "expiraTs": 1783648969758,
-    "datos": {}
+    "datos": {
+      "nombre": "aa",
+      "rango": "aa",
+      "mic": "aa",
+      "disp": "aa"
+    }
   }
 }
