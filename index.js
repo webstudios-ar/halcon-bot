@@ -678,7 +678,7 @@ client.on('interactionCreate', async (interaction) => {
           .setTitle('Postulación Halcón (3/5) — Protocolo');
         modal.addComponents(
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m2_fuga').setLabel('Sospechoso que se fuga en vehículo — ¿qué hacés?')
+            new TextInputBuilder().setCustomId('m2_fuga').setLabel('Sospechoso se fuga en vehículo — ¿qué hacés?')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
           ),
           new ActionRowBuilder().addComponents(
@@ -700,17 +700,17 @@ client.on('interactionCreate', async (interaction) => {
           .setTitle('Postulación Halcón (4/5) — Criterio');
         modal.addComponents(
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m3_punto').setLabel('40 min cubriendo punto sin novedades — ¿qué hacés?')
+            new TextInputBuilder().setCustomId('m3_punto').setLabel('40 min cubriendo un punto — ¿qué hacés?')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
               .setPlaceholder('Tu compañero te dice que te vayas. ¿Qué hacés?')
           ),
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m3_superior').setLabel('Superior falta el respeto a un civil sin motivo')
+            new TextInputBuilder().setCustomId('m3_superior').setLabel('Superior falta el respeto a un civil')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
               .setPlaceholder('Vos estás al lado. ¿Cómo actuás?')
           ),
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m3_patrulla').setLabel('Solo en patrulla, auto sospechoso mirando un local')
+            new TextInputBuilder().setCustomId('m3_patrulla').setLabel('Solo en patrulla, auto sospechoso')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
               .setPlaceholder('Sin apoyo disponible. ¿Qué hacés paso a paso?')
           )
