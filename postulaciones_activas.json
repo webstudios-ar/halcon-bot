@@ -6,7 +6,8 @@
       "nombre": "Chinito grim",
       "rango": "Sargento",
       "mic": "Si",
-      "disp": "4d"
+      "disp": "4d",
+      "latasResp": []
     }
   }
 }
