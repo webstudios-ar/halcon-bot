@@ -2,6 +2,11 @@
   "813147862895558726": {
     "inicio": 1783795922371,
     "expiraTs": 1783796822371,
-    "datos": {}
+    "datos": {
+      "nombre": "Chinito grim",
+      "rango": "Sargento",
+      "mic": "Si",
+      "disp": "4d"
+    }
   }
 }
