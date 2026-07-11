@@ -7,7 +7,10 @@
       "rango": "Sargento",
       "mic": "Si",
       "disp": "4d",
-      "latasResp": []
+      "latasResp": [],
+      "fuga": "Nose como debería actuar",
+      "disparar": "Nose como debería actuar",
+      "nvl": "Nose como debería actuar"
     }
   }
 }
