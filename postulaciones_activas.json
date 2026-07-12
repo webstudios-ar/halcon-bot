@@ -2,6 +2,33 @@
   "1334335034135679026": {
     "inicio": 1783838551243,
     "expiraTs": 1783839451243,
-    "datos": {}
+    "datos": {
+      "nombre": "Manuel Grim",
+      "rango": "Sargento",
+      "mic": "Si",
+      "disp": "3-5",
+      "robosPreguntados": [
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Banco Central",
+          "latas": 6
+        }
+      ]
+    }
   }
 }
