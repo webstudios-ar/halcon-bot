@@ -6,7 +6,8 @@
       "nombre": "AAAAAAAAA",
       "rango": "AAAAAAAAAAAAAAAA",
       "mic": "AAAAAAAAAA",
-      "disp": "AAAAAAAAAAA"
+      "disp": "AAAAAAAAAAA",
+      "latasResp": []
     }
   }
 }
