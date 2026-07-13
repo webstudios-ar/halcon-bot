@@ -16,6 +16,7 @@ const GITHUB_REPO       = 'webstudios-ar/halcon-bot';
 
 const CANAL_PANEL       = '1523848151763783690';   // panel con botón POSTULARSE
 const CANAL_APROBACION  = '1523830367889522878';   // donde llegan las postulaciones para aprobar
+const CANAL_RESULTADOS  = '1523831102614143187';   // archivo de exámenes con resultado final (privado para roles autorizados)
 const CANAL_RESULTADO   = '1523831102614143187';   // resultado final aprobado/rechazado
 const CANAL_UPDATES     = '1493446131663896626';
 const CANAL_OPERATIVOS  = '1523846077038596197';
@@ -26,7 +27,7 @@ const ROL_CADETE        = '1494247166053449798';   // rol "Cadete Halcón"
 const ROL_DUENO_HALCON  = '1474197418890362911';
 const ROL_DUENO_GENERAL = '1452149338049613864'; // Dueño general del server (para bypass de testing)
 
-const ROLES_AUTORIZADOS = ['1474197418890362911','1460348058888830976','1466331349945155615','1466328471536930846']; // + Comandante Halcón
+const ROLES_AUTORIZADOS = ['1474197418890362911','1460348058888830976','1466331349945155615'];
 
 // Anti-copia
 const TIEMPO_MAX_POSTULACION_MS = 15 * 60 * 1000;      // 15 minutos para completar
@@ -416,10 +417,12 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.personaje = interaction.fields.getTextInputValue('m4_personaje');
 
     const d = postulacionesActivas[uid].datos;
-    // Cancelar el timeout ya que completó
-    if (postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
-    delete postulacionesActivas[uid];
-    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+
+    // Helper para valores con default y truncado
+    const sf = (v, max = 400) => {
+      const s = (v || '_(vacío)_').toString();
+      return s.length > max ? s.slice(0, max - 3) + '...' : s;
+    };
 
     // Preparar detalle de latas
     const latasResp = d.latasResp || [];
@@ -431,42 +434,68 @@ client.on('interactionCreate', async (interaction) => {
       return emoji + ' **' + r.nombre + ':** respondió `' + resp + '` (correcto: `' + r.correcto + '`)';
     }).join('\n');
 
-    // Construir embed consolidado para HEAD Halcón
-    const embed = new EmbedBuilder()
-      .setTitle('🦅  NUEVO EXAMEN DE INGRESO — GRUPO HALCÓN  🦅')
+    // Embed 1 — Datos personales + Latas + Preguntas 1-4
+    const embed1 = new EmbedBuilder()
+      .setTitle('🦅 NUEVO EXAMEN DE INGRESO — GRUPO HALCÓN (1/2) 🦅')
       .setColor(0xFFD700)
       .setThumbnail(interaction.user.displayAvatarURL())
       .addFields(
-        { name: '👤 Nombre IC',       value: d.nombre,   inline: true },
-        { name: '🎖️ Rango PFA',       value: d.rango,    inline: true },
-        { name: '🎙️ Micrófono',       value: d.mic,      inline: true },
-        { name: '📅 Disponibilidad',  value: d.disp,     inline: true },
-        { name: '🔗 Discord',         value: '<@' + uid + '>',            inline: true },
-        { name: '🆔 Discord ID',      value: '`' + uid + '`',             inline: true },
-        { name: '🥫 Latas — resultado', value: '**' + aciertos + '/' + total + ' correctas**\n' + (detalleLatas || '_(sin datos)_'), inline: false },
-        { name: '\u200B', value: '\u200B', inline: false },
-        { name: '🚗 P1 — Sospechoso en fuga', value: d.fuga.slice(0, 1024), inline: false },
-        { name: '🔫 P2 — Disparar primero', value: d.disparar.slice(0, 1024), inline: false },
-        { name: '📖 P3 — NVL', value: d.nvl.slice(0, 1024), inline: false },
-        { name: '📍 P4 — Cubriendo un punto', value: d.punto.slice(0, 1024), inline: false },
-        { name: '⚠️ P5 — Superior faltando el respeto', value: d.superior.slice(0, 1024), inline: false },
-        { name: '🚙 P6 — Solo en patrulla', value: d.patrulla.slice(0, 1024), inline: false },
-        { name: '❓ P7 — ¿Por qué Halcón?', value: d.porque.slice(0, 1024), inline: false },
-        { name: '🧍 P8 — Personaje IC', value: d.personaje.slice(0, 1024), inline: false }
+        { name: '👤 Nombre IC',       value: sf(d.nombre, 60),   inline: true },
+        { name: '🎖️ Rango PFA',       value: sf(d.rango, 60),    inline: true },
+        { name: '🎙️ Micrófono',       value: sf(d.mic, 60),      inline: true },
+        { name: '📅 Disponibilidad',  value: sf(d.disp, 60),     inline: true },
+        { name: '🔗 Discord',         value: '<@' + uid + '>',   inline: true },
+        { name: '🆔 Discord ID',      value: '`' + uid + '`',    inline: true },
+        { name: '🥫 Latas — resultado', value: '**' + aciertos + '/' + total + ' correctas**\n' + (sf(detalleLatas, 800) || '_(sin datos)_'), inline: false },
+        { name: '🚗 P1 — Sospechoso en fuga', value: sf(d.fuga), inline: false },
+        { name: '🔫 P2 — Disparar primero', value: sf(d.disparar), inline: false },
+        { name: '📖 P3 — NVL', value: sf(d.nvl), inline: false },
+        { name: '📍 P4 — Cubriendo un punto', value: sf(d.punto), inline: false }
+      )
+      .setFooter({ text: 'Parte 1/2 • Grupo Halcón' });
+
+    // Embed 2 — Preguntas 5-8
+    const embed2 = new EmbedBuilder()
+      .setColor(0xFFD700)
+      .setTitle('🦅 EXAMEN DE INGRESO — GRUPO HALCÓN (2/2) 🦅')
+      .addFields(
+        { name: '⚠️ P5 — Superior faltando el respeto', value: sf(d.superior), inline: false },
+        { name: '🚙 P6 — Solo en patrulla', value: sf(d.patrulla), inline: false },
+        { name: '❓ P7 — ¿Por qué Halcón?', value: sf(d.porque), inline: false },
+        { name: '🧍 P8 — Personaje IC', value: sf(d.personaje), inline: false }
       )
       .setTimestamp()
-      .setFooter({ text: 'Grupo Halcón • Sistema de Postulaciones' });
+      .setFooter({ text: 'Parte 2/2 • Grupo Halcón • Sistema de Postulaciones' });
 
     const mencionRoles = ROLES_AUTORIZADOS.map(r => '<@&' + r + '>').join(' ');
+    const nombreLimpio = (d.nombre || 'postulante').replace(/[^a-zA-Z0-9]/g, '').slice(0, 30) || 'postulante';
     const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('ap_' + Date.now() + '_' + d.nombre.replace(/[^a-zA-Z0-9]/g,'') + '_' + uid).setLabel('APROBAR').setStyle(ButtonStyle.Success),
-      new ButtonBuilder().setCustomId('re_' + Date.now() + '_' + d.nombre.replace(/[^a-zA-Z0-9]/g,'') + '_' + uid).setLabel('RECHAZAR').setStyle(ButtonStyle.Danger)
+      new ButtonBuilder().setCustomId('ap_' + Date.now() + '_' + nombreLimpio + '_' + uid).setLabel('APROBAR').setStyle(ButtonStyle.Success),
+      new ButtonBuilder().setCustomId('re_' + Date.now() + '_' + nombreLimpio + '_' + uid).setLabel('RECHAZAR').setStyle(ButtonStyle.Danger)
     );
 
+    // Intentar enviar los embeds — si falla, NO borrar el estado (el user puede reintentar)
     try {
       const canalAprob = await client.channels.fetch(CANAL_APROBACION);
-      await canalAprob.send({ content: mencionRoles, embeds: [embed], components: [row], allowedMentions: { roles: ROLES_AUTORIZADOS } });
-    } catch (e) { console.error('Publicar postulacion:', e.message); }
+      await canalAprob.send({
+        content: mencionRoles,
+        embeds: [embed1, embed2],
+        components: [row],
+        allowedMentions: { roles: ROLES_AUTORIZADOS }
+      });
+    } catch (e) {
+      console.error('[POSTULAR MODAL 4] Error publicando postulación:', e);
+      await interaction.reply({
+        content: '❌ **Hubo un error al enviar tu postulación.** Tus respuestas siguen guardadas. Volvé a apretar "🦅 POSTULARSE" del panel para reintentar.\n\n_Error: ' + (e.message || 'desconocido') + '_',
+        ephemeral: true
+      });
+      return;
+    }
+
+    // Solo si el envío fue OK, borrar el estado
+    if (postulacionesActivas[uid] && postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
+    delete postulacionesActivas[uid];
+    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
 
     await interaction.reply({ content: '✅ **Tu postulación fue enviada correctamente.**\n\nLa oficialidad del Halcón revisará tu examen y te avisará por mensaje privado si es aprobada o rechazada.\n\n_— Grupo Halcón_', ephemeral: true });
     return;
@@ -804,6 +833,25 @@ client.on('interactionCreate', async (interaction) => {
             await canalUp.send({ content: '<@' + discordId + '>', embeds: [embedIngreso] });
           } catch (e) { console.error('Publicar ingreso en updates:', e.message); }
 
+          // Guardar el examen completo + resultado APROBADO en CANAL_RESULTADOS
+          try {
+            const embedsOriginales = interaction.message.embeds.map(e => EmbedBuilder.from(e).setColor(0x2ECC71));
+            const embedResultado = new EmbedBuilder()
+              .setTitle('✅ RESULTADO — APROBADO')
+              .setDescription('Postulación de <@' + discordId + '> **APROBADA**.')
+              .addFields(
+                { name: '👮 Aprobado por', value: revisor,                                      inline: true },
+                { name: '📅 Fecha',        value: '<t:' + Math.floor(Date.now() / 1000) + ':F>', inline: true },
+                { name: '🆔 Discord ID',   value: '`' + discordId + '`',                        inline: true }
+              )
+              .setColor(0x2ECC71)
+              .setThumbnail(miembro.displayAvatarURL())
+              .setTimestamp()
+              .setFooter({ text: 'Grupo Halcón · Archivo de Resultados' });
+            const canalResultados = await client.channels.fetch(CANAL_RESULTADOS);
+            await canalResultados.send({ embeds: [...embedsOriginales, embedResultado] });
+          } catch (e) { console.error('Publicar en resultados (APROBADO):', e.message); }
+
           // DM al aprobado
           try {
             await miembro.send({ content: '✅ **¡Fuiste APROBADO en el Grupo Halcón!**\n\nBienvenido a la unidad de élite de la PFA. Ya se te asignaron los roles de **Cadete Halcón** y podés participar en los operativos.\n\n**Revisado por:** ' + revisor + '\n\n_— Grupo Halcón · Kilombo RP_' });
@@ -832,6 +880,25 @@ client.on('interactionCreate', async (interaction) => {
           // Aplicar cooldown de 24hs
           postulacionesCooldown[discordId] = Date.now() + COOLDOWN_POSTULACION_MS;
           guardarCooldowns().catch(e => console.error("Save cooldowns:", e.message));
+
+          // Guardar el examen completo + resultado RECHAZADO en CANAL_RESULTADOS
+          try {
+            const embedsOriginales = interaction.message.embeds.map(e => EmbedBuilder.from(e).setColor(0xE74C3C));
+            const embedResultado = new EmbedBuilder()
+              .setTitle('❌ RESULTADO — RECHAZADO')
+              .setDescription('Postulación de <@' + discordId + '> **RECHAZADA**.')
+              .addFields(
+                { name: '👮 Rechazado por', value: revisor,                                      inline: true },
+                { name: '📅 Fecha',         value: '<t:' + Math.floor(Date.now() / 1000) + ':F>', inline: true },
+                { name: '🆔 Discord ID',    value: '`' + discordId + '`',                        inline: true },
+                { name: '⏳ Cooldown',      value: '24 horas',                                    inline: true }
+              )
+              .setColor(0xE74C3C)
+              .setTimestamp()
+              .setFooter({ text: 'Grupo Halcón · Archivo de Resultados' });
+            const canalResultados = await client.channels.fetch(CANAL_RESULTADOS);
+            await canalResultados.send({ embeds: [...embedsOriginales, embedResultado] });
+          } catch (e) { console.error('Publicar en resultados (RECHAZADO):', e.message); }
 
           // Enviar DM al postulante rechazado
           try {
