@@ -6,7 +6,61 @@
       "nombre": "aaaa",
       "rango": "aaaa",
       "mic": "aaa",
-      "disp": "aaaa"
+      "disp": "aaaa",
+      "robosPreguntados": [
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Facebook",
+          "correcto": 3,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Maze Bank",
+          "correcto": 3,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Joyería",
+          "correcto": 2,
+          "respondio": null,
+          "acierta": false
+        }
+      ]
     }
   }
 }
