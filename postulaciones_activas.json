@@ -60,7 +60,10 @@
           "respondio": null,
           "acierta": false
         }
-      ]
+      ],
+      "punto": "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "superior": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "patrulla": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     }
   }
 }
