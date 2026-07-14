@@ -2,6 +2,11 @@
   "1382123591184941096": {
     "inicio": 1784068151527,
     "expiraTs": 1784069051527,
-    "datos": {}
+    "datos": {
+      "nombre": "Joako Raze",
+      "rango": "Sargento",
+      "mic": "Si",
+      "disp": "3 o 4 dias"
+    }
   }
 }
