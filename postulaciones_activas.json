@@ -7,7 +7,10 @@
       "rango": "sargento",
       "mic": "Si",
       "disp": "3-5 depende si estoy con exams",
-      "latasResp": []
+      "latasResp": [],
+      "fuga": "Seguirlo , dar orden a q se detenga si no se detiene lo sigo hasta q choque , se detenga o otro compañero lo choque",
+      "disparar": "Cuando la persona q inflige la norma dispara o saca arma de fuego o arma blanca",
+      "nvl": "No valorar vida , q te esten apuntando 10 personas y te vayas corriendo como si nada"
     }
   }
 }
