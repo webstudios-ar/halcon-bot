@@ -6,7 +6,8 @@
       "nombre": "Manuel grim",
       "rango": "sargento",
       "mic": "Si",
-      "disp": "3-5 depende si estoy con exams"
+      "disp": "3-5 depende si estoy con exams",
+      "latasResp": []
     }
   }
 }
