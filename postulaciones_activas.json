@@ -10,7 +10,10 @@
       "latasResp": [],
       "fuga": "Seguirlo , dar orden a q se detenga si no se detiene lo sigo hasta q choque , se detenga o otro compañero lo choque",
       "disparar": "Cuando la persona q inflige la norma dispara o saca arma de fuego o arma blanca",
-      "nvl": "No valorar vida , q te esten apuntando 10 personas y te vayas corriendo como si nada"
+      "nvl": "No valorar vida , q te esten apuntando 10 personas y te vayas corriendo como si nada",
+      "punto": "Si es un rango superior tirando a head le hago caso pero si es un rango mayor q yo le digo para cambiar o me quedo yo",
+      "superior": "Le digo al oficial q estuvo mal y proceso a pedirle disculpas al civil",
+      "patrulla": "Le doy la orden de q se detena , en el caso de q se detenga prodeco a pedirle documentos y a cacharlo , si no frena lo sigo y trato de hacerlo frendar de amgima forma"
     }
   }
 }
