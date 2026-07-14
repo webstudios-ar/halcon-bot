@@ -6,7 +6,8 @@
       "nombre": "Joako Raze",
       "rango": "Sargento",
       "mic": "Si",
-      "disp": "3 o 4 dias"
+      "disp": "3 o 4 dias",
+      "latasResp": []
     }
   }
 }
