@@ -10,7 +10,10 @@
       "latasResp": [],
       "fuga": "Seguirlo, tratar de pincharle las ruedas o dar orden de que lo puedan chocar o detener",
       "disparar": "Cuando el sujeto apunta primero o dispara",
-      "nvl": "NoValorar vida, te cortan son 4 y vos te vas como si no pasa nada"
+      "nvl": "NoValorar vida, te cortan son 4 y vos te vas como si no pasa nada",
+      "punto": "Tomaria la orden depende el rango, o cambiaria de lugar",
+      "superior": "No actuaria, el superior si le falta el respeto a un civil el superior tiene la responsabilidad",
+      "patrulla": "me quedaria atras viendo que movimientos hace y en caso de quedarse quieto me acercaria y actuaria segun el caso"
     }
   }
 }
