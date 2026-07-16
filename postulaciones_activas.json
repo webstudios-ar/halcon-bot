@@ -6,7 +6,8 @@
       "nombre": "Benjamin bot",
       "rango": "sub oficial",
       "mic": "si",
-      "disp": "7"
+      "disp": "7",
+      "latasResp": []
     }
   }
 }
