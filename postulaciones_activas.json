@@ -7,7 +7,10 @@
       "rango": "sub oficial",
       "mic": "si",
       "disp": "7",
-      "latasResp": []
+      "latasResp": [],
+      "fuga": "buscar el vehiculo segun sus caracteristicas y avisar a mis compañeros que si lo ven lo detengan y lo interrogen",
+      "disparar": "cuando inician rol agresivo",
+      "nvl": "no valorar vida 1 ej es que me esten aputando 10 personas y yo disparo estando solo"
     }
   }
 }
