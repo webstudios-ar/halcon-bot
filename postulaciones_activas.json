@@ -10,7 +10,10 @@
       "latasResp": [],
       "fuga": "buscar el vehiculo segun sus caracteristicas y avisar a mis compañeros que si lo ven lo detengan y lo interrogen",
       "disparar": "cuando inician rol agresivo",
-      "nvl": "no valorar vida 1 ej es que me esten aputando 10 personas y yo disparo estando solo"
+      "nvl": "no valorar vida 1 ej es que me esten aputando 10 personas y yo disparo estando solo",
+      "punto": "si es rango mas alto no importa la orden le hago caso",
+      "superior": "primero le diria que esta mal pero al ser rango mas alto que high sabe lo que tiene q hacer entonces no lo cuestionaria mucho",
+      "patrulla": "lo sigo hasta alcansarlo lo detengo lo reviso y me saco las dudas pero si no se detiene lo voy a tener q pinchar las ruedas"
     }
   }
 }
