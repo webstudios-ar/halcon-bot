@@ -2,6 +2,11 @@
   "1347393243955855465": {
     "inicio": 1784219385109,
     "expiraTs": 1784220285109,
-    "datos": {}
+    "datos": {
+      "nombre": "Benjamin bot",
+      "rango": "sub oficial",
+      "mic": "si",
+      "disp": "7"
+    }
   }
 }
