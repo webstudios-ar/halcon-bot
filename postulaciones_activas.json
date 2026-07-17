@@ -6,7 +6,8 @@
       "nombre": "Resset Valkov",
       "rango": "cadete",
       "mic": "si",
-      "disp": "todo el dia toda la noche todo"
+      "disp": "todo el dia toda la noche todo",
+      "latasResp": []
     }
   }
 }
