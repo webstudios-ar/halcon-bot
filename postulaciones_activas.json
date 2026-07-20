@@ -6,7 +6,8 @@
       "nombre": "Tuki Nieva",
       "rango": "Teniente 1",
       "mic": "si",
-      "disp": "4"
+      "disp": "4",
+      "latasResp": []
     }
   }
 }
