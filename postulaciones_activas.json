@@ -7,7 +7,10 @@
       "rango": "Teniente 1",
       "mic": "si",
       "disp": "4",
-      "latasResp": []
+      "latasResp": [],
+      "fuga": "Procedo a Iniciar Persecucion Con Mi Patrulla y Avisar En Radio a Mis Compañeros",
+      "disparar": "Cuando El Delincuente Empieza a Disparar o Cuando No Se Cumple Con El Pacto De La Negociacion",
+      "nvl": "NVL Es No Valorar Vida.\nEj: Te Apuntan 3 Personas Con Armas Y En Lugar De Levantar Las Manos o Intentar Negociar, Sacas  Un Arma Y Los Matas Como Si Nada"
     }
   }
 }
