@@ -2,6 +2,11 @@
   "896243128237961228": {
     "inicio": 1784579796821,
     "expiraTs": 1784580696821,
-    "datos": {}
+    "datos": {
+      "nombre": "Tuki Nieva",
+      "rango": "Teniente 1",
+      "mic": "si",
+      "disp": "4"
+    }
   }
 }
