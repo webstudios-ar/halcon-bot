@@ -10,7 +10,10 @@
       "latasResp": [],
       "fuga": "Procedo a Iniciar Persecucion Con Mi Patrulla y Avisar En Radio a Mis Compañeros",
       "disparar": "Cuando El Delincuente Empieza a Disparar o Cuando No Se Cumple Con El Pacto De La Negociacion",
-      "nvl": "NVL Es No Valorar Vida.\nEj: Te Apuntan 3 Personas Con Armas Y En Lugar De Levantar Las Manos o Intentar Negociar, Sacas  Un Arma Y Los Matas Como Si Nada"
+      "nvl": "NVL Es No Valorar Vida.\nEj: Te Apuntan 3 Personas Con Armas Y En Lugar De Levantar Las Manos o Intentar Negociar, Sacas  Un Arma Y Los Matas Como Si Nada",
+      "punto": "Si llevo 40 minutos cubriendo un punto sin novedades, mantengo la calma y sigo atento. Informo por frecuencia que el punto continúa sin movimientos sospechosos y consulto a mi superior si desea que continúe en la posición o si dispone un relevo o una nueva orden. Nunca abandono el puesto por cuenta propia",
+      "superior": "Durante el procedimiento mantengo el profesionalismo y no contradigo a mi superior delante del civil, Si la situación no pone en riesgo a nadie, continúo cumpliendo mi función. Una vez finalizado el operativo, informo la situación por los canales correspondientes o hablo con el superior de forma respetuosa",
+      "patrulla": "Si estoy solo en patrulla y detecto un vehículo sospechoso, informo la situación por radio indicando la ubicación, las características del vehículo y el motivo de la sospecha. Mantengo una distancia prudente mientras observo sus movimientos y solicito apoyo antes de intervenir, salvo que exista un riesgo inminente para la vida de alguien. Actúo siempre siguiendo el protocolo y priorizando mi seguridad"
     }
   }
 }
