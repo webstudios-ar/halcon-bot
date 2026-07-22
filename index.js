@@ -887,14 +887,14 @@ client.on('interactionCreate', async (interaction) => {
         { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
         { name: '⬛  CONDUCCIÓN', value: '\u200B' },
         {
-          name: '👑  Dueño/a Halcón',
+          name: '👑',
           value: rol('1474197418890362911', 'Dueño/a Halcón') + '\n▸ Autoridad máxima de la unidad\n' +
                  '▸ Establece la normativa, la estructura y sus modificaciones\n' +
                  '▸ Resuelve ascensos de alto rango y decisiones críticas\n' +
                  '_Conducción institucional. No interviene en campo._'
         },
         {
-          name: '⭐  Director/a Halcón',
+          name: '⭐',
           value: rol('1460348058888830976', 'Director/a Halcón') + '\n▸ Conducción efectiva de la unidad\n' +
                  '▸ Enlace con el alto mando de la P.F.A.\n' +
                  '▸ Define la estrategia general de despliegue y cobertura\n' +
@@ -904,21 +904,21 @@ client.on('interactionCreate', async (interaction) => {
         { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
         { name: '⬛  JEFATURA', value: '\u200B' },
         {
-          name: '🎖️  Jefe Halcón',
+          name: '🎖️',
           value: rol('1466331349945155615', 'Jefe Halcón') + '\n▸ Comanda el despliegue diario de la unidad\n' +
                  '▸ Asigna zonas, turnos y funciones\n' +
                  '▸ Resuelve en tiempo real y asume la responsabilidad del resultado\n' +
                  '_La autoridad en el terreno es indiscutible._'
         },
         {
-          name: '🥇  Sub Jefe Halcón',
+          name: '🥇',
           value: rol('1466331228864254002', 'Sub Jefe Halcón') + '\n▸ Segundo al mando de la unidad\n' +
                  '▸ Asume la conducción en ausencia del Jefe\n' +
                  '▸ Apoya la coordinación y el control del personal\n' +
                  '▸ Habilitado para conducir operativos de menor escala'
         },
         {
-          name: '🥈  Comandante Halcón',
+          name: '🥈',
           value: rol('1466328471536930846', 'Comandante Halcón') + '\n▸ Conduce el operativo asignado por Jefatura\n' +
                  '▸ Supervisa a los Capitanes en despliegue\n' +
                  '▸ Autoriza intervenciones sobre robos en curso\n' +
@@ -932,14 +932,14 @@ client.on('interactionCreate', async (interaction) => {
       .addFields(
         { name: '⬛  MANDO OPERATIVO', value: '\u200B' },
         {
-          name: '🥉  Capitán Halcón',
+          name: '🥉',
           value: rol('1476854892181065739', 'Capitán Halcón') + '\n▸ Lidera el grupo de patrulla en calle\n' +
                  '▸ Distribuye posiciones y mantiene el enlace por radio\n' +
                  '▸ Decide la interceptación cuando no hay mando superior presente\n' +
                  '▸ Responde por el desempeño de su grupo'
         },
         {
-          name: '🔹  Teniente Halcón',
+          name: '🔹',
           value: rol('1460777138129998025', 'Teniente Halcón') + '\n▸ Segundo del Capitán en el grupo asignado\n' +
                  '▸ Conduce unidad propia dentro del despliegue\n' +
                  '▸ Instruye a Miembros y Cadetes en procedimiento\n' +
@@ -948,14 +948,14 @@ client.on('interactionCreate', async (interaction) => {
         { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
         { name: '⬛  AGENTES', value: '\u200B' },
         {
-          name: '🔸  Miembro Halcón',
+          name: '🔸',
           value: rol('1459343074378387591', 'Miembro Halcón') + '\n▸ Agente operativo pleno de la unidad\n' +
                  '▸ Cubre patrulla, custodia y respuesta sin restricción\n' +
                  '▸ Habilitado para operar sin supervisión directa\n' +
                  '▸ Responde a las órdenes del mando sin dilación'
         },
         {
-          name: '▫️  Cadete Halcón',
+          name: '▫️',
           value: rol('1494247166053449798', 'Cadete Halcón') + '\n▸ Ingreso reciente a la unidad — período de instrucción\n' +
                  '▸ Opera únicamente acompañado por un agente de mayor rango\n' +
                  '▸ Evaluado sobre procedimiento, criterio y conducta\n' +
