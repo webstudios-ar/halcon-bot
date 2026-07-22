@@ -843,6 +843,14 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.commandName === 'jerarquia') {
     await interaction.deferReply();
 
+    // Resuelve la mención del rol contra el guild actual.
+    // Si el ID no existe (rol borrado, ID viejo, otro server), Discord
+    // renderiza el <@&ID> como número crudo — por eso caemos a texto en negrita.
+    const rol = (id, fallback) => {
+      const r = interaction.guild.roles.cache.get(id);
+      return r ? '<@&' + id + '>' : '**' + fallback + '**';
+    };
+
     const ORGANIGRAMA =
       '```\n' +
       '              DUEÑO/A\n' +
@@ -879,15 +887,15 @@ client.on('interactionCreate', async (interaction) => {
         { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
         { name: '⬛  CONDUCCIÓN', value: '\u200B' },
         {
-          name: '👑  <@&1474197418890362911>',
-          value: '▸ Autoridad máxima de la unidad\n' +
+          name: '👑  Dueño/a Halcón',
+          value: rol('1474197418890362911', 'Dueño/a Halcón') + '\n▸ Autoridad máxima de la unidad\n' +
                  '▸ Establece la normativa, la estructura y sus modificaciones\n' +
                  '▸ Resuelve ascensos de alto rango y decisiones críticas\n' +
                  '_Conducción institucional. No interviene en campo._'
         },
         {
-          name: '⭐  <@&1460348058888830976>',
-          value: '▸ Conducción efectiva de la unidad\n' +
+          name: '⭐  Director/a Halcón',
+          value: rol('1460348058888830976', 'Director/a Halcón') + '\n▸ Conducción efectiva de la unidad\n' +
                  '▸ Enlace con el alto mando de la P.F.A.\n' +
                  '▸ Define la estrategia general de despliegue y cobertura\n' +
                  '▸ Autoriza operativos de envergadura\n' +
@@ -896,22 +904,22 @@ client.on('interactionCreate', async (interaction) => {
         { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
         { name: '⬛  JEFATURA', value: '\u200B' },
         {
-          name: '🎖️  <@&1466331349945155615>',
-          value: '▸ Comanda el despliegue diario de la unidad\n' +
+          name: '🎖️  Jefe Halcón',
+          value: rol('1466331349945155615', 'Jefe Halcón') + '\n▸ Comanda el despliegue diario de la unidad\n' +
                  '▸ Asigna zonas, turnos y funciones\n' +
                  '▸ Resuelve en tiempo real y asume la responsabilidad del resultado\n' +
                  '_La autoridad en el terreno es indiscutible._'
         },
         {
-          name: '🥇  <@&1466331228864254002>',
-          value: '▸ Segundo al mando de la unidad\n' +
+          name: '🥇  Sub Jefe Halcón',
+          value: rol('1466331228864254002', 'Sub Jefe Halcón') + '\n▸ Segundo al mando de la unidad\n' +
                  '▸ Asume la conducción en ausencia del Jefe\n' +
                  '▸ Apoya la coordinación y el control del personal\n' +
                  '▸ Habilitado para conducir operativos de menor escala'
         },
         {
-          name: '🥈  <@&1466328471536930846>',
-          value: '▸ Conduce el operativo asignado por Jefatura\n' +
+          name: '🥈  Comandante Halcón',
+          value: rol('1466328471536930846', 'Comandante Halcón') + '\n▸ Conduce el operativo asignado por Jefatura\n' +
                  '▸ Supervisa a los Capitanes en despliegue\n' +
                  '▸ Autoriza intervenciones sobre robos en curso\n' +
                  '_Nexo entre la Jefatura y el mando en calle._'
@@ -924,15 +932,15 @@ client.on('interactionCreate', async (interaction) => {
       .addFields(
         { name: '⬛  MANDO OPERATIVO', value: '\u200B' },
         {
-          name: '🥉  <@&1476854892181065739>',
-          value: '▸ Lidera el grupo de patrulla en calle\n' +
+          name: '🥉  Capitán Halcón',
+          value: rol('1476854892181065739', 'Capitán Halcón') + '\n▸ Lidera el grupo de patrulla en calle\n' +
                  '▸ Distribuye posiciones y mantiene el enlace por radio\n' +
                  '▸ Decide la interceptación cuando no hay mando superior presente\n' +
                  '▸ Responde por el desempeño de su grupo'
         },
         {
-          name: '🔹  <@&1460777138129998025>',
-          value: '▸ Segundo del Capitán en el grupo asignado\n' +
+          name: '🔹  Teniente Halcón',
+          value: rol('1460777138129998025', 'Teniente Halcón') + '\n▸ Segundo del Capitán en el grupo asignado\n' +
                  '▸ Conduce unidad propia dentro del despliegue\n' +
                  '▸ Instruye a Miembros y Cadetes en procedimiento\n' +
                  '▸ Primer escalón de mando efectivo'
@@ -940,15 +948,15 @@ client.on('interactionCreate', async (interaction) => {
         { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
         { name: '⬛  AGENTES', value: '\u200B' },
         {
-          name: '🔸  <@&1459343074378387591>',
-          value: '▸ Agente operativo pleno de la unidad\n' +
+          name: '🔸  Miembro Halcón',
+          value: rol('1459343074378387591', 'Miembro Halcón') + '\n▸ Agente operativo pleno de la unidad\n' +
                  '▸ Cubre patrulla, custodia y respuesta sin restricción\n' +
                  '▸ Habilitado para operar sin supervisión directa\n' +
                  '▸ Responde a las órdenes del mando sin dilación'
         },
         {
-          name: '▫️  <@&1494247166053449798>',
-          value: '▸ Ingreso reciente a la unidad — período de instrucción\n' +
+          name: '▫️  Cadete Halcón',
+          value: rol('1494247166053449798', 'Cadete Halcón') + '\n▸ Ingreso reciente a la unidad — período de instrucción\n' +
                  '▸ Opera únicamente acompañado por un agente de mayor rango\n' +
                  '▸ Evaluado sobre procedimiento, criterio y conducta\n' +
                  '⚠️  **No participa en custodias ni intervenciones de alto riesgo.**'
