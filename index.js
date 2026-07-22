@@ -16,7 +16,6 @@ const GITHUB_REPO       = 'webstudios-ar/halcon-bot';
 
 const CANAL_PANEL       = '1523848151763783690';   // panel con botón POSTULARSE
 const CANAL_APROBACION  = '1523830367889522878';   // donde llegan las postulaciones para aprobar
-const CANAL_RESULTADOS  = '1523831102614143187';   // archivo de exámenes con resultado final (privado para roles autorizados)
 const CANAL_RESULTADO   = '1523831102614143187';   // resultado final aprobado/rechazado
 const CANAL_UPDATES     = '1493446131663896626';
 const CANAL_OPERATIVOS  = '1523846077038596197';
@@ -25,7 +24,6 @@ const ROL_HALCON_BASE   = '1466327608697290854';   // rol grupal "Halcón"
 const ROL_MIEMBRO       = '1459343074378387591';   // rol "Miembro Halcón"
 const ROL_CADETE        = '1494247166053449798';   // rol "Cadete Halcón"
 const ROL_DUENO_HALCON  = '1474197418890362911';
-const ROL_DUENO_GENERAL = '1452149338049613864'; // Dueño general del server (para bypass de testing)
 
 const ROLES_AUTORIZADOS = ['1474197418890362911','1460348058888830976','1466331349945155615'];
 
@@ -171,10 +169,10 @@ function iniciarTimeoutPostulacion(userId) {
   p.timeoutId = setTimeout(async () => {
     if (!postulacionesActivas[userId]) return;
     delete postulacionesActivas[userId];
-    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+    await guardarPostulacionesActivas();
     // Aplicar cooldown de 24hs por no terminar a tiempo
     postulacionesCooldown[userId] = Date.now() + COOLDOWN_POSTULACION_MS;
-    guardarCooldowns().catch(e => console.error("Save cooldowns:", e.message));
+    await guardarCooldowns();
     // Intentar avisar por DM
     try {
       const guild = client.guilds.cache.first();
@@ -277,7 +275,12 @@ client.once('ready', async () => {
 
     .addSubcommand(s => s.setName('panel-postulaciones').setDescription('[HEAD] Publica el panel con el botón para postularse'));
 
-  const commands = [halconCmd.toJSON()];
+  // Comando suelto /jerarquia
+  const jerarquiaCmd = new SlashCommandBuilder()
+    .setName('jerarquia')
+    .setDescription('Muestra la jerarquía y estructura del Grupo Halcón');
+
+  const commands = [halconCmd.toJSON(), jerarquiaCmd.toJSON()];
 
   const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
   try {
@@ -288,12 +291,6 @@ client.once('ready', async () => {
 
 // ==================== INTERACTIONS ====================
 client.on('interactionCreate', async (interaction) => {
-  const tipoLog = interaction.isChatInputCommand() ? 'SLASH:' + interaction.commandName
-    : interaction.isButton() ? 'BUTTON:' + interaction.customId
-    : interaction.isModalSubmit() ? 'MODAL:' + interaction.customId
-    : 'OTHER';
-  console.log('[INTERACTION] ' + tipoLog + ' por ' + interaction.user.tag);
-
   // Bloquear interacciones hasta que el bot haya cargado todos los datos
   if (!botListo) {
     try {
@@ -323,7 +320,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.rango  = interaction.fields.getTextInputValue('m1_rango');
     postulacionesActivas[uid].datos.mic    = interaction.fields.getTextInputValue('m1_mic');
     postulacionesActivas[uid].datos.disp   = interaction.fields.getTextInputValue('m1_disp');
-    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+    await guardarPostulacionesActivas();
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -353,7 +350,7 @@ client.on('interactionCreate', async (interaction) => {
       });
     }
     postulacionesActivas[uid].datos.latasResp = respuestas;
-    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+    await guardarPostulacionesActivas();
 
     const aciertos = respuestas.filter(r => r.acierta).length;
     const total = respuestas.length;
@@ -376,7 +373,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.fuga      = interaction.fields.getTextInputValue('m2_fuga');
     postulacionesActivas[uid].datos.disparar  = interaction.fields.getTextInputValue('m2_disparar');
     postulacionesActivas[uid].datos.nvl       = interaction.fields.getTextInputValue('m2_nvl');
-    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+    await guardarPostulacionesActivas();
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -396,7 +393,7 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.punto     = interaction.fields.getTextInputValue('m3_punto');
     postulacionesActivas[uid].datos.superior  = interaction.fields.getTextInputValue('m3_superior');
     postulacionesActivas[uid].datos.patrulla  = interaction.fields.getTextInputValue('m3_patrulla');
-    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+    await guardarPostulacionesActivas();
 
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
@@ -417,12 +414,10 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.personaje = interaction.fields.getTextInputValue('m4_personaje');
 
     const d = postulacionesActivas[uid].datos;
-
-    // Helper para valores con default y truncado
-    const sf = (v, max = 400) => {
-      const s = (v || '_(vacío)_').toString();
-      return s.length > max ? s.slice(0, max - 3) + '...' : s;
-    };
+    // Cancelar el timeout ya que completó
+    if (postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
+    delete postulacionesActivas[uid];
+    await guardarPostulacionesActivas();
 
     // Preparar detalle de latas
     const latasResp = d.latasResp || [];
@@ -434,68 +429,42 @@ client.on('interactionCreate', async (interaction) => {
       return emoji + ' **' + r.nombre + ':** respondió `' + resp + '` (correcto: `' + r.correcto + '`)';
     }).join('\n');
 
-    // Embed 1 — Datos personales + Latas + Preguntas 1-4
-    const embed1 = new EmbedBuilder()
-      .setTitle('🦅 NUEVO EXAMEN DE INGRESO — GRUPO HALCÓN (1/2) 🦅')
+    // Construir embed consolidado para HEAD Halcón
+    const embed = new EmbedBuilder()
+      .setTitle('🦅  NUEVO EXAMEN DE INGRESO — GRUPO HALCÓN  🦅')
       .setColor(0xFFD700)
       .setThumbnail(interaction.user.displayAvatarURL())
       .addFields(
-        { name: '👤 Nombre IC',       value: sf(d.nombre, 60),   inline: true },
-        { name: '🎖️ Rango PFA',       value: sf(d.rango, 60),    inline: true },
-        { name: '🎙️ Micrófono',       value: sf(d.mic, 60),      inline: true },
-        { name: '📅 Disponibilidad',  value: sf(d.disp, 60),     inline: true },
-        { name: '🔗 Discord',         value: '<@' + uid + '>',   inline: true },
-        { name: '🆔 Discord ID',      value: '`' + uid + '`',    inline: true },
-        { name: '🥫 Latas — resultado', value: '**' + aciertos + '/' + total + ' correctas**\n' + (sf(detalleLatas, 800) || '_(sin datos)_'), inline: false },
-        { name: '🚗 P1 — Sospechoso en fuga', value: sf(d.fuga), inline: false },
-        { name: '🔫 P2 — Disparar primero', value: sf(d.disparar), inline: false },
-        { name: '📖 P3 — NVL', value: sf(d.nvl), inline: false },
-        { name: '📍 P4 — Cubriendo un punto', value: sf(d.punto), inline: false }
-      )
-      .setFooter({ text: 'Parte 1/2 • Grupo Halcón' });
-
-    // Embed 2 — Preguntas 5-8
-    const embed2 = new EmbedBuilder()
-      .setColor(0xFFD700)
-      .setTitle('🦅 EXAMEN DE INGRESO — GRUPO HALCÓN (2/2) 🦅')
-      .addFields(
-        { name: '⚠️ P5 — Superior faltando el respeto', value: sf(d.superior), inline: false },
-        { name: '🚙 P6 — Solo en patrulla', value: sf(d.patrulla), inline: false },
-        { name: '❓ P7 — ¿Por qué Halcón?', value: sf(d.porque), inline: false },
-        { name: '🧍 P8 — Personaje IC', value: sf(d.personaje), inline: false }
+        { name: '👤 Nombre IC',       value: d.nombre,   inline: true },
+        { name: '🎖️ Rango PFA',       value: d.rango,    inline: true },
+        { name: '🎙️ Micrófono',       value: d.mic,      inline: true },
+        { name: '📅 Disponibilidad',  value: d.disp,     inline: true },
+        { name: '🔗 Discord',         value: '<@' + uid + '>',            inline: true },
+        { name: '🆔 Discord ID',      value: '`' + uid + '`',             inline: true },
+        { name: '🥫 Latas — resultado', value: '**' + aciertos + '/' + total + ' correctas**\n' + (detalleLatas || '_(sin datos)_'), inline: false },
+        { name: '\u200B', value: '\u200B', inline: false },
+        { name: '🚗 P1 — Sospechoso en fuga', value: d.fuga.slice(0, 1024), inline: false },
+        { name: '🔫 P2 — Disparar primero', value: d.disparar.slice(0, 1024), inline: false },
+        { name: '📖 P3 — NVL', value: d.nvl.slice(0, 1024), inline: false },
+        { name: '📍 P4 — Cubriendo un punto', value: d.punto.slice(0, 1024), inline: false },
+        { name: '⚠️ P5 — Superior faltando el respeto', value: d.superior.slice(0, 1024), inline: false },
+        { name: '🚙 P6 — Solo en patrulla', value: d.patrulla.slice(0, 1024), inline: false },
+        { name: '❓ P7 — ¿Por qué Halcón?', value: d.porque.slice(0, 1024), inline: false },
+        { name: '🧍 P8 — Personaje IC', value: d.personaje.slice(0, 1024), inline: false }
       )
       .setTimestamp()
-      .setFooter({ text: 'Parte 2/2 • Grupo Halcón • Sistema de Postulaciones' });
+      .setFooter({ text: 'Grupo Halcón • Sistema de Postulaciones' });
 
     const mencionRoles = ROLES_AUTORIZADOS.map(r => '<@&' + r + '>').join(' ');
-    const nombreLimpio = (d.nombre || 'postulante').replace(/[^a-zA-Z0-9]/g, '').slice(0, 30) || 'postulante';
     const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder().setCustomId('ap_' + Date.now() + '_' + nombreLimpio + '_' + uid).setLabel('APROBAR').setStyle(ButtonStyle.Success),
-      new ButtonBuilder().setCustomId('re_' + Date.now() + '_' + nombreLimpio + '_' + uid).setLabel('RECHAZAR').setStyle(ButtonStyle.Danger)
+      new ButtonBuilder().setCustomId('ap_' + Date.now() + '_' + d.nombre.replace(/[^a-zA-Z0-9]/g,'') + '_' + uid).setLabel('APROBAR').setStyle(ButtonStyle.Success),
+      new ButtonBuilder().setCustomId('re_' + Date.now() + '_' + d.nombre.replace(/[^a-zA-Z0-9]/g,'') + '_' + uid).setLabel('RECHAZAR').setStyle(ButtonStyle.Danger)
     );
 
-    // Intentar enviar los embeds — si falla, NO borrar el estado (el user puede reintentar)
     try {
       const canalAprob = await client.channels.fetch(CANAL_APROBACION);
-      await canalAprob.send({
-        content: mencionRoles,
-        embeds: [embed1, embed2],
-        components: [row],
-        allowedMentions: { roles: ROLES_AUTORIZADOS }
-      });
-    } catch (e) {
-      console.error('[POSTULAR MODAL 4] Error publicando postulación:', e);
-      await interaction.reply({
-        content: '❌ **Hubo un error al enviar tu postulación.** Tus respuestas siguen guardadas. Volvé a apretar "🦅 POSTULARSE" del panel para reintentar.\n\n_Error: ' + (e.message || 'desconocido') + '_',
-        ephemeral: true
-      });
-      return;
-    }
-
-    // Solo si el envío fue OK, borrar el estado
-    if (postulacionesActivas[uid] && postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
-    delete postulacionesActivas[uid];
-    guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+      await canalAprob.send({ content: mencionRoles, embeds: [embed], components: [row], allowedMentions: { roles: ROLES_AUTORIZADOS } });
+    } catch (e) { console.error('Publicar postulacion:', e.message); }
 
     await interaction.reply({ content: '✅ **Tu postulación fue enviada correctamente.**\n\nLa oficialidad del Halcón revisará tu examen y te avisará por mensaje privado si es aprobada o rechazada.\n\n_— Grupo Halcón_', ephemeral: true });
     return;
@@ -530,7 +499,7 @@ client.on('interactionCreate', async (interaction) => {
     );
 
     const canalOp = await client.channels.fetch(CANAL_OPERATIVOS);
-    const msgEnviado = await canalOp.send({ content: '<@&' + ROL_HALCON + '>', embeds: [embed], components: [rowAnota] });
+    const msgEnviado = await canalOp.send({ content: '<@&' + ROL_HALCON_BASE + '>', embeds: [embed], components: [rowAnota] });
 
     const rowReal = new ActionRowBuilder().addComponents(
       new ButtonBuilder()
@@ -560,7 +529,7 @@ client.on('interactionCreate', async (interaction) => {
       }
 
       asistentes[msgId].push(interaction.user.id);
-      guardarAsistentes().catch(e => console.error("Save asistentes:", e.message));
+      await guardarAsistentes();
       const lista = asistentes[msgId].map(uid => '<@' + uid + '>').join('\n');
 
       const msgOriginal = interaction.message;
@@ -578,43 +547,29 @@ client.on('interactionCreate', async (interaction) => {
     if (id === 'POSTULAR_INICIAR') {
       const uid = interaction.user.id;
 
-      // Los DUEÑOS pueden postular indefinidamente (modo testing)
-      const esDueno = interaction.member.roles.cache.has(ROL_DUENO_HALCON) ||
-                      interaction.member.roles.cache.has(ROL_DUENO_GENERAL);
-      console.log('[POSTULAR_INICIAR] Usuario:', interaction.user.tag, '· esDueno:', esDueno, '· roles:', interaction.member.roles.cache.map(r => r.id).join(', '));
-
-      // Chequear cooldown (dueños lo saltan)
-      if (!esDueno) {
-        const cooldownHasta = estaEnCooldown(uid);
-        if (cooldownHasta) {
-          await interaction.reply({
-            content: '⏳ Ya te postulaste recientemente. Podés volver a intentar <t:' + Math.floor(cooldownHasta / 1000) + ':R>.',
-            ephemeral: true
-          });
-          return;
-        }
+      // Chequear cooldown
+      const cooldownHasta = estaEnCooldown(uid);
+      if (cooldownHasta) {
+        await interaction.reply({
+          content: '⏳ Ya te postulaste recientemente. Podés volver a intentar <t:' + Math.floor(cooldownHasta / 1000) + ':R>.',
+          ephemeral: true
+        });
+        return;
       }
 
-      // Chequear si ya tiene postulación activa (dueños la reinician)
+      // Chequear si ya tiene postulación activa
       if (postulacionesActivas[uid]) {
-        if (esDueno) {
-          // Dueño reinicia su postulación pendiente
-          if (postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
-          delete postulacionesActivas[uid];
-          guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
-        } else {
-          const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
-          const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
-          await interaction.reply({
-            content: '❌ Ya tenés una postulación en curso. Te quedan **' + minutos + ' minutos** para terminarla. Buscá en tus mensajes el último modal enviado por el bot.',
-            ephemeral: true
-          });
-          return;
-        }
+        const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
+        const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
+        await interaction.reply({
+          content: '❌ Ya tenés una postulación en curso. Te quedan **' + minutos + ' minutos** para terminarla. Buscá en tus mensajes el último modal enviado por el bot.',
+          ephemeral: true
+        });
+        return;
       }
 
-      // Chequear si ya es Halcón (dueños lo saltan)
-      if (!esDueno && (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE))) {
+      // Chequear si ya es Halcón
+      if (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE)) {
         await interaction.reply({ content: '❌ Ya sos parte del Grupo Halcón. No podés volver a postularte.', ephemeral: true });
         return;
       }
@@ -627,7 +582,7 @@ client.on('interactionCreate', async (interaction) => {
         datos: {}
       };
       iniciarTimeoutPostulacion(uid);
-      guardarPostulacionesActivas().catch(e => console.error("Save postulaciones:", e.message));
+      await guardarPostulacionesActivas();
       const modal = new ModalBuilder()
         .setCustomId('POSTULAR_MODAL_1')
         .setTitle('Postulación Halcón (1/5) — Datos');
@@ -710,7 +665,7 @@ client.on('interactionCreate', async (interaction) => {
           .setTitle('Postulación Halcón (3/5) — Protocolo');
         modal.addComponents(
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m2_fuga').setLabel('Sospechoso se fuga en vehículo — ¿qué hacés?')
+            new TextInputBuilder().setCustomId('m2_fuga').setLabel('Sospechoso que se fuga en vehículo — ¿qué hacés?')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
           ),
           new ActionRowBuilder().addComponents(
@@ -732,17 +687,17 @@ client.on('interactionCreate', async (interaction) => {
           .setTitle('Postulación Halcón (4/5) — Criterio');
         modal.addComponents(
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m3_punto').setLabel('40 min cubriendo un punto — ¿qué hacés?')
+            new TextInputBuilder().setCustomId('m3_punto').setLabel('40 min cubriendo punto sin novedades — ¿qué hacés?')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
               .setPlaceholder('Tu compañero te dice que te vayas. ¿Qué hacés?')
           ),
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m3_superior').setLabel('Superior falta el respeto a un civil')
+            new TextInputBuilder().setCustomId('m3_superior').setLabel('Superior falta el respeto a un civil sin motivo')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
               .setPlaceholder('Vos estás al lado. ¿Cómo actuás?')
           ),
           new ActionRowBuilder().addComponents(
-            new TextInputBuilder().setCustomId('m3_patrulla').setLabel('Solo en patrulla, auto sospechoso')
+            new TextInputBuilder().setCustomId('m3_patrulla').setLabel('Solo en patrulla, auto sospechoso mirando un local')
               .setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)
               .setPlaceholder('Sin apoyo disponible. ¿Qué hacés paso a paso?')
           )
@@ -833,25 +788,6 @@ client.on('interactionCreate', async (interaction) => {
             await canalUp.send({ content: '<@' + discordId + '>', embeds: [embedIngreso] });
           } catch (e) { console.error('Publicar ingreso en updates:', e.message); }
 
-          // Guardar el examen completo + resultado APROBADO en CANAL_RESULTADOS
-          try {
-            const embedsOriginales = interaction.message.embeds.map(e => EmbedBuilder.from(e).setColor(0x2ECC71));
-            const embedResultado = new EmbedBuilder()
-              .setTitle('✅ RESULTADO — APROBADO')
-              .setDescription('Postulación de <@' + discordId + '> **APROBADA**.')
-              .addFields(
-                { name: '👮 Aprobado por', value: revisor,                                      inline: true },
-                { name: '📅 Fecha',        value: '<t:' + Math.floor(Date.now() / 1000) + ':F>', inline: true },
-                { name: '🆔 Discord ID',   value: '`' + discordId + '`',                        inline: true }
-              )
-              .setColor(0x2ECC71)
-              .setThumbnail(miembro.displayAvatarURL())
-              .setTimestamp()
-              .setFooter({ text: 'Grupo Halcón · Archivo de Resultados' });
-            const canalResultados = await client.channels.fetch(CANAL_RESULTADOS);
-            await canalResultados.send({ embeds: [...embedsOriginales, embedResultado] });
-          } catch (e) { console.error('Publicar en resultados (APROBADO):', e.message); }
-
           // DM al aprobado
           try {
             await miembro.send({ content: '✅ **¡Fuiste APROBADO en el Grupo Halcón!**\n\nBienvenido a la unidad de élite de la PFA. Ya se te asignaron los roles de **Cadete Halcón** y podés participar en los operativos.\n\n**Revisado por:** ' + revisor + '\n\n_— Grupo Halcón · Kilombo RP_' });
@@ -879,26 +815,7 @@ client.on('interactionCreate', async (interaction) => {
 
           // Aplicar cooldown de 24hs
           postulacionesCooldown[discordId] = Date.now() + COOLDOWN_POSTULACION_MS;
-          guardarCooldowns().catch(e => console.error("Save cooldowns:", e.message));
-
-          // Guardar el examen completo + resultado RECHAZADO en CANAL_RESULTADOS
-          try {
-            const embedsOriginales = interaction.message.embeds.map(e => EmbedBuilder.from(e).setColor(0xE74C3C));
-            const embedResultado = new EmbedBuilder()
-              .setTitle('❌ RESULTADO — RECHAZADO')
-              .setDescription('Postulación de <@' + discordId + '> **RECHAZADA**.')
-              .addFields(
-                { name: '👮 Rechazado por', value: revisor,                                      inline: true },
-                { name: '📅 Fecha',         value: '<t:' + Math.floor(Date.now() / 1000) + ':F>', inline: true },
-                { name: '🆔 Discord ID',    value: '`' + discordId + '`',                        inline: true },
-                { name: '⏳ Cooldown',      value: '24 horas',                                    inline: true }
-              )
-              .setColor(0xE74C3C)
-              .setTimestamp()
-              .setFooter({ text: 'Grupo Halcón · Archivo de Resultados' });
-            const canalResultados = await client.channels.fetch(CANAL_RESULTADOS);
-            await canalResultados.send({ embeds: [...embedsOriginales, embedResultado] });
-          } catch (e) { console.error('Publicar en resultados (RECHAZADO):', e.message); }
+          await guardarCooldowns();
 
           // Enviar DM al postulante rechazado
           try {
@@ -921,6 +838,181 @@ client.on('interactionCreate', async (interaction) => {
 
   // ==================== SLASH COMMANDS ====================
   if (!interaction.isChatInputCommand()) return;
+
+  // ==================== /jerarquia ====================
+  if (interaction.commandName === 'jerarquia') {
+    await interaction.deferReply();
+
+    const ORGANIGRAMA =
+      '```\n' +
+      '              DUEÑO/A\n' +
+      '                 |\n' +
+      '             DIRECTOR/A\n' +
+      '                 |\n' +
+      '          JEFE / SUB JEFE\n' +
+      '                 |\n' +
+      '            COMANDANTE\n' +
+      '                 |\n' +
+      '              CAPITÁN\n' +
+      '                 |\n' +
+      '             TENIENTE\n' +
+      '                 |\n' +
+      '       MIEMBRO  ·  CADETE\n' +
+      '```';
+
+    const FUNCIONES =
+      '```\n' +
+      '           GRUPO HALCÓN\n' +
+      '                 |\n' +
+      ' PATRULLA · CUSTODIA · RESPUESTA\n' +
+      '```';
+
+    // ---------- EMBED 1: CONDUCCIÓN Y JEFATURA ----------
+    const embed1 = new EmbedBuilder()
+      .setAuthor({ name: 'Grupo Halcón · Unidad de Operaciones Especiales' })
+      .setTitle('🦅  ESTRUCTURA DE MANDO')
+      .setDescription(
+        'Responsable de la **presencia operativa sostenida**: patrullaje, custodia de convoyes y traslados, ' +
+        'interceptación de robos en curso y control de zonas.\n\n' + ORGANIGRAMA
+      )
+      .addFields(
+        { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
+        { name: '⬛  CONDUCCIÓN', value: '\u200B' },
+        {
+          name: '👑  <@&1474197418890362911>',
+          value: '▸ Autoridad máxima de la unidad\n' +
+                 '▸ Establece la normativa, la estructura y sus modificaciones\n' +
+                 '▸ Resuelve ascensos de alto rango y decisiones críticas\n' +
+                 '_Conducción institucional. No interviene en campo._'
+        },
+        {
+          name: '⭐  <@&1460348058888830976>',
+          value: '▸ Conducción efectiva de la unidad\n' +
+                 '▸ Enlace con el alto mando de la P.F.A.\n' +
+                 '▸ Define la estrategia general de despliegue y cobertura\n' +
+                 '▸ Autoriza operativos de envergadura\n' +
+                 '_Máxima autoridad operativa activa._'
+        },
+        { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
+        { name: '⬛  JEFATURA', value: '\u200B' },
+        {
+          name: '🎖️  <@&1466331349945155615>',
+          value: '▸ Comanda el despliegue diario de la unidad\n' +
+                 '▸ Asigna zonas, turnos y funciones\n' +
+                 '▸ Resuelve en tiempo real y asume la responsabilidad del resultado\n' +
+                 '_La autoridad en el terreno es indiscutible._'
+        },
+        {
+          name: '🥇  <@&1466331228864254002>',
+          value: '▸ Segundo al mando de la unidad\n' +
+                 '▸ Asume la conducción en ausencia del Jefe\n' +
+                 '▸ Apoya la coordinación y el control del personal\n' +
+                 '▸ Habilitado para conducir operativos de menor escala'
+        },
+        {
+          name: '🥈  <@&1466328471536930846>',
+          value: '▸ Conduce el operativo asignado por Jefatura\n' +
+                 '▸ Supervisa a los Capitanes en despliegue\n' +
+                 '▸ Autoriza intervenciones sobre robos en curso\n' +
+                 '_Nexo entre la Jefatura y el mando en calle._'
+        }
+      )
+      .setColor(0xFFD700);
+
+    // ---------- EMBED 2: MANDO OPERATIVO Y AGENTES ----------
+    const embed2 = new EmbedBuilder()
+      .addFields(
+        { name: '⬛  MANDO OPERATIVO', value: '\u200B' },
+        {
+          name: '🥉  <@&1476854892181065739>',
+          value: '▸ Lidera el grupo de patrulla en calle\n' +
+                 '▸ Distribuye posiciones y mantiene el enlace por radio\n' +
+                 '▸ Decide la interceptación cuando no hay mando superior presente\n' +
+                 '▸ Responde por el desempeño de su grupo'
+        },
+        {
+          name: '🔹  <@&1460777138129998025>',
+          value: '▸ Segundo del Capitán en el grupo asignado\n' +
+                 '▸ Conduce unidad propia dentro del despliegue\n' +
+                 '▸ Instruye a Miembros y Cadetes en procedimiento\n' +
+                 '▸ Primer escalón de mando efectivo'
+        },
+        { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
+        { name: '⬛  AGENTES', value: '\u200B' },
+        {
+          name: '🔸  <@&1459343074378387591>',
+          value: '▸ Agente operativo pleno de la unidad\n' +
+                 '▸ Cubre patrulla, custodia y respuesta sin restricción\n' +
+                 '▸ Habilitado para operar sin supervisión directa\n' +
+                 '▸ Responde a las órdenes del mando sin dilación'
+        },
+        {
+          name: '▫️  <@&1494247166053449798>',
+          value: '▸ Ingreso reciente a la unidad — período de instrucción\n' +
+                 '▸ Opera únicamente acompañado por un agente de mayor rango\n' +
+                 '▸ Evaluado sobre procedimiento, criterio y conducta\n' +
+                 '⚠️  **No participa en custodias ni intervenciones de alto riesgo.**'
+        }
+      )
+      .setColor(0xFFD700)
+      .setFooter({ text: 'Grupo Halcón • Estructura de Mando' });
+
+    // ---------- EMBED 3: FUNCIONES OPERATIVAS ----------
+    const embed3 = new EmbedBuilder()
+      .setTitle('🎯  FUNCIONES OPERATIVAS')
+      .setDescription(
+        'Transversales al rango. Todo agente habilitado rota entre las tres según el despliegue del día.\n\n' + FUNCIONES
+      )
+      .addFields(
+        {
+          name: '🚙  Patrulla',
+          value: '▸ Presencia disuasiva y cobertura de zona asignada\n' +
+                 '▸ Primer respondiente ante incidente en su sector\n' +
+                 '▸ Releva movimientos irregulares y los informa por radio\n' +
+                 '▸ No abandona el sector sin autorización del mando'
+        },
+        {
+          name: '🚛  Custodia',
+          value: '▸ Escolta de convoyes blindados y traslados de valores\n' +
+                 '▸ Protección de objetivos fijos y personal bajo resguardo\n' +
+                 '▸ Mantiene la formación establecida durante todo el trayecto\n' +
+                 '⚠️  **La ruta no se difunde por canal abierto.**'
+        },
+        {
+          name: '🚨  Respuesta',
+          value: '▸ Interceptación de robos en curso\n' +
+                 '▸ Persecución vehicular conforme al protocolo vigente\n' +
+                 '▸ Contención perimetral y aseguramiento de la zona\n' +
+                 '▸ Sostiene el cerco exterior mientras dure la intervención'
+        },
+        { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
+        {
+          name: '🤝  ARTICULACIÓN CON EL G.E.O.F',
+          value: '▸ Halcón contiene, asegura el perímetro y sostiene el cerco\n' +
+                 '▸ Ante rehenes o necesidad de ingreso táctico, el **G.E.O.F toma el mando de la intervención**\n' +
+                 '▸ Halcón mantiene el cierre exterior y no ingresa salvo orden expresa\n' +
+                 '_Halcón está en la calle antes. El G.E.O.F entra cuando la situación se cristaliza._'
+        },
+        { name: '\u200B', value: '━━━━━━━━━━━━━━━━━━━━━━━━' },
+        {
+          name: '📌  INCORPORACIÓN A LA UNIDAD',
+          value: '▸ El ingreso se realiza **por postulación con examen** desde el panel habilitado\n' +
+                 '▸ Se evalúa procedimiento, criterio y conocimiento de la normativa\n' +
+                 '▸ Todo ingreso comienza en el rango de **Cadete Halcón**\n' +
+                 '▸ El pase a Miembro depende del desempeño durante la instrucción'
+        }
+      )
+      .setColor(0xFFD700)
+      .setTimestamp()
+      .setFooter({ text: 'Grupo Halcón • Funciones Operativas' });
+
+    await interaction.editReply({
+      embeds: [embed1, embed2, embed3],
+      allowedMentions: { parse: [] }
+    });
+    return;
+  }
+
   if (interaction.commandName !== 'halcon') return;
 
   const sub = interaction.options.getSubcommand();
