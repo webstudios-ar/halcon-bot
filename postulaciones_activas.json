@@ -2,6 +2,11 @@
   "1070781671856668692": {
     "inicio": 1785880030702,
     "expiraTs": 1785880930702,
-    "datos": {}
+    "datos": {
+      "nombre": "Julian Lopez",
+      "rango": "Sargento",
+      "mic": "Si",
+      "disp": "todos los dias"
+    }
   }
 }
