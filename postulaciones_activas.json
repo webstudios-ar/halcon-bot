@@ -6,7 +6,8 @@
       "nombre": "Julian Lopez",
       "rango": "Sargento",
       "mic": "Si",
-      "disp": "todos los dias"
+      "disp": "todos los dias",
+      "latasResp": []
     }
   }
 }
