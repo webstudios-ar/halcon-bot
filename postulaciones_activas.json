@@ -6,7 +6,61 @@
       "nombre": "aaaaaaaaaaa",
       "rango": "aaaaaaaaaa",
       "mic": "aaaaaaaaaa",
-      "disp": "aaaaaaaaaaa"
+      "disp": "aaaaaaaaaaa",
+      "robosPreguntados": [
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Carnicería",
+          "correcto": 8,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": null,
+          "acierta": false
+        }
+      ]
     }
   }
 }
