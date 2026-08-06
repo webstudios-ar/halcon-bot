@@ -1,36 +1,4 @@
 {
-  "1251547352192389144": {
-    "inicio": 1786046282477,
-    "expiraTs": 1786047182478,
-    "datos": {
-      "nombre": "Cristian Zanotti",
-      "rango": "teniente",
-      "mic": "si",
-      "disp": "2 horas por dia",
-      "robosPreguntados": [
-        {
-          "nombre": "Maze Bank",
-          "latas": 3
-        },
-        {
-          "nombre": "Museo",
-          "latas": 3
-        },
-        {
-          "nombre": "Casa Michael",
-          "latas": 2
-        },
-        {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Joyería",
-          "latas": 2
-        }
-      ]
-    }
-  },
   "1528192265720168468": {
     "inicio": 1786046315595,
     "expiraTs": 1786047215595,
