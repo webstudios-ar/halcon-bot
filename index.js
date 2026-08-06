@@ -315,13 +315,14 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.rango  = interaction.fields.getTextInputValue('m1_rango');
     postulacionesActivas[uid].datos.mic    = interaction.fields.getTextInputValue('m1_mic');
     postulacionesActivas[uid].datos.disp   = interaction.fields.getTextInputValue('m1_disp');
-    await guardarPostulacionesActivas();
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
     const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId('POSTULAR_SIG_LATAS').setLabel('Continuar (2/5) — Robos').setStyle(ButtonStyle.Primary)
     );
+    // Responder PRIMERO, guardar en segundo plano
     await interaction.reply({ content: '✅ Datos guardados. Te quedan **' + minutos + ' minutos**.\n\nClick en **Continuar** para el examen de **cantidades de robos**.', components: [row], ephemeral: true });
+    guardarPostulacionesActivas().catch(err => console.error('Error guardando modal 1:', err.message));
     return;
   }
 
@@ -344,7 +345,6 @@ client.on('interactionCreate', async (interaction) => {
       });
     }
     postulacionesActivas[uid].datos.latasResp = respuestas;
-    await guardarPostulacionesActivas();
     const aciertos = respuestas.filter(r => r.acierta).length;
     const total = respuestas.length;
     const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
@@ -352,7 +352,9 @@ client.on('interactionCreate', async (interaction) => {
     const row = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId('POSTULAR_SIG_3').setLabel('Continuar (3/5) — Protocolo').setStyle(ButtonStyle.Primary)
     );
+    // Responder PRIMERO, guardar en segundo plano
     await interaction.reply({ content: '✅ Cantidades registradas: **' + aciertos + '/' + total + ' correctas**. Te quedan **' + minutos + ' minutos**.\n\nClick en **Continuar** para las preguntas de protocolo.', components: [row], ephemeral: true });
+    guardarPostulacionesActivas().catch(err => console.error('Error guardando latas:', err.message));
     return;
   }
 
@@ -365,13 +367,14 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.fuga      = interaction.fields.getTextInputValue('m2_fuga');
     postulacionesActivas[uid].datos.disparar  = interaction.fields.getTextInputValue('m2_disparar');
     postulacionesActivas[uid].datos.nvl       = interaction.fields.getTextInputValue('m2_nvl');
-    await guardarPostulacionesActivas();
-    const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
-    const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
-    const row = new ActionRowBuilder().addComponents(
+    const restanteMs2 = postulacionesActivas[uid].expiraTs - Date.now();
+    const minutos2 = Math.max(0, Math.ceil(restanteMs2 / 60000));
+    const row2 = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId('POSTULAR_SIG_4').setLabel('Continuar (4/5) — Criterio').setStyle(ButtonStyle.Primary)
     );
-    await interaction.reply({ content: '✅ Respuestas de protocolo guardadas. Te quedan **' + minutos + ' minutos**.\n\nClick en **Continuar** para las preguntas de criterio.', components: [row], ephemeral: true });
+    // Responder PRIMERO, guardar en segundo plano
+    await interaction.reply({ content: '✅ Respuestas de protocolo guardadas. Te quedan **' + minutos2 + ' minutos**.\n\nClick en **Continuar** para las preguntas de criterio.', components: [row2], ephemeral: true });
+    guardarPostulacionesActivas().catch(err => console.error('Error guardando modal 2:', err.message));
     return;
   }
 
@@ -384,13 +387,14 @@ client.on('interactionCreate', async (interaction) => {
     postulacionesActivas[uid].datos.punto     = interaction.fields.getTextInputValue('m3_punto');
     postulacionesActivas[uid].datos.superior  = interaction.fields.getTextInputValue('m3_superior');
     postulacionesActivas[uid].datos.patrulla  = interaction.fields.getTextInputValue('m3_patrulla');
-    await guardarPostulacionesActivas();
-    const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
-    const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
-    const row = new ActionRowBuilder().addComponents(
+    const restanteMs3 = postulacionesActivas[uid].expiraTs - Date.now();
+    const minutos3 = Math.max(0, Math.ceil(restanteMs3 / 60000));
+    const row3 = new ActionRowBuilder().addComponents(
       new ButtonBuilder().setCustomId('POSTULAR_SIG_5').setLabel('Continuar (5/5) — Motivación').setStyle(ButtonStyle.Primary)
     );
-    await interaction.reply({ content: '✅ Respuestas de criterio guardadas. Te quedan **' + minutos + ' minutos**.\n\nÚltimo paso: **Motivación y personaje**.', components: [row], ephemeral: true });
+    // Responder PRIMERO, guardar en segundo plano
+    await interaction.reply({ content: '✅ Respuestas de criterio guardadas. Te quedan **' + minutos3 + ' minutos**.\n\nÚltimo paso: **Motivación y personaje**.', components: [row3], ephemeral: true });
+    guardarPostulacionesActivas().catch(err => console.error('Error guardando modal 3:', err.message));
     return;
   }
 
