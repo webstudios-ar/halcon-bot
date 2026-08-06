@@ -512,8 +512,9 @@ client.on('interactionCreate', async (interaction) => {
 
     if (id === 'POSTULAR_INICIAR') {
       const uid = interaction.user.id;
+      const esDueno = interaction.member.roles.cache.has(ROL_DUENO_HALCON);
       const cooldownHasta = estaEnCooldown(uid);
-      if (cooldownHasta) {
+      if (!esDueno && cooldownHasta) {
         await interaction.reply({ content: '⏳ Ya te postulaste recientemente. Podés volver a intentar <t:' + Math.floor(cooldownHasta / 1000) + ':R>.', ephemeral: true });
         return;
       }
@@ -523,7 +524,7 @@ client.on('interactionCreate', async (interaction) => {
         await interaction.reply({ content: '❌ Ya tenés una postulación en curso. Te quedan **' + minutos + ' minutos** para terminarla.', ephemeral: true });
         return;
       }
-      if (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE)) {
+      if (!esDueno && (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE))) {
         await interaction.reply({ content: '❌ Ya sos parte del Grupo Halcón. No podés volver a postularte.', ephemeral: true });
         return;
       }
