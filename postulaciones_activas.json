@@ -2,6 +2,11 @@
   "1251547352192389144": {
     "inicio": 1786229874770,
     "expiraTs": 1786230774770,
-    "datos": {}
+    "datos": {
+      "nombre": "Cristian Zanotti",
+      "rango": "teniente",
+      "mic": "si",
+      "disp": "2 hr diarias"
+    }
   }
 }
