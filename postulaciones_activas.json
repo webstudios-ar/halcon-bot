@@ -39,26 +39,26 @@
         {
           "nombre": "Gasolinera / Tienda",
           "correcto": 0,
-          "respondio": 0,
-          "acierta": true
+          "respondio": 3,
+          "acierta": false
         },
         {
           "nombre": "Museo",
           "correcto": 3,
-          "respondio": 3,
-          "acierta": true
+          "respondio": 2,
+          "acierta": false
         },
         {
           "nombre": "Casa Michael",
           "correcto": 2,
-          "respondio": 2,
-          "acierta": true
+          "respondio": 6,
+          "acierta": false
         },
         {
           "nombre": "Estadio",
           "correcto": 3,
-          "respondio": 3,
-          "acierta": true
+          "respondio": 0,
+          "acierta": false
         }
       ]
     }
