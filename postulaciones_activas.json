@@ -6,7 +6,61 @@
       "nombre": "Cristian Zanotti",
       "rango": "teniente",
       "mic": "si",
-      "disp": "2 hr diarias"
+      "disp": "2 hr diarias",
+      "robosPreguntados": [
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Joyería",
+          "correcto": 2,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": 0,
+          "acierta": true
+        },
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Casa Michael",
+          "correcto": 2,
+          "respondio": 2,
+          "acierta": true
+        },
+        {
+          "nombre": "Estadio",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        }
+      ]
     }
   }
 }
