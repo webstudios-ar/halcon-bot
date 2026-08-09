@@ -2,6 +2,11 @@
   "966460995511910410": {
     "inicio": 1786246607337,
     "expiraTs": 1786247507337,
-    "datos": {}
+    "datos": {
+      "nombre": "Jacob Allan",
+      "rango": "Teniente",
+      "mic": "Si",
+      "disp": "3-2 dias"
+    }
   }
 }
