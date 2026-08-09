@@ -9,19 +9,19 @@
       "disp": "3-2 dias",
       "robosPreguntados": [
         {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Rancho Abandonado",
-          "latas": 4
-        },
-        {
           "nombre": "Gasolinera / Tienda",
           "latas": 0
         },
         {
-          "nombre": "Yate",
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        },
+        {
+          "nombre": "Maze Bank",
           "latas": 3
         },
         {
@@ -31,25 +31,25 @@
       ],
       "latasResp": [
         {
-          "nombre": "Carnicería",
-          "correcto": 8,
-          "respondio": 3,
-          "acierta": false
-        },
-        {
-          "nombre": "Rancho Abandonado",
-          "correcto": 4,
-          "respondio": 3,
-          "acierta": false
-        },
-        {
           "nombre": "Gasolinera / Tienda",
           "correcto": 0,
           "respondio": 3,
           "acierta": false
         },
         {
-          "nombre": "Yate",
+          "nombre": "Estadio",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Maze Bank",
           "correcto": 3,
           "respondio": 3,
           "acierta": true
