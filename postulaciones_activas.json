@@ -28,6 +28,38 @@
           "nombre": "Rancho Abandonado",
           "latas": 4
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Joyería",
+          "correcto": 2,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Humane",
+          "correcto": 6,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": null,
+          "acierta": false
+        }
       ]
     }
   }
