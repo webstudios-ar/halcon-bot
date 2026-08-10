@@ -28,6 +28,38 @@
           "nombre": "Subte",
           "latas": 4
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Yate",
+          "correcto": 3,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Estadio",
+          "correcto": 3,
+          "respondio": null,
+          "acierta": false
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": null,
+          "acierta": false
+        }
       ]
     }
   }
