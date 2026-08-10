@@ -490,112 +490,140 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.isButton()) {
     const id = interaction.customId;
 
+    // ── ANOTA ──
     if (id.startsWith('ANOTA_')) {
-      const msgId = id.replace('ANOTA_', '');
-      if (!asistentes[msgId]) asistentes[msgId] = [];
-      if (asistentes[msgId].includes(interaction.user.id)) {
-        await interaction.reply({ content: '❌ Ya te anotaste en este operativo.', ephemeral: true });
-        return;
+      try {
+        const msgId = id.replace('ANOTA_', '');
+        if (!asistentes[msgId]) asistentes[msgId] = [];
+        if (asistentes[msgId].includes(interaction.user.id)) {
+          await interaction.reply({ content: '❌ Ya te anotaste en este operativo.', ephemeral: true });
+          return;
+        }
+        asistentes[msgId].push(interaction.user.id);
+        const lista = asistentes[msgId].map(uid => '<@' + uid + '>').join('\n');
+        const msgOriginal = interaction.message;
+        const embedActualizado = EmbedBuilder.from(msgOriginal.embeds[0])
+          .setFields(
+            ...msgOriginal.embeds[0].fields.filter(f => f.name !== '👥 Asistentes confirmados'),
+            { name: '👥 Asistentes confirmados (' + asistentes[msgId].length + ')', value: lista, inline: false }
+          );
+        await interaction.update({ embeds: [embedActualizado] });
+        guardarAsistentes().catch(e => console.error('guardarAsistentes:', e.message));
+      } catch (e) {
+        console.error('ANOTA_ error:', e);
+        try { await interaction.reply({ content: '❌ Error al anotarte.', ephemeral: true }); } catch(_) {}
       }
-      asistentes[msgId].push(interaction.user.id);
-      await guardarAsistentes();
-      const lista = asistentes[msgId].map(uid => '<@' + uid + '>').join('\n');
-      const msgOriginal = interaction.message;
-      const embedActualizado = EmbedBuilder.from(msgOriginal.embeds[0])
-        .setFields(
-          ...msgOriginal.embeds[0].fields.filter(f => f.name !== '👥 Asistentes confirmados'),
-          { name: '👥 Asistentes confirmados (' + asistentes[msgId].length + ')', value: lista, inline: false }
-        );
-      await interaction.update({ embeds: [embedActualizado] });
       return;
     }
 
+    // ── POSTULAR_INICIAR ──
     if (id === 'POSTULAR_INICIAR') {
-      const uid = interaction.user.id;
-      const esDueno = interaction.member.roles.cache.has(ROL_DUENO_HALCON);
-      const cooldownHasta = estaEnCooldown(uid);
-      if (!esDueno && cooldownHasta) {
-        await interaction.reply({ content: '⏳ Ya te postulaste recientemente. Podés volver a intentar <t:' + Math.floor(cooldownHasta / 1000) + ':R>.', ephemeral: true });
-        return;
+      try {
+        const uid = interaction.user.id;
+        const esDueno = interaction.member.roles.cache.has(ROL_DUENO_HALCON);
+        const cooldownHasta = estaEnCooldown(uid);
+        if (!esDueno && cooldownHasta) {
+          await interaction.reply({ content: '⏳ Ya te postulaste recientemente. Podés volver a intentar <t:' + Math.floor(cooldownHasta / 1000) + ':R>.', ephemeral: true });
+          return;
+        }
+        if (postulacionesActivas[uid]) {
+          // Cancelar la anterior y dejar empezar de nuevo
+          if (postulacionesActivas[uid].timeoutId) clearTimeout(postulacionesActivas[uid].timeoutId);
+          delete postulacionesActivas[uid];
+          guardarPostulacionesActivas().catch(e => console.error('guardar cancel:', e.message));
+        }
+        if (!esDueno && (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE))) {
+          await interaction.reply({ content: '❌ Ya sos parte del Grupo Halcón. No podés volver a postularte.', ephemeral: true });
+          return;
+        }
+        // Guardar en memoria PRIMERO
+        postulacionesActivas[uid] = { inicio: Date.now(), expiraTs: Date.now() + TIEMPO_MAX_POSTULACION_MS, timeoutId: null, datos: {} };
+        iniciarTimeoutPostulacion(uid);
+        // Mostrar modal INMEDIATAMENTE (antes de cualquier await lento)
+        const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_1').setTitle('Postulación Halcón (1/5) — Datos');
+        modal.addComponents(
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_nombre').setLabel('Nombre IC en el server').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(2).setMaxLength(60)),
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_rango').setLabel('Rango actual en la PFA').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(2).setMaxLength(60).setPlaceholder('Ej: Sargento, Teniente, Sub-inspector, etc.')),
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_mic').setLabel('¿Tenés micrófono? (Sí / No)').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(1).setMaxLength(10)),
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_disp').setLabel('Días disponibles por semana').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(1).setMaxLength(30).setPlaceholder('Ej: 3-4 días, 5+ días, todos los días')),
+          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_confirm').setLabel('Escribí "ACEPTO" para confirmar que leíste').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(6).setMaxLength(10).setPlaceholder('ACEPTO'))
+        );
+        await interaction.showModal(modal);
+        // Guardar en GitHub en segundo plano DESPUÉS
+        guardarPostulacionesActivas().catch(e => console.error('guardar INICIAR:', e.message));
+      } catch (e) {
+        console.error('POSTULAR_INICIAR error:', e);
+        try { await interaction.reply({ content: '❌ Error al iniciar la postulación. Intentá de nuevo.', ephemeral: true }); } catch(_) {}
       }
-      if (postulacionesActivas[uid]) {
-        const restanteMs = postulacionesActivas[uid].expiraTs - Date.now();
-        const minutos = Math.max(0, Math.ceil(restanteMs / 60000));
-        await interaction.reply({ content: '❌ Ya tenés una postulación en curso. Te quedan **' + minutos + ' minutos** para terminarla.', ephemeral: true });
-        return;
-      }
-      if (!esDueno && (interaction.member.roles.cache.has(ROL_MIEMBRO) || interaction.member.roles.cache.has(ROL_HALCON_BASE))) {
-        await interaction.reply({ content: '❌ Ya sos parte del Grupo Halcón. No podés volver a postularte.', ephemeral: true });
-        return;
-      }
-      postulacionesActivas[uid] = { inicio: Date.now(), expiraTs: Date.now() + TIEMPO_MAX_POSTULACION_MS, timeoutId: null, datos: {} };
-      iniciarTimeoutPostulacion(uid);
-      await guardarPostulacionesActivas();
-      const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_1').setTitle('Postulación Halcón (1/5) — Datos');
-      modal.addComponents(
-        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_nombre').setLabel('Nombre IC en el server').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(2).setMaxLength(60)),
-        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_rango').setLabel('Rango actual en la PFA').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(2).setMaxLength(60).setPlaceholder('Ej: Sargento, Teniente, Sub-inspector, etc.')),
-        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_mic').setLabel('¿Tenés micrófono? (Sí / No)').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(1).setMaxLength(10)),
-        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_disp').setLabel('Días disponibles por semana').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(1).setMaxLength(30).setPlaceholder('Ej: 3-4 días, 5+ días, todos los días')),
-        new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m1_confirm').setLabel('Escribí "ACEPTO" para confirmar que leíste').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(6).setMaxLength(10).setPlaceholder('ACEPTO'))
-      );
-      await interaction.showModal(modal);
       return;
     }
 
+    // ── POSTULAR_SIG_LATAS ──
     if (id === 'POSTULAR_SIG_LATAS') {
-      const uid = interaction.user.id;
-      if (!postulacionesActivas[uid]) {
-        await interaction.reply({ content: '❌ Tu postulación se venció o no existe. Volvé a arrancar desde el panel.', ephemeral: true });
-        return;
+      try {
+        const uid = interaction.user.id;
+        if (!postulacionesActivas[uid]) {
+          await interaction.reply({ content: '❌ Tu postulación se venció o no existe. Volvé a arrancar desde el panel.', ephemeral: true });
+          return;
+        }
+        const robosElegidos = elegirRobosAlAzar(5);
+        postulacionesActivas[uid].datos.robosPreguntados = robosElegidos;
+        const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_LATAS').setTitle('Halcón (2/5) — Latas por robo');
+        for (let i = 0; i < robosElegidos.length; i++) {
+          modal.addComponents(new ActionRowBuilder().addComponents(
+            new TextInputBuilder().setCustomId('lata_' + i).setLabel(robosElegidos[i].nombre + ' — ¿cuántas latas?').setStyle(TextInputStyle.Short).setRequired(true).setMinLength(1).setMaxLength(3).setPlaceholder('Número exacto')
+          ));
+        }
+        await interaction.showModal(modal);
+        guardarPostulacionesActivas().catch(e => console.error('guardar SIG_LATAS:', e.message));
+      } catch (e) {
+        console.error('POSTULAR_SIG_LATAS error:', e);
+        try { await interaction.reply({ content: '❌ Error al cargar la siguiente etapa. Intentá de nuevo.', ephemeral: true }); } catch(_) {}
       }
-      const robosElegidos = elegirRobosAlAzar(5);
-      postulacionesActivas[uid].datos.robosPreguntados = robosElegidos;
-      const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_LATAS').setTitle('Postulación Halcón (2/5) — Latas por robo');
-      for (let i = 0; i < robosElegidos.length; i++) {
-        modal.addComponents(new ActionRowBuilder().addComponents(
-          new TextInputBuilder().setCustomId('lata_' + i).setLabel('Latas permitidas: ' + robosElegidos[i].nombre).setStyle(TextInputStyle.Short).setRequired(true).setMinLength(1).setMaxLength(3).setPlaceholder('Cantidad exacta (número)')
-        ));
-      }
-      await interaction.showModal(modal);
       return;
     }
 
+    // ── POSTULAR_SIG_3 / 4 / 5 ──
     if (id.startsWith('POSTULAR_SIG_')) {
-      const paso = id.replace('POSTULAR_SIG_', '');
-      const uid = interaction.user.id;
-      if (!postulacionesActivas[uid]) {
-        await interaction.reply({ content: '❌ Tu postulación se venció o no existe. Volvé a arrancar desde el panel.', ephemeral: true });
-        return;
-      }
-      if (paso === '3') {
-        const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_2').setTitle('Postulación Halcón (3/5) — Protocolo');
-        modal.addComponents(
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m2_fuga').setLabel('Sospechoso que se fuga en vehículo — ¿qué hacés?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m2_disparar').setLabel('¿Cuándo está permitido disparar primero?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m2_nvl').setLabel('¿Qué es el NVL? Poné un ejemplo').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800))
-        );
-        await interaction.showModal(modal);
-        return;
-      }
-      if (paso === '4') {
-        const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_3').setTitle('Postulación Halcón (4/5) — Criterio');
-        modal.addComponents(
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_punto').setLabel('40 min cubriendo punto sin novedades — ¿qué hacés?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800).setPlaceholder('Tu compañero te dice que te vayas. ¿Qué hacés?')),
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_superior').setLabel('Superior falta el respeto a un civil sin motivo').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800).setPlaceholder('Vos estás al lado. ¿Cómo actuás?')),
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_patrulla').setLabel('Solo en patrulla, auto sospechoso mirando un local').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800).setPlaceholder('Sin apoyo disponible. ¿Qué hacés paso a paso?'))
-        );
-        await interaction.showModal(modal);
-        return;
-      }
-      if (paso === '5') {
-        const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_4').setTitle('Postulación Halcón (5/5) — Motivación');
-        modal.addComponents(
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m4_porque').setLabel('¿Por qué querés ser parte del Grupo Halcón?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(30).setMaxLength(1000)),
-          new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m4_personaje').setLabel('Describí a tu personaje (mínimo 3 líneas)').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(50).setMaxLength(1500).setPlaceholder('Quién es, de dónde viene y por qué entró a la PFA.'))
-        );
-        await interaction.showModal(modal);
-        return;
+      try {
+        const paso = id.replace('POSTULAR_SIG_', '');
+        const uid = interaction.user.id;
+        if (!postulacionesActivas[uid]) {
+          await interaction.reply({ content: '❌ Tu postulación se venció o no existe. Volvé a arrancar desde el panel.', ephemeral: true });
+          return;
+        }
+        if (paso === '3') {
+          const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_2').setTitle('Halcón (3/5) — Protocolo');
+          modal.addComponents(
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m2_fuga').setLabel('Sospechoso que se fuga — ¿qué hacés?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m2_disparar').setLabel('¿Cuándo está permitido disparar primero?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m2_nvl').setLabel('¿Qué es el NVL? Poné un ejemplo').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800))
+          );
+          await interaction.showModal(modal);
+          return;
+        }
+        if (paso === '4') {
+          const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_3').setTitle('Halcón (4/5) — Criterio');
+          modal.addComponents(
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_punto').setLabel('40 min sin novedades, compañero dice que te vayas').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_superior').setLabel('Superior falta el respeto a un civil').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_patrulla').setLabel('Solo en patrulla, auto sospechoso').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800))
+          );
+          await interaction.showModal(modal);
+          return;
+        }
+        if (paso === '5') {
+          const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_4').setTitle('Halcón (5/5) — Motivación');
+          modal.addComponents(
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m4_porque').setLabel('¿Por qué querés ser parte del Grupo Halcón?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(30).setMaxLength(1000)),
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m4_personaje').setLabel('Describí a tu personaje (mínimo 3 líneas)').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(50).setMaxLength(1500).setPlaceholder('Quién es, de dónde viene y por qué entró a la PFA.'))
+          );
+          await interaction.showModal(modal);
+          return;
+        }
+      } catch (e) {
+        console.error('POSTULAR_SIG_' + id + ' error:', e);
+        try { await interaction.reply({ content: '❌ Error al cargar la siguiente etapa. Intentá de nuevo.', ephemeral: true }); } catch(_) {}
       }
       return;
     }
