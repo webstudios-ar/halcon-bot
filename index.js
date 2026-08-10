@@ -605,7 +605,7 @@ client.on('interactionCreate', async (interaction) => {
         if (paso === '4') {
           const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_3').setTitle('Halcón (4/5) — Criterio');
           modal.addComponents(
-            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_punto').setLabel('40 min sin novedades, compañero dice que te vayas').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_punto').setLabel('Punto solo, compañero dice que te vayas').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
             new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_superior').setLabel('Superior falta el respeto a un civil').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800)),
             new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m3_patrulla').setLabel('Solo en patrulla, auto sospechoso').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(20).setMaxLength(800))
           );
@@ -615,7 +615,7 @@ client.on('interactionCreate', async (interaction) => {
         if (paso === '5') {
           const modal = new ModalBuilder().setCustomId('POSTULAR_MODAL_4').setTitle('Halcón (5/5) — Motivación');
           modal.addComponents(
-            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m4_porque').setLabel('¿Por qué querés ser parte del Grupo Halcón?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(30).setMaxLength(1000)),
+            new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m4_porque').setLabel('¿Por qué querés ser parte del Halcón?').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(30).setMaxLength(1000)),
             new ActionRowBuilder().addComponents(new TextInputBuilder().setCustomId('m4_personaje').setLabel('Describí a tu personaje (mínimo 3 líneas)').setStyle(TextInputStyle.Paragraph).setRequired(true).setMinLength(50).setMaxLength(1500).setPlaceholder('Quién es, de dónde viene y por qué entró a la PFA.'))
           );
           await interaction.showModal(modal);
