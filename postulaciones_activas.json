@@ -6,7 +6,29 @@
       "nombre": "AAAA",
       "rango": "AAAA",
       "mic": "AAAA",
-      "disp": "AAAA"
+      "disp": "AAAA",
+      "robosPreguntados": [
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Humane",
+          "latas": 6
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        }
+      ]
     }
   }
 }
