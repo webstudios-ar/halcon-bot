@@ -6,7 +6,29 @@
       "nombre": "AAAAAAA",
       "rango": "AAAAAAAAAAAAAA",
       "mic": "AAAAAAAAAA",
-      "disp": "AAAAAAAAAAA"
+      "disp": "AAAAAAAAAAA",
+      "robosPreguntados": [
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        }
+      ]
     }
   }
 }
