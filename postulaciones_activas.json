@@ -60,7 +60,10 @@
           "respondio": null,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "disparar": "AAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "nvl": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
     }
   }
 }
