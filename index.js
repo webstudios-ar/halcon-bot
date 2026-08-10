@@ -1,12 +1,28 @@
 require('dotenv').config();
 const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, REST, Routes, SlashCommandBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
+const http = require('http');
 
-// Manejo global de errores para que un crash no tumbe el proceso
+// ── Servidor HTTP para keep-alive (el hosting hace ping a este puerto) ──
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Halcón Bot activo ✅\n');
+}).listen(PORT, () => {
+  console.log('[HTTP] Keep-alive server escuchando en puerto ' + PORT);
+});
+
+// ── Manejo global de errores — NUNCA dejar caer el proceso ──
 process.on('unhandledRejection', (err) => {
-  console.error('[GLOBAL] Unhandled promise rejection:', err);
+  console.error('[ERROR] Unhandled rejection:', err?.message || err);
 });
 process.on('uncaughtException', (err) => {
-  console.error('[GLOBAL] Uncaught exception:', err);
+  console.error('[ERROR] Uncaught exception:', err?.message || err);
+  // NO llamar process.exit() — el bot sigue vivo
+});
+process.on('SIGTERM', () => {
+  console.log('[BOT] SIGTERM recibido. Cerrando limpiamente...');
+  client.destroy();
+  process.exit(0);
 });
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMembers] });
