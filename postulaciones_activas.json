@@ -60,7 +60,10 @@
           "respondio": 3,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "Persecución hasta abatir al delicuente",
+      "disparar": "Cuando el delicuente apunta o dispara",
+      "nvl": "No tengo ni idea, niveles?"
     }
   },
   "872516218253344800": {
