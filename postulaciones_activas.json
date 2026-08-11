@@ -70,7 +70,29 @@
       "nombre": "catrdddd sanchez",
       "rango": "cadete",
       "mic": "si",
-      "disp": "de lunes a viernes de 3 a 12"
+      "disp": "de lunes a viernes de 3 a 12",
+      "robosPreguntados": [
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        }
+      ]
     }
   }
 }
