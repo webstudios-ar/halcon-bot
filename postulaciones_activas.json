@@ -66,6 +66,11 @@
   "872516218253344800": {
     "inicio": 1786475051983,
     "expiraTs": 1786475951983,
-    "datos": {}
+    "datos": {
+      "nombre": "catrdddd sanchez",
+      "rango": "cadete",
+      "mic": "si",
+      "disp": "de lunes a viernes de 3 a 12"
+    }
   }
 }
