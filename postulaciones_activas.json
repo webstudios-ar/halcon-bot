@@ -6,7 +6,29 @@
       "nombre": "El mapache",
       "rango": "Cadete",
       "mic": "Si",
-      "disp": "16hr"
+      "disp": "16hr",
+      "robosPreguntados": [
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Banco Central",
+          "latas": 6
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Humane",
+          "latas": 6
+        }
+      ]
     }
   }
 }
