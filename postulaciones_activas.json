@@ -2,6 +2,11 @@
   "1077360161418657842": {
     "inicio": 1786468359670,
     "expiraTs": 1786469259670,
-    "datos": {}
+    "datos": {
+      "nombre": "Marcos Perez",
+      "rango": "sargento 1ro",
+      "mic": "si",
+      "disp": "a la noche de 9 a 1:30"
+    }
   }
 }
