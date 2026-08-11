@@ -95,6 +95,38 @@
           "nombre": "Joyería",
           "latas": 2
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Maze Bank",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": 0,
+          "acierta": true
+        },
+        {
+          "nombre": "Casa Michael",
+          "correcto": 2,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Joyería",
+          "correcto": 2,
+          "respondio": 3,
+          "acierta": false
+        }
       ]
     }
   }
