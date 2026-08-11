@@ -63,7 +63,10 @@
       ],
       "fuga": "si se fuja lo comienzo a seguir y si se frena Y ABRE TIRO  sigo el tiroteo y cuando lo abata llemo al same para que acuda y luego lo proceso",
       "disparar": "cuando este en riesgo tu vida",
-      "nvl": "no me lo se pero aprendo rapido"
+      "nvl": "no me lo se pero aprendo rapido",
+      "punto": "si es rango superior me retiro pero si no me quedo ahi",
+      "superior": "no puede hacer eso solo si el civil lo insulta primero",
+      "patrulla": "si estoy solo en patrulla y veo auto sospechoso lo comienzo a seguir cuando lo detenga lo comienzo a revisar y si tiene algo ilegal lo confisco"
     }
   }
 }
