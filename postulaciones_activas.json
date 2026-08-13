@@ -6,7 +6,29 @@
       "nombre": "El bananero",
       "rango": "cadete",
       "mic": "si",
-      "disp": "5 o mas"
+      "disp": "5 o mas",
+      "robosPreguntados": [
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        }
+      ]
     }
   }
 }
