@@ -9,24 +9,24 @@
       "disp": "5 o mas",
       "robosPreguntados": [
         {
-          "nombre": "Fábrica",
-          "latas": 6
+          "nombre": "Facebook",
+          "latas": 3
         },
         {
-          "nombre": "Humane",
-          "latas": 6
+          "nombre": "Carnicería",
+          "latas": 8
         },
         {
-          "nombre": "Joyería",
-          "latas": 2
+          "nombre": "Estadio",
+          "latas": 3
         },
         {
           "nombre": "Bancos Fleeca",
           "latas": 3
         },
         {
-          "nombre": "Facebook",
-          "latas": 3
+          "nombre": "Joyería",
+          "latas": 2
         }
       ]
     }
