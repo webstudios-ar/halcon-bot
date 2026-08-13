@@ -2,6 +2,11 @@
   "1283210191164411934": {
     "inicio": 1786649850891,
     "expiraTs": 1786650750891,
-    "datos": {}
+    "datos": {
+      "nombre": "El bananero",
+      "rango": "cadete",
+      "mic": "si",
+      "disp": "5 o mas"
+    }
   }
 }
