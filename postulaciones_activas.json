@@ -9,7 +9,7 @@
       "disp": "5 o mas",
       "robosPreguntados": [
         {
-          "nombre": "Joyería",
+          "nombre": "Casa Michael",
           "latas": 2
         },
         {
@@ -17,16 +17,16 @@
           "latas": 3
         },
         {
-          "nombre": "Fábrica",
-          "latas": 6
-        },
-        {
-          "nombre": "Estadio",
-          "latas": 3
-        },
-        {
           "nombre": "Gasolinera / Tienda",
           "latas": 0
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
         }
       ]
     }
