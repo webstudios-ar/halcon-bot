@@ -63,7 +63,10 @@
       ],
       "fuga": "lo persigo y lo cacheo que no tenga nada sospechoso",
       "disparar": "cuando esta en riesgo tu vida",
-      "nvl": "es cuando tenes rango mas alto que otro con rango menor"
+      "nvl": "es cuando tenes rango mas alto que otro con rango menor",
+      "punto": "solo me voy si es rango mayor al mio por ejemplo yo soy cadete y el es halcon o superior",
+      "superior": "no puede faltarle el resperto pero si el civil lo insulta primero esta en todo su derecho de hacerlo",
+      "patrulla": "lo sigo y le digo que detenga el auto a la derecha"
     }
   }
 }
