@@ -7,7 +7,10 @@
       "rango": "cadete",
       "mic": "si",
       "disp": "mas de 5",
-      "latasResp": []
+      "latasResp": [],
+      "fuga": "primero si estoy en auto lo detengo y le pido q se baje y lo cacheo si veo q tiene un arma ilegal lo proceso",
+      "disparar": "cuando estas deteniendo a un sospechoso y ese saca arma y ahi tenes permitido disparar",
+      "nvl": "no valorar vida es cuando si apuntan a un civil el civil no levanta las manos"
     }
   }
 }
