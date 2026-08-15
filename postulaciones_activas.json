@@ -1,1 +1,12 @@
-{}
+{
+  "1283210191164411934": {
+    "inicio": 1786804796071,
+    "expiraTs": 1786805696071,
+    "datos": {
+      "nombre": "el bananero",
+      "rango": "cadete",
+      "mic": "si",
+      "disp": "mas de 5"
+    }
+  }
+}
