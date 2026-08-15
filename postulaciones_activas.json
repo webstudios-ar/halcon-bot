@@ -6,7 +6,8 @@
       "nombre": "el bananero",
       "rango": "cadete",
       "mic": "si",
-      "disp": "mas de 5"
+      "disp": "mas de 5",
+      "latasResp": []
     }
   }
 }
