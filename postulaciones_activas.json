@@ -2,6 +2,11 @@
   "1132483184630698096": {
     "inicio": 1786863707713,
     "expiraTs": 1786864607714,
-    "datos": {}
+    "datos": {
+      "nombre": "Pereira OGG",
+      "rango": "Sargento",
+      "mic": "Si",
+      "disp": "todos los días"
+    }
   }
 }
