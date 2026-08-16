@@ -6,7 +6,29 @@
       "nombre": "Pereira OGG",
       "rango": "Sargento",
       "mic": "Si",
-      "disp": "todos los días"
+      "disp": "todos los días",
+      "robosPreguntados": [
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Banco Central",
+          "latas": 6
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        }
+      ]
     }
   }
 }
