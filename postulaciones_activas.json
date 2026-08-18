@@ -28,6 +28,38 @@
           "nombre": "Museo",
           "latas": 3
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Maze Bank",
+          "correcto": 3,
+          "respondio": 2,
+          "acierta": false
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": 0,
+          "acierta": true
+        },
+        {
+          "nombre": "Casa Michael",
+          "correcto": 2,
+          "respondio": 2,
+          "acierta": true
+        },
+        {
+          "nombre": "Humane",
+          "correcto": 6,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": 2,
+          "acierta": false
+        }
       ]
     }
   }
