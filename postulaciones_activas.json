@@ -63,7 +63,10 @@
       ],
       "fuga": "tiro alerta y aviso en radio q estoy en persecucion deun sospechoso",
       "disparar": "cuando un civil o en un robo dispara al aire o a uno de tus compañeros o a vos",
-      "nvl": "nvl es cuando vos apuntas a un civil q ayas frenado o q veas en comisaria y q vos tengas mas mayoria de compañeros apuntandolo y q el chabon les empiese a disparar"
+      "nvl": "nvl es cuando vos apuntas a un civil q ayas frenado o q veas en comisaria y q vos tengas mas mayoria de compañeros apuntandolo y q el chabon les empiese a disparar",
+      "punto": "le pregunto el motivo o si es un rango superior simplemente me retiro de la zona",
+      "superior": "si un superior le falta el respeto a un civil tiene q ser reportado por abuso de autoridad",
+      "patrulla": "aviso por radio q tengo un sospechoso en mira y q requiero refuersos"
     }
   }
 }
