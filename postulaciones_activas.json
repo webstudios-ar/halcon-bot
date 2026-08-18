@@ -60,7 +60,10 @@
           "respondio": 2,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "tiro alerta y aviso en radio q estoy en persecucion deun sospechoso",
+      "disparar": "cuando un civil o en un robo dispara al aire o a uno de tus compañeros o a vos",
+      "nvl": "nvl es cuando vos apuntas a un civil q ayas frenado o q veas en comisaria y q vos tengas mas mayoria de compañeros apuntandolo y q el chabon les empiese a disparar"
     }
   }
 }
