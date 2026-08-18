@@ -6,7 +6,29 @@
       "nombre": "krilin jr",
       "rango": "sargento 1",
       "mic": "si",
-      "disp": "todos"
+      "disp": "todos",
+      "robosPreguntados": [
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        }
+      ]
     }
   }
 }
