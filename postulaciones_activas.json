@@ -2,6 +2,11 @@
   "1427490449240883270": {
     "inicio": 1787094774281,
     "expiraTs": 1787095674281,
-    "datos": {}
+    "datos": {
+      "nombre": "krilin jr",
+      "rango": "sargento 1",
+      "mic": "si",
+      "disp": "todos"
+    }
   }
 }
