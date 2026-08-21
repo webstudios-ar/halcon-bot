@@ -28,6 +28,38 @@
           "nombre": "Estadio",
           "latas": 3
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Joyería",
+          "correcto": 2,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Facebook",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Casa Michael",
+          "correcto": 2,
+          "respondio": 2,
+          "acierta": true
+        },
+        {
+          "nombre": "Yate",
+          "correcto": 3,
+          "respondio": 2,
+          "acierta": false
+        },
+        {
+          "nombre": "Estadio",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        }
       ]
     }
   }
