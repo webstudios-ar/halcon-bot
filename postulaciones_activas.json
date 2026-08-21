@@ -6,7 +6,29 @@
       "nombre": "krilin jr",
       "rango": "sargento 1",
       "mic": "si",
-      "disp": "todos"
+      "disp": "todos",
+      "robosPreguntados": [
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        }
+      ]
     }
   }
 }
