@@ -6,7 +6,29 @@
       "nombre": "Stevenn Svykal",
       "rango": "cadete",
       "mic": "si",
-      "disp": "4 dias por semana"
+      "disp": "4 dias por semana",
+      "robosPreguntados": [
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        }
+      ]
     }
   }
 }
