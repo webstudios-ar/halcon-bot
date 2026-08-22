@@ -28,6 +28,38 @@
           "nombre": "Subte",
           "latas": 4
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Maze Bank",
+          "correcto": 3,
+          "respondio": 4,
+          "acierta": false
+        },
+        {
+          "nombre": "Facebook",
+          "correcto": 3,
+          "respondio": 6,
+          "acierta": false
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 6,
+          "acierta": false
+        },
+        {
+          "nombre": "Casa Michael",
+          "correcto": 2,
+          "respondio": 4,
+          "acierta": false
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": 7,
+          "acierta": false
+        }
       ]
     }
   }
