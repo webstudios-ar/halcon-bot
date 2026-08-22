@@ -2,6 +2,11 @@
   "1084546206300127302": {
     "inicio": 1787417065380,
     "expiraTs": 1787417965380,
-    "datos": {}
+    "datos": {
+      "nombre": "Stevenn Svykal",
+      "rango": "cadete",
+      "mic": "si",
+      "disp": "4 dias por semana"
+    }
   }
 }
