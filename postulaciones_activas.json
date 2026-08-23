@@ -9,24 +9,24 @@
       "disp": "todos los dias un rato puedo",
       "robosPreguntados": [
         {
-          "nombre": "Bancos Fleeca",
+          "nombre": "Estadio",
           "latas": 3
         },
         {
-          "nombre": "Yate",
+          "nombre": "Banco Central",
+          "latas": 6
+        },
+        {
+          "nombre": "Maze Bank",
           "latas": 3
         },
         {
-          "nombre": "Carnicería",
-          "latas": 8
+          "nombre": "Joyería",
+          "latas": 2
         },
         {
-          "nombre": "Facebook",
-          "latas": 3
-        },
-        {
-          "nombre": "Museo",
-          "latas": 3
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
         }
       ]
     }
