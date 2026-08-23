@@ -2,6 +2,11 @@
   "1460445133051920601": {
     "inicio": 1787473401001,
     "expiraTs": 1787474301001,
-    "datos": {}
+    "datos": {
+      "nombre": "kaze badh",
+      "rango": "cabo 1ero",
+      "mic": "si",
+      "disp": "todos los dias un rato puedo"
+    }
   }
 }
