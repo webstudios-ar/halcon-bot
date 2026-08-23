@@ -6,7 +6,29 @@
       "nombre": "kaze badh",
       "rango": "cabo 1ero",
       "mic": "si",
-      "disp": "todos los dias un rato puedo"
+      "disp": "todos los dias un rato puedo",
+      "robosPreguntados": [
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        }
+      ]
     }
   }
 }
