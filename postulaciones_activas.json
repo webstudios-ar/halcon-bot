@@ -9,24 +9,24 @@
       "disp": "todos los dias un rato puedo",
       "robosPreguntados": [
         {
-          "nombre": "Fábrica",
+          "nombre": "Humane",
           "latas": 6
         },
         {
-          "nombre": "Bancos Fleeca",
+          "nombre": "Yate",
           "latas": 3
         },
         {
-          "nombre": "Subte",
-          "latas": 4
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
         },
         {
           "nombre": "Facebook",
           "latas": 3
-        },
-        {
-          "nombre": "Humane",
-          "latas": 6
         }
       ]
     }
