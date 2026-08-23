@@ -9,24 +9,24 @@
       "disp": "todos los dias un rato puedo",
       "robosPreguntados": [
         {
-          "nombre": "Yate",
+          "nombre": "Facebook",
           "latas": 3
         },
         {
-          "nombre": "Maze Bank",
-          "latas": 3
-        },
-        {
-          "nombre": "Fábrica",
+          "nombre": "Banco Central",
           "latas": 6
         },
         {
-          "nombre": "Museo",
-          "latas": 3
+          "nombre": "Casa Michael",
+          "latas": 2
         },
         {
-          "nombre": "Subte",
+          "nombre": "Rancho Abandonado",
           "latas": 4
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
         }
       ]
     }
