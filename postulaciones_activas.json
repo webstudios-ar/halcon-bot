@@ -9,24 +9,24 @@
       "disp": "todos los dias un rato puedo",
       "robosPreguntados": [
         {
-          "nombre": "Estadio",
+          "nombre": "Yate",
           "latas": 3
-        },
-        {
-          "nombre": "Banco Central",
-          "latas": 6
         },
         {
           "nombre": "Maze Bank",
           "latas": 3
         },
         {
-          "nombre": "Joyería",
-          "latas": 2
+          "nombre": "Fábrica",
+          "latas": 6
         },
         {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
         }
       ]
     }
