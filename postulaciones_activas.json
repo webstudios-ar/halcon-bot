@@ -9,20 +9,20 @@
       "disp": "todos los dias un rato puedo",
       "robosPreguntados": [
         {
-          "nombre": "Facebook",
-          "latas": 3
-        },
-        {
-          "nombre": "Banco Central",
-          "latas": 6
-        },
-        {
-          "nombre": "Casa Michael",
+          "nombre": "Joyería",
           "latas": 2
         },
         {
-          "nombre": "Rancho Abandonado",
-          "latas": 4
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
         },
         {
           "nombre": "Carnicería",
