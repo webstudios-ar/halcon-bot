@@ -2,6 +2,11 @@
   "1234650901248086139": {
     "inicio": 1787530594652,
     "expiraTs": 1787531494652,
-    "datos": {}
+    "datos": {
+      "nombre": "Samuel Eto'o",
+      "rango": "Sargento",
+      "mic": "si",
+      "disp": "de 4 a 5 dias"
+    }
   }
 }
