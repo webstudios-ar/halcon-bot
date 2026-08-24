@@ -6,7 +6,29 @@
       "nombre": "Samuel Eto'o",
       "rango": "Sargento",
       "mic": "si",
-      "disp": "de 4 a 5 dias"
+      "disp": "de 4 a 5 dias",
+      "robosPreguntados": [
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        }
+      ]
     }
   }
 }
