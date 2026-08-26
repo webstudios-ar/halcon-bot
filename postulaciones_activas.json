@@ -9,24 +9,24 @@
       "disp": "3+",
       "robosPreguntados": [
         {
-          "nombre": "Bancos Fleeca",
-          "latas": 3
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
         },
         {
           "nombre": "Gasolinera / Tienda",
           "latas": 0
-        },
-        {
-          "nombre": "Estadio",
-          "latas": 3
-        },
-        {
-          "nombre": "Yate",
-          "latas": 3
-        },
-        {
-          "nombre": "Joyería",
-          "latas": 2
         }
       ]
     }
