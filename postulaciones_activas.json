@@ -6,7 +6,29 @@
       "nombre": "Teo Lopez.",
       "rango": "Cabo°1",
       "mic": "Si.",
-      "disp": "4 días."
+      "disp": "4 días.",
+      "robosPreguntados": [
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        }
+      ]
     }
   }
 }
