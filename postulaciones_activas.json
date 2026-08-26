@@ -2,6 +2,11 @@
   "1437518761635610766": {
     "inicio": 1787702701572,
     "expiraTs": 1787703601572,
-    "datos": {}
+    "datos": {
+      "nombre": "Valentin Rojas",
+      "rango": "Sargento",
+      "mic": "si",
+      "disp": "3+"
+    }
   }
 }
