@@ -6,7 +6,29 @@
       "nombre": "Valentin Rojas",
       "rango": "Sargento",
       "mic": "si",
-      "disp": "3+"
+      "disp": "3+",
+      "robosPreguntados": [
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Humane",
+          "latas": 6
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Banco Central",
+          "latas": 6
+        }
+      ]
     }
   }
 }
