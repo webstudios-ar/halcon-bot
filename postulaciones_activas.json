@@ -9,24 +9,24 @@
       "disp": "3+",
       "robosPreguntados": [
         {
-          "nombre": "Casa Michael",
-          "latas": 2
+          "nombre": "Bancos Fleeca",
+          "latas": 3
         },
         {
-          "nombre": "Facebook",
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Yate",
           "latas": 3
         },
         {
           "nombre": "Joyería",
           "latas": 2
-        },
-        {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Yate",
-          "latas": 3
         }
       ]
     }
