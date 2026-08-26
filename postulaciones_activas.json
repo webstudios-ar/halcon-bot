@@ -28,6 +28,38 @@
           "nombre": "Gasolinera / Tienda",
           "latas": 0
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": 8,
+          "acierta": false
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": 2,
+          "acierta": false
+        },
+        {
+          "nombre": "Carnicería",
+          "correcto": 8,
+          "respondio": 4,
+          "acierta": false
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": 0,
+          "acierta": true
+        }
       ]
     }
   }
