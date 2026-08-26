@@ -2,6 +2,11 @@
   "428918672736780298": {
     "inicio": 1787781772425,
     "expiraTs": 1787782672425,
-    "datos": {}
+    "datos": {
+      "nombre": "Teo Lopez.",
+      "rango": "Cabo°1",
+      "mic": "Si.",
+      "disp": "4 días."
+    }
   }
 }
