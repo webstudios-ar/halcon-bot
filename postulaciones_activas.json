@@ -9,24 +9,24 @@
       "disp": "3+",
       "robosPreguntados": [
         {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Humane",
-          "latas": 6
-        },
-        {
-          "nombre": "Maze Bank",
-          "latas": 3
+          "nombre": "Casa Michael",
+          "latas": 2
         },
         {
           "nombre": "Facebook",
           "latas": 3
         },
         {
-          "nombre": "Banco Central",
-          "latas": 6
+          "nombre": "Joyería",
+          "latas": 2
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
         }
       ]
     }
