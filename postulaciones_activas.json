@@ -60,6 +60,38 @@
           "nombre": "Fábrica",
           "latas": 6
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Humane",
+          "correcto": 6,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Facebook",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Yate",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": 3,
+          "acierta": false
+        }
       ]
     }
   }
