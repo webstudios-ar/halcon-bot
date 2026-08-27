@@ -2,7 +2,12 @@
   "1397001207909847083": {
     "inicio": 1787865843274,
     "expiraTs": 1787866743274,
-    "datos": {}
+    "datos": {
+      "nombre": "Alee lopez",
+      "rango": "CABO",
+      "mic": "SI",
+      "disp": "TODOS LOS DIAS"
+    }
   },
   "1458188013984284928": {
     "inicio": 1787865848701,
