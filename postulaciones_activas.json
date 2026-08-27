@@ -6,7 +6,29 @@
       "nombre": "Alee lopez",
       "rango": "CABO",
       "mic": "SI",
-      "disp": "TODOS LOS DIAS"
+      "disp": "TODOS LOS DIAS",
+      "robosPreguntados": [
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Humane",
+          "latas": 6
+        },
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        }
+      ]
     }
   },
   "1458188013984284928": {
