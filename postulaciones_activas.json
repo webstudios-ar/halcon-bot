@@ -38,7 +38,29 @@
       "nombre": "more apendino",
       "rango": "teniente mayor",
       "mic": "si",
-      "disp": "lunes a viernes"
+      "disp": "lunes a viernes",
+      "robosPreguntados": [
+        {
+          "nombre": "Humane",
+          "latas": 6
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        }
+      ]
     }
   }
 }
