@@ -60,7 +60,10 @@
           "respondio": 3,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "intervengo al sospechoso",
+      "disparar": "cuando la persona disparar",
+      "nvl": "quisiera saber pero nunca habia llegado tan lejos"
     }
   }
 }
