@@ -1,36 +1,4 @@
 {
-  "1397001207909847083": {
-    "inicio": 1787865843274,
-    "expiraTs": 1787866743274,
-    "datos": {
-      "nombre": "Alee lopez",
-      "rango": "CABO",
-      "mic": "SI",
-      "disp": "TODOS LOS DIAS",
-      "robosPreguntados": [
-        {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
-        },
-        {
-          "nombre": "Yate",
-          "latas": 3
-        },
-        {
-          "nombre": "Maze Bank",
-          "latas": 3
-        },
-        {
-          "nombre": "Humane",
-          "latas": 6
-        },
-        {
-          "nombre": "Joyería",
-          "latas": 2
-        }
-      ]
-    }
-  },
   "1458188013984284928": {
     "inicio": 1787866260416,
     "expiraTs": 1787867160416,
