@@ -60,7 +60,10 @@
           "respondio": 6,
           "acierta": true
         }
-      ]
+      ],
+      "fuga": "Iniciar persecución y detenerlo",
+      "disparar": "Cuando el delincuente inicia rol agresivo",
+      "nvl": "Sin valor para la vida"
     }
   }
 }
