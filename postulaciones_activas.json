@@ -28,6 +28,38 @@
           "nombre": "Subte",
           "latas": 4
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": 4,
+          "acierta": false
+        },
+        {
+          "nombre": "Facebook",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": 0,
+          "acierta": true
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": 4,
+          "acierta": true
+        }
       ]
     }
   }
