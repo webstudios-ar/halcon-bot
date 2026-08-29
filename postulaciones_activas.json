@@ -60,7 +60,10 @@
           "respondio": 5,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "Procedo a informar por radio que un sospechoso se me dio ala fuga lo pongo en búsqueda y captura mientras doy vueltas al ver si lo encuentro",
+      "disparar": "Cuando veo que me vida corre peligro",
+      "nvl": "Son los niveles ejemplo: en que nivel puedo actuar según el procedimiento como un banco central sería nivel alto y es donde más tenemos que ser cautelosos en la forma de actuar"
     }
   }
 }
