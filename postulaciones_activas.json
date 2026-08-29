@@ -9,24 +9,24 @@
       "disp": "5 días",
       "robosPreguntados": [
         {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
+          "nombre": "Maze Bank",
+          "latas": 3
         },
         {
-          "nombre": "Fábrica",
-          "latas": 6
+          "nombre": "Carnicería",
+          "latas": 8
         },
         {
-          "nombre": "Rancho Abandonado",
-          "latas": 4
+          "nombre": "Joyería",
+          "latas": 2
         },
         {
           "nombre": "Museo",
           "latas": 3
         },
         {
-          "nombre": "Bancos Fleeca",
-          "latas": 3
+          "nombre": "Banco Central",
+          "latas": 6
         }
       ],
       "latasResp": [
