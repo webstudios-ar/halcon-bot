@@ -6,7 +6,29 @@
       "nombre": "Benjamin Montana",
       "rango": "Teniente 1°",
       "mic": "si",
-      "disp": "6"
+      "disp": "6",
+      "robosPreguntados": [
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        }
+      ]
     }
   }
 }
