@@ -6,7 +6,29 @@
       "nombre": "Eldomi chileno",
       "rango": "Sargento",
       "mic": "Si",
-      "disp": "5 días"
+      "disp": "5 días",
+      "robosPreguntados": [
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        }
+      ]
     }
   }
 }
