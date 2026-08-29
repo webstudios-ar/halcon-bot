@@ -63,7 +63,10 @@
       ],
       "fuga": "Iniciar persecución y detenerlo",
       "disparar": "Cuando el delincuente inicia rol agresivo",
-      "nvl": "Sin valor para la vida"
+      "nvl": "Sin valor para la vida",
+      "punto": "Depende la situación, si llegue tarde al robo y son el máximo o ya negociaron me tengo que retirar",
+      "superior": "Es sancionable, motivo de sanción para el superior, pueden abrir ticket y reportarlo",
+      "patrulla": "Pedir refuerzos y iniciar persecución para detenerlo y ver que todo esté en condiciones"
     }
   }
 }
