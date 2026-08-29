@@ -28,6 +28,38 @@
           "nombre": "Bancos Fleeca",
           "latas": 3
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": 2,
+          "acierta": false
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": 4,
+          "acierta": false
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 5,
+          "acierta": false
+        }
       ]
     }
   }
