@@ -2,6 +2,11 @@
   "1331993821986422848": {
     "inicio": 1788044547572,
     "expiraTs": 1788045447572,
-    "datos": {}
+    "datos": {
+      "nombre": "Benjamin Montana",
+      "rango": "Teniente 1°",
+      "mic": "si",
+      "disp": "6"
+    }
   }
 }
