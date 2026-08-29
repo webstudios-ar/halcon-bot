@@ -6,7 +6,29 @@
       "nombre": "Tapitaaa Chicheee",
       "rango": "Teniente mayor",
       "mic": "Si",
-      "disp": "Todos los días menos lunes y v"
+      "disp": "Todos los días menos lunes y v",
+      "robosPreguntados": [
+        {
+          "nombre": "Banco Central",
+          "latas": 6
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        }
+      ]
     }
   }
 }
