@@ -60,7 +60,10 @@
           "respondio": 3,
           "acierta": true
         }
-      ]
+      ],
+      "fuga": "Frente a un sospechoso que se fuga, el protocolo policial estándar busca neutralizar la evasión de forma segura",
+      "disparar": "cuando la persona dispare primero",
+      "nvl": "quisiera saber pero no llegue a tanto"
     }
   }
 }
