@@ -31,8 +31,14 @@
       ],
       "latasResp": [
         {
-          "nombre": "Joyería",
-          "correcto": 2,
+          "nombre": "Gasolinera / Tienda",
+          "correcto": 0,
+          "respondio": 0,
+          "acierta": true
+        },
+        {
+          "nombre": "Humane",
+          "correcto": 6,
           "respondio": 3,
           "acierta": false
         },
@@ -43,20 +49,14 @@
           "acierta": true
         },
         {
-          "nombre": "Bancos Fleeca",
-          "correcto": 3,
+          "nombre": "Joyería",
+          "correcto": 2,
           "respondio": 3,
-          "acierta": true
+          "acierta": false
         },
         {
-          "nombre": "Maze Bank",
-          "correcto": 3,
-          "respondio": 3,
-          "acierta": true
-        },
-        {
-          "nombre": "Subte",
-          "correcto": 4,
+          "nombre": "Casa Michael",
+          "correcto": 2,
           "respondio": 3,
           "acierta": false
         }
