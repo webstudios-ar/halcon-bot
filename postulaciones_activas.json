@@ -31,12 +31,6 @@
       ],
       "latasResp": [
         {
-          "nombre": "Gasolinera / Tienda",
-          "correcto": 0,
-          "respondio": 0,
-          "acierta": true
-        },
-        {
           "nombre": "Carnicería",
           "correcto": 8,
           "respondio": 3,
@@ -49,16 +43,22 @@
           "acierta": true
         },
         {
-          "nombre": "Subte",
-          "correcto": 4,
-          "respondio": 3,
-          "acierta": false
-        },
-        {
           "nombre": "Museo",
           "correcto": 3,
           "respondio": 3,
           "acierta": true
+        },
+        {
+          "nombre": "Estadio",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": 3,
+          "acierta": false
         }
       ],
       "fuga": "lo sigo y procedo a detenerlo lo cacheo y reviso si tiene algo ilegal y si tiene lo proceso y lo mando preso",
