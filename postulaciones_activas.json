@@ -9,10 +9,6 @@
       "disp": "6 dias",
       "robosPreguntados": [
         {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
-        },
-        {
           "nombre": "Carnicería",
           "latas": 8
         },
@@ -21,12 +17,16 @@
           "latas": 3
         },
         {
-          "nombre": "Subte",
-          "latas": 4
-        },
-        {
           "nombre": "Museo",
           "latas": 3
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
         }
       ],
       "latasResp": [
