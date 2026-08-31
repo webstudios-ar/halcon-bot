@@ -6,7 +6,29 @@
       "nombre": "eldomi chileno",
       "rango": "sargento",
       "mic": "si",
-      "disp": "6 dias"
+      "disp": "6 dias",
+      "robosPreguntados": [
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        }
+      ]
     }
   }
 }
