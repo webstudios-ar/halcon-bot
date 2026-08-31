@@ -9,24 +9,24 @@
       "disp": "6 dias",
       "robosPreguntados": [
         {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Maze Bank",
-          "latas": 3
+          "nombre": "Joyería",
+          "latas": 2
         },
         {
           "nombre": "Museo",
           "latas": 3
         },
         {
-          "nombre": "Estadio",
+          "nombre": "Bancos Fleeca",
           "latas": 3
         },
         {
-          "nombre": "Fábrica",
-          "latas": 6
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
         }
       ],
       "latasResp": [
