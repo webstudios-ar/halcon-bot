@@ -31,16 +31,10 @@
       ],
       "latasResp": [
         {
-          "nombre": "Carnicería",
-          "correcto": 8,
+          "nombre": "Joyería",
+          "correcto": 2,
           "respondio": 3,
           "acierta": false
-        },
-        {
-          "nombre": "Maze Bank",
-          "correcto": 3,
-          "respondio": 3,
-          "acierta": true
         },
         {
           "nombre": "Museo",
@@ -49,14 +43,20 @@
           "acierta": true
         },
         {
-          "nombre": "Estadio",
+          "nombre": "Bancos Fleeca",
           "correcto": 3,
           "respondio": 3,
           "acierta": true
         },
         {
-          "nombre": "Fábrica",
-          "correcto": 6,
+          "nombre": "Maze Bank",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
           "respondio": 3,
           "acierta": false
         }
