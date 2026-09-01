@@ -60,6 +60,38 @@
           "nombre": "Rancho Abandonado",
           "latas": 4
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Carnicería",
+          "correcto": 8,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": 3,
+          "acierta": false
+        },
+        {
+          "nombre": "Yate",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": 3,
+          "acierta": false
+        }
       ]
     }
   }
