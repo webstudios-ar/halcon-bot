@@ -6,7 +6,29 @@
       "nombre": "cyberbulling",
       "rango": "sargento",
       "mic": "si",
-      "disp": "5+"
+      "disp": "5+",
+      "robosPreguntados": [
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        }
+      ]
     }
   },
   "1458188013984284928": {
