@@ -38,7 +38,29 @@
       "nombre": "more apendino",
       "rango": "teniente mayor",
       "mic": "si",
-      "disp": "lunes y viernes"
+      "disp": "lunes y viernes",
+      "robosPreguntados": [
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        }
+      ]
     }
   }
 }
