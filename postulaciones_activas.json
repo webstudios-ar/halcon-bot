@@ -9,20 +9,20 @@
       "disp": "5+",
       "robosPreguntados": [
         {
-          "nombre": "Estadio",
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Maze Bank",
           "latas": 3
         },
         {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
+          "nombre": "Fábrica",
+          "latas": 6
         },
         {
-          "nombre": "Museo",
+          "nombre": "Facebook",
           "latas": 3
-        },
-        {
-          "nombre": "Rancho Abandonado",
-          "latas": 4
         },
         {
           "nombre": "Joyería",
