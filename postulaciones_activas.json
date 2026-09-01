@@ -34,6 +34,11 @@
   "1458188013984284928": {
     "inicio": 1788231228771,
     "expiraTs": 1788232128771,
-    "datos": {}
+    "datos": {
+      "nombre": "more apendino",
+      "rango": "teniente mayor",
+      "mic": "si",
+      "disp": "lunes y viernes"
+    }
   }
 }
