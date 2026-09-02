@@ -60,7 +60,10 @@
           "respondio": 3,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "pide refurzos de immediato.",
+      "disparar": "cuando la persona dispare",
+      "nvl": "quisiera saber pero no llegue a tanto"
     }
   }
 }
