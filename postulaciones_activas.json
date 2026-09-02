@@ -6,7 +6,29 @@
       "nombre": "more apendino",
       "rango": "teniente mayor",
       "mic": "si",
-      "disp": "lunes y viernes"
+      "disp": "lunes y viernes",
+      "robosPreguntados": [
+        {
+          "nombre": "Museo",
+          "latas": 3
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        }
+      ]
     }
   }
 }
