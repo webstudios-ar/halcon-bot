@@ -63,7 +63,10 @@
       ],
       "fuga": "seguirlo para luego reducirlo y esposarlo y verificar que lleva encima",
       "disparar": "en el momento que mi vida se encuentre en riesgo",
-      "nvl": "creo que son las jerarquías dentro de la faccion halcon"
+      "nvl": "creo que son las jerarquías dentro de la faccion halcon",
+      "punto": "me retiro del lugar hasta encontrar un punto donde cubrir a mi compañero en caso de estar su vida en riesgo",
+      "superior": "me retiro a un lugar apartado llamo a mi superior y le doy mi punto de vista de la situación ocurrida",
+      "patrulla": "doy las características del vehículo , patente, color, modelo y la razon de la que tengo sospechas del vehiculo"
     }
   }
 }
