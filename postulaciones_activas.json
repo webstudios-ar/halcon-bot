@@ -2,6 +2,11 @@
   "693247144395538583": {
     "inicio": 1788307347315,
     "expiraTs": 1788308247315,
-    "datos": {}
+    "datos": {
+      "nombre": "eldomi chileno",
+      "rango": "sargento",
+      "mic": "si",
+      "disp": "6 dias"
+    }
   }
 }
