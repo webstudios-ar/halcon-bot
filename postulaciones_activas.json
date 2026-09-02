@@ -63,7 +63,10 @@
       ],
       "fuga": "pide refurzos de immediato.",
       "disparar": "cuando la persona dispare",
-      "nvl": "quisiera saber pero no llegue a tanto"
+      "nvl": "quisiera saber pero no llegue a tanto",
+      "punto": "me retiro imediatamente",
+      "superior": "no dirijirse al superior y no falarle el respeto",
+      "patrulla": "le pido el documento al auto sospechoso"
     }
   }
 }
