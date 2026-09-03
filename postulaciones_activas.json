@@ -2,6 +2,11 @@
   "549684562012143629": {
     "inicio": 1788421442710,
     "expiraTs": 1788422342710,
-    "datos": {}
+    "datos": {
+      "nombre": "kevin ogg",
+      "rango": "teniente",
+      "mic": "si",
+      "disp": "5"
+    }
   }
 }
