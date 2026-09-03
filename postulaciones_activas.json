@@ -6,7 +6,29 @@
       "nombre": "kevin ogg",
       "rango": "teniente",
       "mic": "si",
-      "disp": "5"
+      "disp": "5",
+      "robosPreguntados": [
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Humane",
+          "latas": 6
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        }
+      ]
     }
   }
 }
