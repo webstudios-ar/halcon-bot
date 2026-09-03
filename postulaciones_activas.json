@@ -6,7 +6,29 @@
       "nombre": "medinas rochito",
       "rango": "cabo 1",
       "mic": "si",
-      "disp": "todos los dias"
+      "disp": "todos los dias",
+      "robosPreguntados": [
+        {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Humane",
+          "latas": 6
+        },
+        {
+          "nombre": "Yate",
+          "latas": 3
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "latas": 3
+        }
+      ]
     }
   }
 }
