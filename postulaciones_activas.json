@@ -28,6 +28,38 @@
           "nombre": "Yate",
           "latas": 3
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Carnicería",
+          "correcto": 8,
+          "respondio": 8,
+          "acierta": true
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": 4,
+          "acierta": true
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": 4,
+          "acierta": true
+        },
+        {
+          "nombre": "Casa Michael",
+          "correcto": 2,
+          "respondio": 2,
+          "acierta": true
+        },
+        {
+          "nombre": "Yate",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        }
       ]
     }
   }
