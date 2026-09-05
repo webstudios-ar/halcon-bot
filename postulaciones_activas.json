@@ -63,7 +63,10 @@
       ],
       "fuga": "Le digo que se detenga, si no coopera, lo paralizo con el taser reglamentario",
       "disparar": "cuando inician rol agresivo, te apuntan, disparan, etc",
-      "nvl": "No se, pero para mi es No Valorar VidA"
+      "nvl": "No se, pero para mi es No Valorar VidA",
+      "punto": "Si un rango superior me dice que me vaya reiteradas veces, obedesco la orden y me retiro.",
+      "superior": "aunque sea mayor rango no tiene derecho a faltarle el respeto a un civil ni a nadie.",
+      "patrulla": "Hago que se detenga y si no coopera hago que se detenga a la fuerza"
     }
   }
 }
