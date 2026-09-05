@@ -130,7 +130,10 @@
           "respondio": 4,
           "acierta": true
         }
-      ]
+      ],
+      "fuga": "Le digo que se detenga, si no coopera, lo paralizo con el taser reglamentario",
+      "disparar": "cuando inician rol agresivo, te apuntan, disparan, etc",
+      "nvl": "No se, pero para mi es No Valorar VidA"
     }
   }
 }
