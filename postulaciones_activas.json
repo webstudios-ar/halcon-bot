@@ -9,24 +9,24 @@
       "disp": "todos los dias",
       "robosPreguntados": [
         {
-          "nombre": "Yate",
-          "latas": 3
+          "nombre": "Joyería",
+          "latas": 2
         },
         {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
+          "nombre": "Bancos Fleeca",
+          "latas": 3
         },
         {
           "nombre": "Humane",
           "latas": 6
         },
         {
-          "nombre": "Estadio",
+          "nombre": "Maze Bank",
           "latas": 3
         },
         {
-          "nombre": "Museo",
-          "latas": 3
+          "nombre": "Fábrica",
+          "latas": 6
         }
       ]
     }
