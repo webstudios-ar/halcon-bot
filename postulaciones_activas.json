@@ -9,24 +9,24 @@
       "disp": "todos los dias",
       "robosPreguntados": [
         {
+          "nombre": "Rancho Abandonado",
+          "latas": 4
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
           "nombre": "Estadio",
           "latas": 3
         },
         {
-          "nombre": "Museo",
-          "latas": 3
+          "nombre": "Joyería",
+          "latas": 2
         },
         {
-          "nombre": "Facebook",
-          "latas": 3
-        },
-        {
-          "nombre": "Humane",
-          "latas": 6
-        },
-        {
-          "nombre": "Yate",
-          "latas": 3
+          "nombre": "Casa Michael",
+          "latas": 2
         }
       ]
     }
