@@ -70,7 +70,29 @@
       "nombre": "Samuel Eto´o",
       "rango": "Sargento 1°",
       "mic": "si",
-      "disp": "4"
+      "disp": "4",
+      "robosPreguntados": [
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Maze Bank",
+          "latas": 3
+        },
+        {
+          "nombre": "Museo",
+          "latas": 3
+        }
+      ]
     }
   }
 }
