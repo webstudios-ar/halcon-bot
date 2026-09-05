@@ -66,6 +66,11 @@
   "1234650901248086139": {
     "inicio": 1788593371176,
     "expiraTs": 1788594271176,
-    "datos": {}
+    "datos": {
+      "nombre": "Samuel Eto´o",
+      "rango": "Sargento 1°",
+      "mic": "si",
+      "disp": "4"
+    }
   }
 }
