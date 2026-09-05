@@ -9,23 +9,23 @@
       "disp": "todos los dias",
       "robosPreguntados": [
         {
-          "nombre": "Casa Michael",
-          "latas": 2
+          "nombre": "Estadio",
+          "latas": 3
         },
         {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
+          "nombre": "Museo",
+          "latas": 3
         },
         {
-          "nombre": "Fábrica",
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Humane",
           "latas": 6
         },
         {
-          "nombre": "Carnicería",
-          "latas": 8
-        },
-        {
-          "nombre": "Maze Bank",
+          "nombre": "Yate",
           "latas": 3
         }
       ]
