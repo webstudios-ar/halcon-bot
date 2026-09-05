@@ -28,6 +28,38 @@
           "nombre": "Fábrica",
           "latas": 6
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Joyería",
+          "correcto": 2,
+          "respondio": 2,
+          "acierta": true
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Humane",
+          "correcto": 6,
+          "respondio": 6,
+          "acierta": true
+        },
+        {
+          "nombre": "Maze Bank",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": 6,
+          "acierta": true
+        }
       ]
     }
   },
