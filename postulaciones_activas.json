@@ -2,6 +2,11 @@
   "1280436678103928843": {
     "inicio": 1788593114459,
     "expiraTs": 1788594014459,
-    "datos": {}
+    "datos": {
+      "nombre": "Felucho Gomez",
+      "rango": "cabo",
+      "mic": "si",
+      "disp": "todos los dias"
+    }
   }
 }
