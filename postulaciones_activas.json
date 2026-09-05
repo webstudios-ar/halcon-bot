@@ -92,6 +92,38 @@
           "nombre": "Rancho Abandonado",
           "latas": 4
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Facebook",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Fábrica",
+          "correcto": 6,
+          "respondio": 6,
+          "acierta": true
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Maze Bank",
+          "correcto": 3,
+          "respondio": 3,
+          "acierta": true
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": 4,
+          "acierta": true
+        }
       ]
     }
   }
