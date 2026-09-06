@@ -6,7 +6,29 @@
       "nombre": "jowel randy",
       "rango": "teniente",
       "mic": "si",
-      "disp": "7"
+      "disp": "7",
+      "robosPreguntados": [
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Joyería",
+          "latas": 2
+        },
+        {
+          "nombre": "Casa Michael",
+          "latas": 2
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Subte",
+          "latas": 4
+        }
+      ]
     }
   }
 }
