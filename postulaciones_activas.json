@@ -60,7 +60,10 @@
           "respondio": 6,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "le sigo la persecucion y intento pararlo",
+      "disparar": "cuando esta en riesgo mi vida",
+      "nvl": "escala gradual que determina el uso proporcional de la fuerza de seguridad"
     }
   }
 }
