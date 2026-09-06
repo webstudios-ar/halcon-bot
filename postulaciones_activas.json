@@ -63,7 +63,10 @@
       ],
       "fuga": "le sigo la persecucion y intento pararlo",
       "disparar": "cuando esta en riesgo mi vida",
-      "nvl": "escala gradual que determina el uso proporcional de la fuerza de seguridad"
+      "nvl": "escala gradual que determina el uso proporcional de la fuerza de seguridad",
+      "punto": "solo le hago caso  si es rango superior",
+      "superior": "abro ticket y reporto al superior",
+      "patrulla": "le comienzo la persecucion"
     }
   }
 }
