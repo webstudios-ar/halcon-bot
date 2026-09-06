@@ -2,6 +2,11 @@
   "1149838728559337572": {
     "inicio": 1788655673339,
     "expiraTs": 1788656573339,
-    "datos": {}
+    "datos": {
+      "nombre": "martin pena",
+      "rango": "teniente",
+      "mic": "si",
+      "disp": "todos los dias"
+    }
   }
 }
