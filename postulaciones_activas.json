@@ -28,6 +28,38 @@
           "nombre": "Subte",
           "latas": 4
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Carnicería",
+          "correcto": 8,
+          "respondio": 8,
+          "acierta": true
+        },
+        {
+          "nombre": "Joyería",
+          "correcto": 2,
+          "respondio": 2,
+          "acierta": true
+        },
+        {
+          "nombre": "Casa Michael",
+          "correcto": 2,
+          "respondio": 1,
+          "acierta": false
+        },
+        {
+          "nombre": "Facebook",
+          "correcto": 3,
+          "respondio": 2,
+          "acierta": false
+        },
+        {
+          "nombre": "Subte",
+          "correcto": 4,
+          "respondio": 2,
+          "acierta": false
+        }
       ]
     }
   }
