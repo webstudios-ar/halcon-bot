@@ -60,7 +60,10 @@
           "respondio": 3,
           "acierta": true
         }
-      ]
+      ],
+      "fuga": "comienzo la persecucion y si no para el vehiculo a las buenas empiezo a abrir fuego a las ruedas",
+      "disparar": "cuando las negocasiones se cortan",
+      "nvl": "no valorar vida  por ejemplo estoy patrullando y una camioneta me dice que frene y son mayoria que yo tengo que valorar mi vida"
     }
   }
 }
