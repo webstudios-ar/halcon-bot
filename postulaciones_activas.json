@@ -63,7 +63,10 @@
       ],
       "fuga": "comienzo la persecucion y si no para el vehiculo a las buenas empiezo a abrir fuego a las ruedas",
       "disparar": "cuando las negocasiones se cortan",
-      "nvl": "no valorar vida  por ejemplo estoy patrullando y una camioneta me dice que frene y son mayoria que yo tengo que valorar mi vida"
+      "nvl": "no valorar vida  por ejemplo estoy patrullando y una camioneta me dice que frene y son mayoria que yo tengo que valorar mi vida",
+      "punto": "si mi compañero me lo dice varias veces le hago cas",
+      "superior": "si te soy sincero no se",
+      "patrulla": "empiezo a describir el auto del sospechoso a mis compañeros y empezaria una persecucion"
     }
   }
 }
