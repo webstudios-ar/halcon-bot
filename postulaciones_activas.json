@@ -6,7 +6,29 @@
       "nombre": "Matteo Eto'o",
       "rango": "Cabo 1ro",
       "mic": "Si",
-      "disp": "todos los dias a la noche"
+      "disp": "todos los dias a la noche",
+      "robosPreguntados": [
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        },
+        {
+          "nombre": "Gasolinera / Tienda",
+          "latas": 0
+        },
+        {
+          "nombre": "Humane",
+          "latas": 6
+        },
+        {
+          "nombre": "Banco Central",
+          "latas": 6
+        }
+      ]
     }
   }
 }
