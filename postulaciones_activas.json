@@ -9,6 +9,10 @@
       "disp": "todos los dias a la noche",
       "robosPreguntados": [
         {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
           "nombre": "Fábrica",
           "latas": 6
         },
@@ -17,15 +21,11 @@
           "latas": 3
         },
         {
-          "nombre": "Gasolinera / Tienda",
-          "latas": 0
+          "nombre": "Bancos Fleeca",
+          "latas": 3
         },
         {
           "nombre": "Humane",
-          "latas": 6
-        },
-        {
-          "nombre": "Banco Central",
           "latas": 6
         }
       ]
