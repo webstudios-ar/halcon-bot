@@ -2,6 +2,11 @@
   "667115168622444544": {
     "inicio": 1788925762809,
     "expiraTs": 1788926662809,
-    "datos": {}
+    "datos": {
+      "nombre": "Matteo Eto'o",
+      "rango": "Cabo 1ro",
+      "mic": "Si",
+      "disp": "todos los  dias a la noche"
+    }
   }
 }
