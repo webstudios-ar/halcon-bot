@@ -2,6 +2,11 @@
   "795153412181458976": {
     "inicio": 1788916402100,
     "expiraTs": 1788917302100,
-    "datos": {}
+    "datos": {
+      "nombre": "Tiki Owend",
+      "rango": "cabo",
+      "mic": "si",
+      "disp": "6/7"
+    }
   }
 }
