@@ -60,7 +60,10 @@
           "respondio": 3,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "Avisar por radio color del auto como esta vestida la persona si es que lo vi y empezar una persecucion",
+      "disparar": "cuando se cortan las negociaciones en los robos y cuando empiezan un rol agresivo",
+      "nvl": "No valorar vida de tu personaje"
     }
   }
 }
