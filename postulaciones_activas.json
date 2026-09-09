@@ -63,7 +63,10 @@
       ],
       "fuga": "le digo que detenga el vehiculo y luego de tres avisos procedo a dispararle a las ruedas",
       "disparar": "cuando la otra persona apunta al agente, rol agresivo",
-      "nvl": "no valorar vida, por ejemplo detengo a una persona con un arma y esta saca un arma  o se da a la fuga"
+      "nvl": "no valorar vida, por ejemplo detengo a una persona con un arma y esta saca un arma  o se da a la fuga",
+      "punto": "depende que rango sea accedo a lo que me dice",
+      "superior": "responsabilidad del superior",
+      "patrulla": "le digo que se detenga y si se da a la fuga disparo a las ruedas"
     }
   }
 }
