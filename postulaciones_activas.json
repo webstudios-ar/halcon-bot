@@ -63,7 +63,10 @@
       ],
       "fuga": "Avisar por radio color del auto como esta vestida la persona si es que lo vi y empezar una persecucion",
       "disparar": "cuando se cortan las negociaciones en los robos y cuando empiezan un rol agresivo",
-      "nvl": "No valorar vida de tu personaje"
+      "nvl": "No valorar vida de tu personaje",
+      "punto": "si es un superior acato ordenes, es un compañero me quedo con el si es que se refieren a eso",
+      "superior": "Le digo que se calme y lo calmo si esque esta enojado o si no le digo que no  le falte el respeto al civil",
+      "patrulla": "frenarlo sin bajar del auto y decirle que baje con las manos arriba"
     }
   }
 }
