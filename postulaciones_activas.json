@@ -60,7 +60,10 @@
           "respondio": 10,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "le digo que detenga el vehiculo y luego de tres avisos procedo a dispararle a las ruedas",
+      "disparar": "cuando la otra persona apunta al agente, rol agresivo",
+      "nvl": "no valorar vida, por ejemplo detengo a una persona con un arma y esta saca un arma  o se da a la fuga"
     }
   }
 }
