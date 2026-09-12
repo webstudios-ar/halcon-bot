@@ -2,6 +2,11 @@
   "945438043307900988": {
     "inicio": 1789183172401,
     "expiraTs": 1789184072401,
-    "datos": {}
+    "datos": {
+      "nombre": "jowel randy",
+      "rango": "teniente",
+      "mic": "si",
+      "disp": "5"
+    }
   }
 }
