@@ -28,6 +28,38 @@
           "nombre": "Bancos Fleeca",
           "latas": 3
         }
+      ],
+      "latasResp": [
+        {
+          "nombre": "Carnicería",
+          "correcto": 8,
+          "respondio": 900,
+          "acierta": false
+        },
+        {
+          "nombre": "Rancho Abandonado",
+          "correcto": 4,
+          "respondio": 100,
+          "acierta": false
+        },
+        {
+          "nombre": "Museo",
+          "correcto": 3,
+          "respondio": 344,
+          "acierta": false
+        },
+        {
+          "nombre": "Yate",
+          "correcto": 3,
+          "respondio": 434,
+          "acierta": false
+        },
+        {
+          "nombre": "Bancos Fleeca",
+          "correcto": 3,
+          "respondio": 344,
+          "acierta": false
+        }
       ]
     }
   }
