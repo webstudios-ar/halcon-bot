@@ -60,7 +60,10 @@
           "respondio": 2,
           "acierta": false
         }
-      ]
+      ],
+      "fuga": "lo salgo a perseguir hasta agarrarlo",
+      "disparar": "cuando te empiezan un rol agresivo",
+      "nvl": "cuando te cortan y no te frenas y te vas ala fuga"
     }
   }
 }
