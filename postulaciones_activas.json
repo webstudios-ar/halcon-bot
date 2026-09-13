@@ -2,6 +2,11 @@
   "1422407971354447965": {
     "inicio": 1789318612815,
     "expiraTs": 1789319512815,
-    "datos": {}
+    "datos": {
+      "nombre": "cyberbulling",
+      "rango": "sargento 1",
+      "mic": "si",
+      "disp": "5+"
+    }
   }
 }
