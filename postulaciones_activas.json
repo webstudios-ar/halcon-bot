@@ -2,6 +2,11 @@
   "1083919484923936869": {
     "inicio": 1789357550741,
     "expiraTs": 1789358450741,
-    "datos": {}
+    "datos": {
+      "nombre": "Delfita Black",
+      "rango": "suboficial mayor",
+      "mic": "si",
+      "disp": "4 dias"
+    }
   }
 }
