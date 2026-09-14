@@ -6,7 +6,29 @@
       "nombre": "Delfita Black",
       "rango": "suboficial mayor",
       "mic": "si",
-      "disp": "4 dias"
+      "disp": "4 dias",
+      "robosPreguntados": [
+        {
+          "nombre": "Subte",
+          "latas": 4
+        },
+        {
+          "nombre": "Fábrica",
+          "latas": 6
+        },
+        {
+          "nombre": "Carnicería",
+          "latas": 8
+        },
+        {
+          "nombre": "Estadio",
+          "latas": 3
+        },
+        {
+          "nombre": "Facebook",
+          "latas": 3
+        }
+      ]
     }
   }
 }
