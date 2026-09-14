@@ -60,7 +60,10 @@
           "respondio": 3,
           "acierta": true
         }
-      ]
+      ],
+      "fuga": "primero doy aviso que se fuga una persona,inicio la persecución respetando el rol,pido apoyo,le doy los avisos antes de disparar",
+      "disparar": "cuando la persona apunte con un arma despues de los avisos que se le da que detenga el vehículo o deje de correr",
+      "nvl": "cuando el personaje no valora vida y cree que es invencible y se cree que puede contra todos, tenemos que actuar como actuariamos en la vida real si quisiera conservar la vida"
     }
   }
 }
